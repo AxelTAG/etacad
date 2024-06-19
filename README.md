@@ -1,4 +1,4 @@
-# pyacad
+# etacad
 
 A package aimed to simplfy drawing of structurals elements, based on ezdxf library.
 
