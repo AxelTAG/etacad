@@ -417,24 +417,3 @@ class Beam(Element):
                                     mandrel_radius_bottom=mandrel_radius_inf, anchor=stirrup[3]))
 
         return entities
-
-
-if __name__ == "__main__":
-    # Testing drawings.
-    doc = ezdxf.new(dxfversion="R2000", setup=True)
-    beam = Beam(width=0.3, height=0.5, length=4, as_sup={12: 2, 8: 1}, as_inf={16: 2, 10: 1}, as_right={10: 4},
-                as_left={10:4}, anchor_sup=0.1, anchor_right=0, anchor_inf=0.1, anchor_left=0,
-                stirrups_db=[0.008, 0.01, 0.008], stirrups_length=[0.6, 2, 0.6], stirrups_sep=[0.15, 0.10, 0.15],
-                stirrups_x=[0.2, 1, 3.10], cover=0.03, columns=[[0.2, 0.5], [0.3, 0.5]], columns_pos=[0, 3.7])
-
-    beam.draw_transverse(document=doc, x=8 + beam.length + 0.50, y=4, x_section=0.3, unifilar=False)
-    beam.draw_transverse(document=doc, x=8 + beam.length + 1.00, y=4, x_section=2, unifilar=False)
-    beam.draw_transverse(document=doc, x=8 + beam.length + 1.50, y=4, x_section=3.5, unifilar=False)
-    beam.draw_longitudinal(document=doc, x=8, y=4, unifilar_bars=False)
-    beam.draw_longitudinal_rebar_detailing(document=doc, x=8, y=3, unifilar=False)
-    beam.draw_transverse_rebar_detailing(document=doc, x=8 + beam.length + 0.50, y=3, x_section=0.3, unifilar=False)
-    beam.draw_transverse_rebar_detailing(document=doc, x=8 + beam.length + 1, y=3, x_section=2, unifilar=False)
-    beam.draw_transverse_rebar_detailing(document=doc, x=8 + beam.length + 1.5, y=3, x_section=3.5, unifilar=True)
-
-    zoom.extents(doc.modelspace())
-    doc.saveas("c:/users/beta/desktop/beam.dxf")
