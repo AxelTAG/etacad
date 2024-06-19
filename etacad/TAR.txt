@@ -1,0 +1,10 @@
+TAR:
+
+* Hacer función de cómputo de hormigón y acero (kilos y barras).
+(*) Reestructurar el código.
+(*) Hacer función de despiece.
+
+NOTAS:
+
+- El objeto Beam se crea considerando el punto (x, y) pasado, por defecto se toma el (0, 0). Dado esto, las coordenadas
+de las columnas y estribos son relativos a las dimensiones del objeto Beam.

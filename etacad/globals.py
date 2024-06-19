@@ -1,0 +1,1 @@
+STEEL_WEIGHT = 7850  # kg / m3
