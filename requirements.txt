@@ -1,0 +1,5 @@
+# Specify where to install requirements from.
+--index-url https://pypi.python.org/simple/
+
+# Needed packages/versions.
+ezdxf
