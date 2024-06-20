@@ -22,7 +22,7 @@ class Beam(Element):
                  cover: float = 0.025, x: float = 0, y: float = 0, direction: str = "horizontal",
                  orientation: str = "right", nomenclature: str = None, number_init: int = None):
 
-        super().__init__(width=width, height=height, type="beam", x=x, y=y)
+        super().__init__(width=width, height=height, element_type="beam", x=x, y=y)
 
         # Armor attributes.
         if as_sup:

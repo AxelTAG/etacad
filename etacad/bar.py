@@ -69,7 +69,7 @@ class Bar(Element):
                  orientation: str = "down", bend_longitud: float = 0, bend_angle: float = 0, bend_height: float = 0,
                  transverse_center: tuple = None, denomination: None = str):
 
-        super().__init__(width=0, height=reinforcement_length, type="bar", x=x, y=y)
+        super().__init__(width=0, height=reinforcement_length, element_type="bar", x=x, y=y)
 
         # Bending attributes.
         self.bend_longitud = bend_longitud

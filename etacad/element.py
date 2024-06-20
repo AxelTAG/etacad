@@ -6,8 +6,8 @@ class Element:
     :type width: float
     :param height: Height of the Element.
     :type height: float
-    :param type: Type of the Element (bar, stirrup, beam, etc.).
-    :type type: str
+    :param element_type: Type of the Element (bar, stirrup, beam, etc.).
+    :type element_type: str
     :param x: X coordinate of the bottom left corner bounding box Element point.
     :type x: float
     :param y: Y coordinate of the bottom left corner bounding box Element point.
@@ -19,12 +19,12 @@ class Element:
     :ivar y: Y coordinate of the bottom left corner bounding box Element point.
     """
 
-    def __init__(self, width: float, height: float, type: str, x: float, y: float):
+    def __init__(self, width: float, height: float, element_type: str, x: float, y: float):
         """
         Initialeze a new instance of Element.
         """
         self.width = width
         self.height = height
-        self.type = type
+        self.type = element_type
         self.x = x
         self.y = y

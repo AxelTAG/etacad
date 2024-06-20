@@ -67,7 +67,7 @@ class Stirrup(Element):
         """
         Initialeze a new instance of Stirrup.
         """
-        super().__init__(width=width, height=height, type="stirrup", x=x, y=y)
+        super().__init__(width=width, height=height, element_type="stirrup", x=x, y=y)
 
         # Stirrups attributes.
         self.reinforcement_length = reinforcement_length
