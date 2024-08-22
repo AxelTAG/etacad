@@ -1,17 +1,13 @@
 # Imports.
 # Local imports.
-from drawing_utils import (circle, curve, dim_linear, line, mirror, rads,
-                           rect, rotate, text, translate)
-from element import Element
-from globals import STEEL_WEIGHT
+from etacad.drawing_utils import circle, curve, line, mirror, rads, rect, rotate, text, translate
+from etacad.element import Element
+from etacad.globals import Direction, ElementTypes, Orientation, COS45, SIN45, STEEL_WEIGHT
 
 # External imports.
-import ezdxf
+from attrs import define, field
 from ezdxf.document import Drawing
 from math import cos, sin, tan, pi
-
-# Constants.
-SIN45, COS45 = sin(rads(45)), cos(rads(45))
 
 
 class Bar(Element):
@@ -33,9 +29,9 @@ class Bar(Element):
         :param mandrel_radius: Mandrel radius of bar.
         :type mandrel_radius: float
         :param direction: Direction of the stirrup (Horizontal or Vertical).
-        :type direction: str
+        :type direction: Direction
         :param orientation: Orientation of the stirrup (top, right, down, left).
-        :type orientation: str
+        :type orientation: Orientation
         :param bend_longitud: Bending longitud of the bar at center of bar.
         :type: float
         :param bend_angle: Bending declination angle.
@@ -59,17 +55,17 @@ class Bar(Element):
         :ivar orientation: Orientation of the bar (top, right, down, left).
         :ivar transverse_center: Transverse center of the drawing of cross-section.
         :ivar reinforcement_length: Length of the reinforcement.
-        ivar length: Length of the bar.
+        :ivar length: Length of the bar.
         :ivar weight: Weight of the reinforcement, considering 7850 kg / m3.
         :ivar box_width: Width of the box that contains the bar.
         :ivar box_height: Height of the box that contains the bar.
     """
     def __init__(self, reinforcement_length: float, diameter: float, x: float = 0, y: float = 0, left_anchor: float = 0,
-                 right_anchor: float = 0, mandrel_radius: float = 0, direction: str = "horizontal",
-                 orientation: str = "down", bend_longitud: float = 0, bend_angle: float = 0, bend_height: float = 0,
-                 transverse_center: tuple = None, denomination: None = str):
+                 right_anchor: float = 0, mandrel_radius: float = 0, direction: Direction = Direction.HORIZONTAL,
+                 orientation: Orientation = Orientation.BOTTOM, bend_longitud: float = 0, bend_angle: float = 0,
+                 bend_height: float = 0, transverse_center: tuple = None, denomination: str = None):
 
-        super().__init__(width=0, height=reinforcement_length, element_type="bar", x=x, y=y)
+        super().__init__(width=None, height=reinforcement_length, element_type="bar", x=x, y=y)
 
         # Bending attributes.
         self.bend_longitud = bend_longitud
@@ -296,13 +292,13 @@ class Bar(Element):
                           attr={"halign": 4, "valign": 0})
             group_text += [group[-1]]
 
-            if denomination:
-                group += text(document=document, text=self.denomination, height=text_denom_height,
-                              point=(x + self.box_width / 2,
-                                     y + self.box_height / 2 + text_denom_height + text_denom_distance),
-                              rotation=0,
-                              attr={"halign": 4, "valign": 0})
-                group_text += [group[-1]]
+        if denomination:
+            group += text(document=document, text=self.denomination, height=text_denom_height,
+                          point=(x + self.box_width / 2,
+                                 y + self.box_height / 2 + text_denom_height + text_denom_distance),
+                          rotation=0,
+                          attr={"halign": 4, "valign": 0})
+            group_text += [group[-1]]
 
         if unifilar:
             translate(objects=group, vector=(0, -self.mandrel_radius_ext))
@@ -343,7 +339,7 @@ class Bar(Element):
 
         # Orienting the bar (direction and orientation).
         # Direction.
-        if self.direction == "vertical":
+        if self.direction == Direction.VERTICAL:
             pivot_point = (x, y + self.box_height)
             vector_translate = (x - (pivot_point[0] * cos(pi / 2) - pivot_point[1] * sin(pi / 2)),
                                 y - (pivot_point[0] * sin(pi / 2) + pivot_point[1] * cos(pi / 2)))
@@ -351,27 +347,30 @@ class Bar(Element):
             rotate(group, pi / 2)
             translate(group, vector=vector_translate)
 
+            if unifilar:
+                translate(group, vector=(-self.diameter, 0))
+
         # Orientation.
-        if self.orientation == "top":
+        if self.orientation == Orientation.TOP:
             mirror(objects=group, mirror_type="x")
-            if self.direction == "vertical":
+            if self.direction == Direction.VERTICAL:
                 translate(group, vector=(0, self.box_width + y * 2))
             else:
                 translate(group, vector=(0, self.box_height + y * 2))
                 if unifilar:
                     translate(group, vector=(0, self.radius))
 
-        elif self.orientation == "right":
-            if self.direction == "vertical":
+        elif self.orientation == Orientation.RIGHT:
+            if self.direction == Direction.VERTICAL:
                 if unifilar:
                     translate(group, vector=(-self.mandrel_radius_ext, 0))
             else:
                 pass
 
-        elif self.orientation == "left":
+        elif self.orientation == Orientation.LEFT:
             mirror(objects=group, mirror_type="y")
 
-            if self.direction == "vertical":
+            if self.direction == Direction.VERTICAL:
                 translate(group, vector=(self.box_height + x * 2, 0))
             else:
                 translate(group, vector=(self.box_width + x * 2, 0))

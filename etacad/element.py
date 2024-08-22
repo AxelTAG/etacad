@@ -1,3 +1,8 @@
+# External imports.
+from attrs import define, field
+
+
+@define(slots=True)
 class Element:
     """
     General proposes for Element objects.
@@ -14,17 +19,14 @@ class Element:
 
     :ivar width: Width of the Element.
     :ivar height: Height of the Element.
-    :ivar type: Type of the Element (bar, stirrup, beam, etc.).
+    :ivar element_type: Type of the Element (bar, stirrup, beam, etc.).
     :ivar x: X coordinate of the bottom left corner bounding box Element point.
     :ivar y: Y coordinate of the bottom left corner bounding box Element point.
     """
 
-    def __init__(self, width: float, height: float, element_type: str, x: float, y: float):
-        """
-        Initialeze a new instance of Element.
-        """
-        self.width = width
-        self.height = height
-        self.type = element_type
-        self.x = x
-        self.y = y
+    # Geometric attributes.
+    width: float
+    height: float
+    element_type: str
+    x: float = field(default=0)
+    y: float = field(default=0)

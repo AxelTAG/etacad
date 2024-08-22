@@ -1,13 +1,11 @@
 # Imports.
 # Local imports.
-
-from drawing_utils import (curve, dim_linear, get_lines_intersec, line, mirror, rads, rect_border_curve, rotate,
+from etacad.drawing_utils import (curve, dim_linear, get_lines_intersec, line, mirror, rads, rect_border_curve, rotate,
                            text, translate)
-from element import Element
-from globals import STEEL_WEIGHT
+from etacad.element import Element
+from etacad.globals import STEEL_WEIGHT
 
 # External imports.
-import ezdxf
 from ezdxf.document import Drawing
 from math import cos, sin, pi, floor
 

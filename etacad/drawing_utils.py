@@ -1,5 +1,6 @@
 # Imports.
 # Local imports.
+from etacad.globals import Direction
 
 # External imports.
 import ezdxf
@@ -66,23 +67,27 @@ def curve(doc: Drawing, center_point: tuple, radius: float, start_angle: float, 
 
 # Create a delimit axe and rerturns and list with elements.
 def delimit_axe(document: Drawing, x: float, y: float, height: float = 1, radius: float = 0.1, text_height: float = 0.1,
-                symbol: str = None, direction: int = 1, attr: GfxAttribs = None) -> list:
+                symbol: str = None, direction: Direction = Direction.VERTICAL, attr: GfxAttribs = None) -> list:
 
     document.linetypes.add(name=lt_center[0], description=lt_center[1], pattern=lt_center[2])
     msp = document.modelspace()
 
-    if direction:
+    if direction == Direction.VERTICAL:
         group = [msp.add_line(start=(x, y), end=(x, y + height), dxfattribs=attr)]
         if symbol is not None:
             group += [msp.add_circle(center=(x, y + height + radius), radius=radius)]
             group += [msp.add_text(text=symbol, height=text_height).set_placement(
                 p1=(x, y + height + radius), align=TextEntityAlignment.MIDDLE_CENTER)]
-    else:
+
+    elif direction == Direction.HORIZONTAL:
         group = [msp.add_line(start=(x + radius, y), end=(x + radius + height, y), dxfattribs=attr)]
         if symbol is not None:
             group += [msp.add_circle(center=(x, y), radius=radius)]
             group += [msp.add_text(text=symbol, height=text_height).set_placement(
                 p1=(x, y), align=TextEntityAlignment.MIDDLE_CENTER)]
+
+    else:
+        raise ValueError
 
     return group
 

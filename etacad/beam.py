@@ -1,22 +1,20 @@
 # Imports.
 # Local imports.
-from drawing_utils import delimit_axe, dim_linear, rect, text
-from bar import Bar
-from element import Element
-from stirrup import Stirrup
-from utils import gen_symmetric_list, str_to_dict_bar
+from etacad.drawing_utils import delimit_axe, dim_linear, rect, text
+from etacad.bar import Bar
+from etacad.element import Element
+from etacad.stirrup import Stirrup
+from etacad.utils import gen_symmetric_list
 
 # External imports.
-import ezdxf
 from ezdxf.document import Drawing
 from ezdxf.gfxattribs import GfxAttribs
-from ezdxf import zoom
 
 
 class Beam(Element):
     def __init__(self, width: float, height: float, length: float, as_sup: dict = None, as_right: dict = None,
                  as_inf: dict = None, as_left: dict = None, anchor_sup: float | list = 0, anchor_right: float | list = 0,
-                 anchor_inf: float | list = 0, anchor_left: float | list = 0, stirrups_db: list = None,
+                 anchor_inf: float | list = 0, anchor_left: float | list = 0, stirrup_db: list = None,
                  stirrups_sep: list = None, stirrups_length: list = None, stirrups_anchor: list = None,
                  stirrups_x: list = None, columns: list = None, columns_pos: list = None, columns_symbol: list = None,
                  cover: float = 0.025, x: float = 0, y: float = 0, direction: str = "horizontal",
@@ -24,7 +22,7 @@ class Beam(Element):
 
         super().__init__(width=width, height=height, element_type="beam", x=x, y=y)
 
-        # Armor attributes.
+        # Steel attributes.
         if as_sup:
             self.as_sup = as_sup
             self.max_db_sup = max(self.as_sup.keys())
@@ -63,12 +61,12 @@ class Beam(Element):
         self.cover = cover
 
         # Stirrups attributes.
-        self.stirrups_db = stirrups_db
+        self.stirrups_db = stirrup_db
         self.stirrups_sep = stirrups_sep
         self.stirrups_length = stirrups_length
 
         if stirrups_anchor is None:
-            self.stirrups_anchor = [0.1] * len(stirrups_db)
+            self.stirrups_anchor = [0.1] * len(stirrup_db)
         else:
             self.stirrups_anchor = stirrups_anchor
 
@@ -191,19 +189,6 @@ class Beam(Element):
 
         return group
 
-    # Function that draws transverse section.
-    def draw_transverse_rebar_detailing(self, document: Drawing, x: float = None, y: float = None,
-                                        x_section: float = None, unifilar: bool = False,
-                                        dimensions: bool = True) -> list:
-
-        stirrups = self.__elements_section(elements=self.stirrups, x=x_section)
-
-        group = []
-        for stirrup in stirrups:
-            group += stirrup.draw_transverse(document=document, x=x, y=y, unifilar=unifilar, dimensions=dimensions)
-
-        return group
-
     def draw_transverse(self, document: Drawing, x: float, y: float, x_section: float = None,
                         unifilar: bool = False, dimensions: bool = True) -> list:
 
@@ -313,6 +298,19 @@ class Beam(Element):
 
         return group
 
+    # Function that draws transverse section.
+    def draw_transverse_rebar_detailing(self, document: Drawing, x: float = None, y: float = None,
+                                        x_section: float = None, unifilar: bool = False,
+                                        dimensions: bool = True) -> list:
+
+        stirrups = self.__elements_section(elements=self.stirrups, x=x_section)
+
+        group = []
+        for stirrup in stirrups:
+            group += stirrup.draw_transverse(document=document, x=x, y=y, unifilar=unifilar, dimensions=dimensions)
+
+        return group
+
     def draw_table_rebar_detailing(self, x: float = None, y: float = None, unifilar: bool = False):
         pass
 
@@ -381,6 +379,16 @@ class Beam(Element):
 
     # Function that returns elements in a given x_beam position.
     def __elements_section(self, elements: list = None, x: float = None) -> list:
+        """
+        Filter elements that are in the Y coordinate given.
+
+        :param elements: Group of entities (bars and stirrups).
+        :type elements: list
+        :param y: Y coordinate of the section.
+        :type y: float
+        :return: Group of entities that are in the Y coordinate given.
+        :rtype: list
+        """
         if elements is None:
             elements = self.all_elements
 

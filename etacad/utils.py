@@ -29,7 +29,7 @@ def gen_symmetric_list(dictionary: dict, nomenclature: str = None, number_init: 
     symmetryc_list = []
     denomination_list = []
 
-    for key, value in dictionary.items():
+    for key, value in sorted([*dictionary.items()]):
         key_factored = key / factor
         for i in range(value // 2):
             symmetryc_list.insert(0, key_factored)
