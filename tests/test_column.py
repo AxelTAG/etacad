@@ -13,6 +13,8 @@ def column():
                   depth=.2,
                   height=6,
                   cover=.03,
+                  x=20,
+                  y=10,
                   as_sup={0.016: 2, 0.012: 2},
                   as_right={0.012: 2},
                   as_inf={0.016: 2, 0.012: 2},
@@ -34,8 +36,8 @@ def test_attributes_rectangular_column(column):
     assert column.height == 6
     assert column.diameter is None
     assert column.column_type == ColumnTypes.RECTANGULAR
-    assert column.x == 0
-    assert column.y == 0
+    assert column.x == 20
+    assert column.y == 10
     assert column.cover == .03
     assert column.direction == Direction.VERTICAL
     assert column.orientation == Orientation.RIGHT
@@ -63,7 +65,7 @@ def test_attributes_rectangular_column(column):
     assert column.box_height == 6
 
 
-def test_draw_longitudinal(column):
+def test_draw_longitudinal_rectangular_column(column):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
     entities = column.draw_longitudinal(document=doc, x=2, y=3, unifilar_bars=False)
     doc.saveas(filename="./tests/column.dxf")
@@ -77,7 +79,7 @@ def test_draw_longitudinal(column):
     assert len(entities) == 86
 
 
-def test_draw_longitudinal_unifilar(column):
+def test_draw_longitudinal_unifilar_rectangular_column(column):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
     entities = column.draw_longitudinal(document=doc, x=2, y=3, unifilar_bars=True)
     doc.saveas(filename="./tests/column_unifilar.dxf")
@@ -91,5 +93,5 @@ def test_draw_longitudinal_unifilar(column):
     assert len(entities) == 74
 
 
-def test_list_to_stirrups(column):
-    assert True
+def test_list_to_stirrups_rectangular_column(column):
+    pass

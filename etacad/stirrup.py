@@ -1,19 +1,17 @@
 # Imports.
 # Local imports.
-from etacad.drawing_utils import (curve, dim_linear, get_lines_intersec, line, mirror, rads, rect_border_curve, rotate,
-                           text, translate)
-from etacad.element import Element
-from etacad.globals import STEEL_WEIGHT
+from etacad.drawing_utils import (curve, dim_linear, get_lines_intersec, line, mirror, rect_border_curve, rotate,
+                                  text, translate)
+from etacad.globals import COS45, Direction, ElementTypes, Orientation, SIN45, STEEL_WEIGHT
 
 # External imports.
+from attrs import define, field
 from ezdxf.document import Drawing
 from math import cos, sin, pi, floor
 
-# Constants.
-SIN45, COS45 = sin(rads(45)), cos(rads(45))
 
-
-class Stirrup(Element):
+@define
+class Stirrup:
     """
     Stirrup element, computes geometrics and physics props and manages dxf drawing methods.
 
@@ -58,37 +56,52 @@ class Stirrup(Element):
         :ivar box_width: Width of the box that contains the stirrup.
         :ivar box_height: Height of the box that contains the stirrup.
     """
-    def __init__(self, width: float, height: float, diameter: float, reinforcement_length: float,
-                 spacing: float, x: float = 0, y: float = 0, mandrel_radius_top: float = 0,
-                 mandrel_radius_bottom: float = 0, anchor: float = 0.15, direction: str = "horizontal",
-                 orientation: str = "down"):
-        """
-        Initialeze a new instance of Stirrup.
-        """
-        super().__init__(width=width, height=height, element_type="stirrup", x=x, y=y)
+    # Stirrups attributes.
+    width: float
+    height: float
+    diameter: float
+    reinforcement_length: float
+    spacing: float
+    x: float = field(default=0)
+    y: float = field(default=0)
+    mandrel_radius_top: float = field(default=0)
+    mandrel_radius_ext_top: float = field(init=False)
+    mandrel_radius_bottom: float = field(default=0)
+    mandrel_radius_ext_bottom: float = field(init=False)
+    anchor: float = field(default=0)
+    quantity: int = field(init=False)
 
+    # Geometric attributes.
+    length: float = field(init=False)
+    direction: Direction = field(default=Direction.HORIZONTAL)
+    orientation: Orientation = field(default=Orientation.BOTTOM)
+
+    # Physics attributes.
+    weight: float = field(init=False)
+
+    # Box attributes.
+    box_width: float = field(init=False)
+    box_height: float = field(init=False)
+
+    # Others.
+    element_type: ElementTypes = field(default=ElementTypes.STIRRUP)
+
+    def __attrs_post_init__(self):
         # Stirrups attributes.
-        self.reinforcement_length = reinforcement_length
-        self.spacing = spacing
-        self.mandrel_radius_top = mandrel_radius_top
-        self.mandrel_radius_ext_top = mandrel_radius_top + diameter
-        self.mandrel_radius_bottom = mandrel_radius_bottom
-        self.mandrel_radius_ext_bottom = mandrel_radius_bottom + diameter
-        self.anchor = anchor
-        self.quantity = floor((reinforcement_length * 100) / (spacing * 100)) + 1
+        self.mandrel_radius_ext_top = self.mandrel_radius_top + self.diameter
+        self.mandrel_radius_ext_bottom = self.mandrel_radius_bottom + self.diameter
+        self.quantity = floor((self.reinforcement_length * 100) / (self.spacing * 100)) + 1
 
         # Geometric attributes.
-        self.diameter = diameter
-        self.direction = direction
-        self.orientation = orientation
-        self.length = (width + height + anchor) * 2
-        self.weight = (diameter ** 2 * pi / 4) * self.length * STEEL_WEIGHT
+        self.length = (self.width + self.height + self.anchor) * 2
+
+        # Physics attributes.
+        self.weight = (self.diameter ** 2 * pi / 4) * self.length * STEEL_WEIGHT
 
         # Box attributes.
         self.box_width = self.width
         self.box_height = self.height
 
-    # Drawing longitudinal function.
     def draw_longitudinal(self, document: Drawing, x: float = None, y: float = None, unifilar=True):
         """
         Draw the longitudinal reinforcement of the stirrup in the dxf file.
@@ -302,7 +315,7 @@ class Stirrup(Element):
         """
         # Orienting the bar (direction and orientation).
         # Direction.
-        if self.direction == "vertical":
+        if self.direction == Direction.VERTICAL:
             pivot_point = (x, y + self.box_height)
             vector_translate = (x - (pivot_point[0] * cos(pi / 2) - pivot_point[1] * sin(pi / 2)),
                                 y - (pivot_point[0] * sin(pi / 2) + pivot_point[1] * cos(pi / 2)))
@@ -311,10 +324,10 @@ class Stirrup(Element):
             translate(group, vector=vector_translate)
 
         # Orientation.
-        if self.orientation == "left":
+        if self.orientation == Orientation.LEFT:
             mirror(objects=group, mirror_type="y")
 
-            if self.direction == "vertical":
+            if self.direction == Direction.VERTICAL:
                 translate(group, vector=(self.box_height + x * 2, 0))
             else:
                 if longitudinal:

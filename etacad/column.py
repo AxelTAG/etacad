@@ -13,6 +13,13 @@ from ezdxf.gfxattribs import GfxAttribs
 
 @define
 class Column:
+    """
+    Column element, computes geometrics and physics props and manages dxf drawing methods (longitudinal, transversal,
+    reinforcement detailing, etc.)
+
+    :param width: Width of column in meters.
+    :param depth: Depth of column in meters.
+    """
     # Geometric attributes.
     width: float
     depth: float
@@ -29,22 +36,29 @@ class Column:
     as_right: dict = field(default=None)
     as_inf: dict = field(default=None)
     as_left: dict = field(default=None)
+
     max_db_sup: float = field(init=False)
     max_db_right: float = field(init=False)
     max_db_inf: float = field(init=False)
     max_db_left: float = field(init=False)
+    max_db_hz: float = field(init=False)
+    max_db_vt: float = field(init=False)
+
     anchor_sup: list = field(default=0)
     anchor_right: list = field(default=0)
     anchor_inf: list = field(default=0)
     anchor_left: list = field(default=0)
+
     bars_as_sup: list = field(init=False)
     bars_as_right: list = field(init=False)
     bars_as_inf: list = field(init=False)
     bars_as_left: list = field(init=False)
+
     number_init_sup: int = field(default=0)
     number_init_right: int = field(default=0)
     number_init_inf: int = field(default=0)
     number_init_left: int = field(default=0)
+
     cover: float = field(default=None)
 
     # Stirrup attributes.
@@ -87,6 +101,9 @@ class Column:
         self.max_db_right = max(self.as_right.keys()) if self.as_right is not None else 0
         self.max_db_inf = max(self.as_inf.keys()) if self.as_inf is not None else 0
         self.max_db_left = max(self.as_left.keys()) if self.as_left is not None else 0
+
+        self.max_db_hz = max(self.max_db_sup, self.max_db_inf)
+        self.max_db_vt = max(self.max_db_right, self.max_db_left)
 
         self.bars_as_sup = self.__dict_to_bars(bars=self.as_sup,
                                                width=self.width,
@@ -201,9 +218,9 @@ class Column:
         if dim:
             for stirrup in self.stirrups:
                 entities += dim_linear(document=document,
-                                       p_base=(x - self.width * 3, y + stirrup.y + stirrup.reinforcement_length / 2),
-                                       p1=(x, y + stirrup.y),
-                                       p2=(x, y + stirrup.y + stirrup.reinforcement_length),
+                                       p_base=(x - self.width * 3, y + (stirrup.y - self.y) + stirrup.reinforcement_length / 2),
+                                       p1=(x, y + (stirrup.y - self.y)),
+                                       p2=(x, y + (stirrup.y - self.y) + stirrup.reinforcement_length),
                                        rotation=90,
                                        dimstyle=dim_style)
 
@@ -218,16 +235,17 @@ class Column:
         if stirrups:
             for stirrup in self.stirrups:
                 entities += stirrup.draw_longitudinal(document=document,
-                                                      x=x + stirrup.x,
-                                                      y=y + stirrup.y,
+                                                      x=x + (stirrup.x - self.x),
+                                                      y=y + (stirrup.y - self.y),
                                                       unifilar=unifilar_stirrups)
 
         # Drawing of bars.
         if bars:
             for bar in self.bars_as_inf:
+                delta_unfilar = 0 if not unifilar_bars else -bar.radius
                 entities += bar.draw_longitudinal(document=document,
-                                                  x=x + bar.x,
-                                                  y=y + bar.y,
+                                                  x=x + (bar.x - self.x) + delta_unfilar,
+                                                  y=y + (bar.y - self.y),
                                                   unifilar=unifilar_bars,
                                                   dimensions=False,
                                                   denomination=False)  # Only left bars.
@@ -265,12 +283,12 @@ class Column:
             raise ValueError
 
         # Generating bars.
-        entities, delta_x, delta_y, orientation = [], 0, 0, "bottom"
+        entities, delta_x, delta_y, orientation = [], 0, 0, Orientation.BOTTOM
         for i, db in enumerate(list_bars):
             # Calculation of x_delta and y_delta.
             if side == Orientation.TOP or side == Orientation.BOTTOM:
                 x_sep += separation
-                delta_x = self.cover + db_max / 2
+                delta_x = self.cover - db_max / 2 + (db_max / 2 - db / 2)
                 if side == Orientation.TOP:
                     delta_y_transverse = self.height - self.cover + self.max_db_sup / 2 - db
                 if side == Orientation.BOTTOM:
@@ -351,7 +369,7 @@ class Column:
         # Generating stirrups.
         entities = []  # Empty list that will contain stirrups elements.
         for stirrup in stirrups:
-            stirrup_x = self.cover - self.max_db_inf / 2 - stirrup[0]  # Subract of thick of stirrup.
+            stirrup_x = self.x + self.cover - self.max_db_inf / 2 - stirrup[0]  # Subract of thick of stirrup.
             stirrup_y = self.y + stirrup[4]  # Difining y coordinate.
 
             # Creating of stirrup.
@@ -365,6 +383,6 @@ class Column:
                                     mandrel_radius_top=mandrel_radius_sup,
                                     mandrel_radius_bottom=mandrel_radius_inf,
                                     anchor=stirrup[3],
-                                    direction="vertical"))
+                                    direction=Direction.VERTICAL))
 
         return entities

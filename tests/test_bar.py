@@ -1,5 +1,5 @@
 # Local imports.
-from etacad.globals import ColumnTypes, Direction, Orientation, STEEL_WEIGHT
+from etacad.globals import Direction, Orientation, STEEL_WEIGHT
 from etacad.bar import Bar
 
 # External imports.
@@ -24,7 +24,6 @@ def bar_straight_horizontal():
                bend_longitud=0,
                bend_angle=0,
                bend_height=0,
-               transverse_center=None,
                denomination="@bar_straight_horizontal")
 
 
@@ -137,7 +136,6 @@ def bar_straight_vertical():
                bend_longitud=0,
                bend_angle=0,
                bend_height=0,
-               transverse_center=None,
                denomination="@bar_straight_vertical")
 
 
@@ -211,3 +209,61 @@ def test_draw_longitudinal_bar_straight_vertical(bar_straight_vertical):
     assert len(entities) == 21
 
     doc.saveas(filename="./tests/bar_straight_vertical.dxf")
+
+
+@pytest.fixture
+def bar_straight_horizontal_lab():
+    return Bar(reinforcement_length=4,
+               diameter=0.01,
+               x=0,
+               y=0,
+               left_anchor=0.15,
+               right_anchor=0,
+               mandrel_radius=0.01,
+               direction=Direction.HORIZONTAL,
+               orientation=Orientation.BOTTOM,
+               bend_longitud=0,
+               bend_angle=0,
+               bend_height=0,
+               denomination="bar_straight_vertical_lab")
+
+
+def test_attributes_straight_horizontal_lab(bar_straight_horizontal_lab):
+    # Bending attributes.
+    assert bar_straight_horizontal_lab.bend_longitud == 0
+    assert bar_straight_horizontal_lab.bend_angle == 0
+    assert bar_straight_horizontal_lab.bend_height == 0
+    assert bar_straight_horizontal_lab.bending_proyection == 0
+
+    # Mandrel attributes.
+    assert bar_straight_horizontal_lab.left_anchor == 0.15
+    assert bar_straight_horizontal_lab.right_anchor == 0
+    assert bar_straight_horizontal_lab.mandrel_radius == 0.01
+    assert bar_straight_horizontal_lab.mandrel_radius_ext == 0.02
+
+    # Geometric attributes.
+    assert bar_straight_horizontal_lab.diameter == 0.01
+    assert bar_straight_horizontal_lab.radius == 0.005
+    assert bar_straight_horizontal_lab.direction == Direction.HORIZONTAL
+    assert bar_straight_horizontal_lab.orientation == Orientation.BOTTOM
+    assert bar_straight_horizontal_lab.transverse_center is None
+    assert bar_straight_horizontal_lab.reinforcement_length == 4
+    assert bar_straight_horizontal_lab.length == 4.15
+    assert bar_straight_horizontal_lab.weight == ((0.01 ** 2) * pi / 4) * 4.15 * STEEL_WEIGHT
+
+    # Boxing attributes.
+    assert bar_straight_horizontal_lab.box_width == 4
+    assert bar_straight_horizontal_lab.box_height == 0.16999999999999998
+
+    # Others.
+    assert bar_straight_horizontal_lab.denomination == "bar_straight_vertical_lab"
+
+
+@pytest.fixture
+def bar_straight_hotizontal_rab():
+    pass
+
+
+@pytest.fixture
+def bar_straight_horizontal_lab_rab():
+    pass

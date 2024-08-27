@@ -1,7 +1,6 @@
 # Imports.
 # Local imports.
 from etacad.drawing_utils import circle, curve, line, mirror, rads, rect, rotate, text, translate
-from etacad.element import Element
 from etacad.globals import Direction, ElementTypes, Orientation, COS45, SIN45, STEEL_WEIGHT
 
 # External imports.
@@ -10,7 +9,8 @@ from ezdxf.document import Drawing
 from math import cos, sin, tan, pi
 
 
-class Bar(Element):
+@define
+class Bar:
     """
     Longitudinal bar element, computes geometrics and physics props and manages dxf drawing methods.
 
@@ -60,48 +60,63 @@ class Bar(Element):
         :ivar box_width: Width of the box that contains the bar.
         :ivar box_height: Height of the box that contains the bar.
     """
-    def __init__(self, reinforcement_length: float, diameter: float, x: float = 0, y: float = 0, left_anchor: float = 0,
-                 right_anchor: float = 0, mandrel_radius: float = 0, direction: Direction = Direction.HORIZONTAL,
-                 orientation: Orientation = Orientation.BOTTOM, bend_longitud: float = 0, bend_angle: float = 0,
-                 bend_height: float = 0, transverse_center: tuple = None, denomination: str = None):
+    # Geometric attributes.
+    reinforcement_length: float
+    diameter: float
+    radius: float = field(init=False)
+    length: float = field(init=False)
+    x: float = field(default=0)
+    y: float = field(default=0)
+    direction: Direction = field(default=Direction.HORIZONTAL)
+    orientation: Orientation = field(default=Orientation.BOTTOM)
+    transverse_center: tuple = field(default=None)
 
-        super().__init__(width=None, height=reinforcement_length, element_type="bar", x=x, y=y)
+    # Anchor attributes.
+    left_anchor: float = field(default=0)
+    right_anchor: float = field(default=0)
+    mandrel_radius: float = field(default=0)
+    mandrel_radius_ext: float = field(init=False)
 
+    # Bending attributes.
+    bend_longitud: float = field(default=0)
+    bend_angle: float = field(default=0)
+    bend_height: float = field(default=0)
+    bending_proyection: float = field(init=False)
+
+    # Boxing attributes.
+    box_width: float = field(init=False)
+    box_height: float = field(init=False)
+
+    # Physics attributes.
+    weight: float = field(init=False)
+
+    # Others.
+    element_type: ElementTypes = field(default=ElementTypes.COLUMN)
+    denomination: str = field(default=None)
+
+    def __attrs_post_init__(self):
         # Bending attributes.
-        self.bend_longitud = bend_longitud
-        self.bend_angle = bend_angle
-        self.bend_height = bend_height
-        self.bending_proyection = bend_height / tan(rads(bend_angle)) if bend_angle else 0
-
-        # Mandrel attributes.
-        self.left_anchor = left_anchor
-        self.right_anchor = right_anchor
-        self.mandrel_radius = mandrel_radius
-        self.mandrel_radius_ext = diameter + mandrel_radius
+        self.bending_proyection = self.bend_height / tan(rads(self.bend_angle)) if self.bend_angle else 0
 
         # Geometric attributes.
-        self.diameter = diameter
-        self.radius = diameter / 2
-        self.direction = direction
-        self.orientation = orientation
-        self.transverse_center = transverse_center
-        self.reinforcement_length = reinforcement_length
-        self.length = (reinforcement_length + (1 / cos(rads(bend_angle)) - 1) * self.bending_proyection * 2
-                       + left_anchor + right_anchor)
-        self.weight = (diameter ** 2 * pi / 4) * self.length * STEEL_WEIGHT
+        self.radius = self.diameter / 2
+        self.length = (self.reinforcement_length + (1 / cos(rads(self.bend_angle)) - 1) * self.bending_proyection * 2
+                       + self.left_anchor + self.right_anchor)
+
+        # Mandrel attributes.
+        self.mandrel_radius_ext = self.diameter + self.mandrel_radius
 
         # Boxing attributes.
-        self.box_width = reinforcement_length
-        if self.left_anchor or right_anchor or bend_height:
-            max_anchor = max([left_anchor, right_anchor])  # Maximum anchor.
+        self.box_width = self.reinforcement_length
+        if self.left_anchor or self.right_anchor or self.bend_height:
+            max_anchor = max([self.left_anchor, self.right_anchor])  # Maximum anchor.
 
-            self.box_height = max([self.mandrel_radius_ext + max_anchor,
-                                   diameter * 2 + self.bend_height])
+            self.box_height = max([self.mandrel_radius_ext + max_anchor, self.diameter * 2 + self.bend_height])
         else:
             self.box_height = self.diameter
 
-        # Others.
-        self.denomination = denomination
+        # Physics attributes.
+        self.weight = (self.diameter ** 2 * pi / 4) * self.length * STEEL_WEIGHT
 
     # Drawing longitudinal function.
     def draw_longitudinal(self, document: Drawing, x: float = None, y: float = None, unifilar: bool = False,
@@ -111,10 +126,16 @@ class Bar(Element):
         if x is None:
             y = self.y
 
-        diameter = self.diameter if not unifilar else 0
-        mandrel_radius_ext = self.mandrel_radius_ext if not unifilar else 0
-        sides_left_anchor = [0, 1, 1, 1] if not unifilar else [0, 0, 0, 1]
-        sides_right_anchor = [0, 1, 1, 1] if not unifilar else [0, 1, 0, 0]
+        if not unifilar:
+            diameter = self.diameter
+            mandrel_radius_ext = self.mandrel_radius_ext
+            sides_left_anchor = [0, 1, 1, 1]
+            sides_right_anchor = [0, 1, 1, 1]
+        else:
+            diameter = 0
+            mandrel_radius_ext = 0
+            sides_left_anchor = [0, 0, 0, 1]
+            sides_right_anchor = [0, 1, 0, 0]
 
         # Configurations variables.
         text_dim_distance = 0.05
