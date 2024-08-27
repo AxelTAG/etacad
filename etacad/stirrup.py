@@ -15,46 +15,46 @@ class Stirrup:
     """
     Stirrup element, computes geometrics and physics props and manages dxf drawing methods.
 
-        :param width: External width of stirrup.
-        :type width: float
-        :param height: External height of stirrup.
-        :type height: float
-        :param diameter: Diameter of stirrup bar.
-        :type diameter: float
-        :param reinforcement_length: Length of the stirrup reinforcement.
-        :type reinforcement_length: float
-        :param spacing: Stirrup spacing.
-        :type spacing: float
-        :param x: X coordinate of the bottom left corner Stirrup bounding box point.
-        :type x: float
-        :param y: Y coordinate of the bottom left corner Stirrup bounding box point.
-        :type y: float
-        :param mandrel_radius_top: Mandrel radius of stirrup bar at the top.
-        :type mandrel_radius_top: float
-        :param mandrel_radius_bottom: Mandrel radius of stirrup bar at the bottom.
-        :type mandrel_radius_bottom: float
-        :param anchor: Anchor length of stirrup.
-        :type anchor: float
-        :param direction: Direction of the stirrup (Horizontal or Vertical).
-        :type direction: str
-        :param orientation: Orientation of the stirrup (top, right, down, left).
-        :type orientation: str
+    :param width: External width of stirrup.
+    :type width: float
+    :param height: External height of stirrup.
+    :type height: float
+    :param diameter: Diameter of stirrup bar.
+    :type diameter: float
+    :param reinforcement_length: Length of the stirrup reinforcement.
+    :type reinforcement_length: float
+    :param spacing: Stirrup spacing.
+    :type spacing: float
+    :param x: X coordinate of the bottom left corner Stirrup bounding box point.
+    :type x: float
+    :param y: Y coordinate of the bottom left corner Stirrup bounding box point.
+    :type y: float
+    :param mandrel_radius_top: Mandrel radius of stirrup bar at the top.
+    :type mandrel_radius_top: float
+    :param mandrel_radius_bottom: Mandrel radius of stirrup bar at the bottom.
+    :type mandrel_radius_bottom: float
+    :param anchor: Anchor length of stirrup.
+    :type anchor: float
+    :param direction: Direction of the stirrup (Horizontal or Vertical).
+    :type direction: str
+    :param orientation: Orientation of the stirrup (top, right, down, left).
+    :type orientation: str
 
-        :ivar reinforcement_length: Length of the stirrup reinforcement.
-        :ivar spacing: Stirrup spacing.
-        :ivar mandrel_radius_top: Mandrel radius of stirrup bar at the top.
-        :ivar mandrel_radius_ext_top: Mandrel radius plus diameter of stirrup bar at the top.
-        :ivar mandrel_radius_bottom: Mandrel radius of stirrup bar at the bottom.
-        :ivar mandrel_radius_ext_bottom: Mandrel radius plus diameter of stirrup bar at the bottom.
-        :ivar anchor: Anchor length of stirrup.
-        :ivar quantity: Number of stirrups that forms de reinforcement.
-        :ivar diameter: Diameter of stirrup bar.
-        :ivar direction: Direction of the stirrup (Horizontal or Vertical).
-        :ivar orientation: Orientation of the Stirrup (top, right, down, left).
-        :ivar length: Length of the bar to fork the stirrup.
-        :ivar weight: Weight of the stirrup, considering 7850 kg / m3.
-        :ivar box_width: Width of the box that contains the stirrup.
-        :ivar box_height: Height of the box that contains the stirrup.
+    :ivar reinforcement_length: Length of the stirrup reinforcement.
+    :ivar spacing: Stirrup spacing.
+    :ivar mandrel_radius_top: Mandrel radius of stirrup bar at the top.
+    :ivar mandrel_radius_ext_top: Mandrel radius plus diameter of stirrup bar at the top.
+    :ivar mandrel_radius_bottom: Mandrel radius of stirrup bar at the bottom.
+    :ivar mandrel_radius_ext_bottom: Mandrel radius plus diameter of stirrup bar at the bottom.
+    :ivar anchor: Anchor length of stirrup.
+    :ivar quantity: Number of stirrups that forms de reinforcement.
+    :ivar diameter: Diameter of stirrup bar.
+    :ivar direction: Direction of the stirrup (Horizontal or Vertical).
+    :ivar orientation: Orientation of the Stirrup (top, right, down, left).
+    :ivar length: Length of the bar to fork the stirrup.
+    :ivar weight: Weight of the stirrup, considering 7850 kg / m3.
+    :ivar box_width: Width of the box that contains the stirrup.
+    :ivar box_height: Height of the box that contains the stirrup.
     """
     # Stirrups attributes.
     width: float
@@ -102,7 +102,11 @@ class Stirrup:
         self.box_width = self.width
         self.box_height = self.height
 
-    def draw_longitudinal(self, document: Drawing, x: float = None, y: float = None, unifilar=True):
+    def draw_longitudinal(self,
+                          document: Drawing,
+                          x: float = None,
+                          y: float = None,
+                          unifilar=True):
         """
         Draw the longitudinal reinforcement of the stirrup in the dxf file.
 
@@ -136,7 +140,11 @@ class Stirrup:
         return group
 
     # Drawing transverse section of stirrup function.
-    def draw_transverse(self, document: Drawing, x: float = None, y: float = None, unifilar: bool = False,
+    def draw_transverse(self,
+                        document: Drawing,
+                        x: float = None,
+                        y: float = None,
+                        unifilar: bool = False,
                         dimensions: bool = False) -> list:
         """
         Draw the cross-section of the stirrup in the dxf file.
@@ -299,7 +307,11 @@ class Stirrup:
         return group
 
     # Function that orients drawing.
-    def __direc_orient(self, group: list, x: float = None, y: float = None, longitudinal: bool = False):
+    def __direc_orient(self,
+                       group: list,
+                       x: float = None,
+                       y: float = None,
+                       longitudinal: bool = False):
         """
         Orient the elements according to the parameters of the stirrup in the group entered.
 

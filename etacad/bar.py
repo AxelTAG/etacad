@@ -14,51 +14,51 @@ class Bar:
     """
     Longitudinal bar element, computes geometrics and physics props and manages dxf drawing methods.
 
-        :param reinforcement_length: Length of the stirrup reinforcement.
-        :type reinforcement_length: float
-        :param diameter: Diameter of stirrup bar.
-        :type diameter: float
-        :param x: X coordinate of the bottom left corner Stirrup bounding box point.
-        :type x: float
-        :param y: Y coordinate of the bottom left corner Stirrup bounding box point.
-        :type y: float
-        :param left_anchor: Left anchor length of stirrup.
-        :type left_anchor: float
-        :param right_anchor: Right anchor length of stirrup.
-        :type right_anchor: float
-        :param mandrel_radius: Mandrel radius of bar.
-        :type mandrel_radius: float
-        :param direction: Direction of the stirrup (Horizontal or Vertical).
-        :type direction: Direction
-        :param orientation: Orientation of the stirrup (top, right, down, left).
-        :type orientation: Orientation
-        :param bend_longitud: Bending longitud of the bar at center of bar.
-        :type: float
-        :param bend_angle: Bending declination angle.
-        :type bend_angle: float
-        :param bend_height: Bending height of the bar at center of bar.
-        :type bend_height: float
-        :param transverse_center: Transverse center of the drawing of cross-section.
-        :type transverse_center: tuple
+    :param reinforcement_length: Length of the stirrup reinforcement.
+    :type reinforcement_length: float
+    :param diameter: Diameter of stirrup bar.
+    :type diameter: float
+    :param x: X coordinate of the bottom left corner Stirrup bounding box point.
+    :type x: float
+    :param y: Y coordinate of the bottom left corner Stirrup bounding box point.
+    :type y: float
+    :param left_anchor: Left anchor length of stirrup.
+    :type left_anchor: float
+    :param right_anchor: Right anchor length of stirrup.
+    :type right_anchor: float
+    :param mandrel_radius: Mandrel radius of bar.
+    :type mandrel_radius: float
+    :param direction: Direction of the stirrup (Horizontal or Vertical).
+    :type direction: Direction
+    :param orientation: Orientation of the stirrup (top, right, down, left).
+    :type orientation: Orientation
+    :param bend_longitud: Bending longitud of the bar at center of bar.
+    :type: float
+    :param bend_angle: Bending declination angle.
+    :type bend_angle: float
+    :param bend_height: Bending height of the bar at center of bar.
+    :type bend_height: float
+    :param transverse_center: Transverse center of the drawing of cross-section.
+    :type transverse_center: tuple
 
-        :ivar bend_longitud: Bending longitud of the bar at center of bar.
-        :ivar bend_angle: Bending declination angle.
-        :ivar bend_height: Bending height of the bar at center of bar.
-        :ivar bending_proyection: Proyection of the bend bar.
-        :ivar left_anchor: Left anchor length of stirrup.
-        :ivar right_anchor: Right anchor length of stirrup.
-        :ivar mandrel_radius: Mandrel radius of bar.
-        :ivar mandrel_radius_ext: Mandrel radius plus diameter of bar.
-        :ivar diameter: Diameter of bar.
-        :ivar radius: Radius of bar.
-        :ivar direction: Direction of the bar (horizontal or vertical).
-        :ivar orientation: Orientation of the bar (top, right, down, left).
-        :ivar transverse_center: Transverse center of the drawing of cross-section.
-        :ivar reinforcement_length: Length of the reinforcement.
-        :ivar length: Length of the bar.
-        :ivar weight: Weight of the reinforcement, considering 7850 kg / m3.
-        :ivar box_width: Width of the box that contains the bar.
-        :ivar box_height: Height of the box that contains the bar.
+    :ivar bend_longitud: Bending longitud of the bar at center of bar.
+    :ivar bend_angle: Bending declination angle.
+    :ivar bend_height: Bending height of the bar at center of bar.
+    :ivar bending_proyection: Proyection of the bend bar.
+    :ivar left_anchor: Left anchor length of stirrup.
+    :ivar right_anchor: Right anchor length of stirrup.
+    :ivar mandrel_radius: Mandrel radius of bar.
+    :ivar mandrel_radius_ext: Mandrel radius plus diameter of bar.
+    :ivar diameter: Diameter of bar.
+    :ivar radius: Radius of bar.
+    :ivar direction: Direction of the bar (horizontal or vertical).
+    :ivar orientation: Orientation of the bar (top, right, down, left).
+    :ivar transverse_center: Transverse center of the drawing of cross-section.
+    :ivar reinforcement_length: Length of the reinforcement.
+    :ivar length: Length of the bar.
+    :ivar weight: Weight of the reinforcement, considering 7850 kg / m3.
+    :ivar box_width: Width of the box that contains the bar.
+    :ivar box_height: Height of the box that contains the bar.
     """
     # Geometric attributes.
     reinforcement_length: float
@@ -119,8 +119,31 @@ class Bar:
         self.weight = (self.diameter ** 2 * pi / 4) * self.length * STEEL_WEIGHT
 
     # Drawing longitudinal function.
-    def draw_longitudinal(self, document: Drawing, x: float = None, y: float = None, unifilar: bool = False,
-                          dimensions: bool = True, denomination: bool = True) -> list:
+    def draw_longitudinal(self,
+                          document: Drawing,
+                          x: float = None,
+                          y: float = None,
+                          unifilar: bool = False,
+                          dimensions: bool = True,
+                          denomination: bool = True) -> list:
+        """
+        Draws the longitudinal view of the bar in a DXF document.
+
+        :param document: The DXF document to draw on.
+        :type document: Drawing
+        :param x: X coordinate for the drawing, defaults to self.x.
+        :type x: float, optional
+        :param y: Y coordinate for the drawing, defaults to self.y.
+        :type y: float, optional
+        :param unifilar: Whether to draw a unifilar representation (simplified view), defaults to False.
+        :type unifilar: bool, optional
+        :param dimensions: Whether to include dimensions in the drawing, defaults to True.
+        :type dimensions: bool, optional
+        :param denomination: Whether to include the denomination label, defaults to True.
+        :type denomination: bool, optional
+        :return: List of drawing entities for the longitudinal view.
+        :rtype: list
+        """
         if x is None:
             x = self.x
         if x is None:
@@ -333,7 +356,18 @@ class Bar:
 
     # Drawing of transverse section of bar function.
     def draw_transverse(self, document: Drawing, x: float = None, y: float = None):
+        """
+        Draws the transverse section of the bar in a DXF document.
 
+        :param document: The DXF document to draw on.
+        :type document: Drawing
+        :param x: X coordinate for the drawing, defaults to self.x.
+        :type x: float, optional
+        :param y: Y coordinate for the drawing, defaults to self.y.
+        :type y: float, optional
+        :return: List of drawing entities for the transverse section.
+        :rtype: list
+        """
         if x is None:
             x = self.x
 
@@ -357,7 +391,18 @@ class Bar:
 
         if y is None:
             y = self.y
+        """
+        Adjusts the orientation of the drawing based on the direction and orientation of the bar.
 
+        :param group: List of drawing entities to be oriented.
+        :type group: list
+        :param x: X coordinate for the orientation, defaults to self.x.
+        :type x: float, optional
+        :param y: Y coordinate for the orientation, defaults to self.y.
+        :type y: float, optional
+        :param unifilar: Whether to apply unifilar adjustments, defaults to False.
+        :type unifilar: bool, optional
+        """
         # Orienting the bar (direction and orientation).
         # Direction.
         if self.direction == Direction.VERTICAL:
@@ -397,6 +442,16 @@ class Bar:
                 translate(group, vector=(self.box_width + x * 2, 0))
 
     def __direct_orient_text(self, group: list, x: float = None, y: float = None):
+        """
+        Adjusts the text orientation in the drawing.
+
+        :param group: List of drawing entities to be adjusted.
+        :type group: list
+        :param x: X coordinate for the text adjustment, defaults to self.x.
+        :type x: float, optional
+        :param y: Y coordinate for the text adjustment, defaults to self.y.
+        :type y: float, optional
+        """
         coordinates = [entitie.get_placement()[1] for entitie in group]
         mirror(group, mirror_type="x")
 

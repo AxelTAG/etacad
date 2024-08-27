@@ -162,6 +162,41 @@ class Column:
                           dim_style: str = "EZ_M_25_H25_CM",
                           unifilar_bars: bool = False,
                           unifilar_stirrups: bool = True) -> list:
+        """
+        Draws the longitudinal view of the column, including concrete shape, beams,
+        stirrups, and bars. Also includes dimensioning and optional middle axes.
+
+        :param document: The drawing document to which the elements will be added.
+        :type document: Drawing
+        :param x: X-coordinate for the drawing position. Defaults to column's x position.
+        :type x: float, optional
+        :param y: Y-coordinate for the drawing position. Defaults to column's y position.
+        :type y: float, optional
+        :param concrete_shape: Whether to draw the concrete shape. Defaults to True.
+        :type concrete_shape: bool
+        :param bars: Whether to draw the longitudinal bars. Defaults to True.
+        :type bars: bool
+        :param beams: Whether to draw crossing beams. Defaults to True.
+        :type beams: bool
+        :param beams_axes: Whether to draw the axes for beams. Defaults to True.
+        :type beams_axes: bool
+        :param stirrups: Whether to draw the stirrups. Defaults to True.
+        :type stirrups: bool
+        :param middle_axe: Whether to draw the middle axis. Defaults to True.
+        :type middle_axe: bool
+        :param middle_axe_symbol: Symbol to use for the middle axis. Defaults to "A".
+        :type middle_axe_symbol: str
+        :param dim: Whether to add dimensions to the drawing. Defaults to True.
+        :type dim: bool
+        :param dim_style: Style of the dimensions. Defaults to "EZ_M_25_H25_CM".
+        :type dim_style: str
+        :param unifilar_bars: Whether to draw bars in unifilar view. Defaults to False.
+        :type unifilar_bars: bool
+        :param unifilar_stirrups: Whether to draw stirrups in unifilar view. Defaults to True.
+        :type unifilar_stirrups: bool
+        :return: A list of entities drawn on the document.
+        :rtype: list
+        """
         if x is None:
             x = self.x
         if y is None:
@@ -253,17 +288,67 @@ class Column:
         return entities
 
     def draw_transverse(self) -> list:
+        """
+        Draws the transverse view of the column. This method should be implemented to
+        generate a drawing from the transverse perspective.
+
+        :return: A list of entities representing the transverse view of the column.
+        :rtype: list
+        """
         pass
 
     def draw_longitudinal_rebar_detailing(self) -> list:
+        """
+        Draws detailed longitudinal reinforcement for the column. This method should
+        be implemented to represent the rebar detailing from a longitudinal view.
+
+        :return: A list of entities representing the longitudinal rebar detailing.
+        :rtype: list
+        """
         pass
 
     def draw_transverse_rebar_detailing(self) -> list:
+        """
+        Draws detailed transverse reinforcement for the column. This method should
+        be implemented to represent the rebar detailing from a transverse view.
+
+        :return: A list of entities representing the transverse rebar detailing.
+        :rtype: list
+        """
         pass
 
-    def __dict_to_bars(self, bars: dict, width: float, x: float, y: float, side: Orientation, anchor: list,
-                       nomenclature: str = None, number_init: int = None) -> list:
+    def __dict_to_bars(self, bars: dict,
+                       width: float,
+                       x: float,
+                       y: float,
+                       side: Orientation,
+                       anchor: list,
+                       nomenclature: str = None,
+                       number_init: int = None) -> list:
+        """
+        Converts a dictionary of bars into a list of Bar objects, placing them according to the specified side of
+        the column.
 
+        :param bars: Dictionary containing bar information.
+        :type bars: dict
+        :param width: Width of the column section.
+        :type width: float
+        :param x: X-coordinate of the starting point for placing the bars.
+        :type x: float
+        :param y: Y-coordinate of the starting point for placing the bars.
+        :type y: float
+        :param side: Indicates the side of the column where the bars are placed (0: top, 1: right, 2: bottom, 3: left).
+        :type side: int
+        :param anchor: List of anchor lengths for each bar.
+        :type anchor: list
+        :param nomenclature: Nomenclature for the bars.
+        :type nomenclature: str, optional
+        :param number_init: Initial number for bar numbering.
+        :type number_init: int, optional
+        :return: A list of Bar objects representing the bars placed in the specified section of the column.
+        :rtype: list
+        :raises ValueError: If the side is not within the range [0, 3].
+        """
         # Creating symetric list of bars.
         list_bars, list_denom = gen_symmetric_list(dictionary=bars, nomenclature=nomenclature, number_init=number_init)
 
@@ -325,7 +410,9 @@ class Column:
 
         return entities
 
-    def __elements_section(self, elements: list = None, y: float = None) -> list:
+    def __elements_section(self,
+                           elements: list = None,
+                           y: float = None) -> list:
         """
         Filter elements that are in the Y coordinate given.
 
