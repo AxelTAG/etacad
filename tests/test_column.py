@@ -6,6 +6,8 @@ from etacad.column import Column
 import ezdxf
 import pytest
 
+from ezdxf.math import Vec3
+
 
 @pytest.fixture
 def column():
@@ -68,7 +70,7 @@ def test_attributes_rectangular_column(column):
 def test_draw_longitudinal_rectangular_column(column):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
     entities = column.draw_longitudinal(document=doc, x=2, y=3, unifilar_bars=False)
-    doc.saveas(filename="./tests/column.dxf")
+    doc.saveas(filename="./tests/column_rectangular_longitudinal.dxf")
 
     # Stirrups.
     stirrup_width = (column.width - column.cover * 2 + column.max_db_inf + 0.006 * 2)
@@ -82,7 +84,7 @@ def test_draw_longitudinal_rectangular_column(column):
 def test_draw_longitudinal_unifilar_rectangular_column(column):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
     entities = column.draw_longitudinal(document=doc, x=2, y=3, unifilar_bars=True)
-    doc.saveas(filename="./tests/column_unifilar.dxf")
+    doc.saveas(filename="./tests/column_rectangular_unifilar.dxf")
 
     # Stirrups.
     stirrup_width = (column.width - column.cover * 2 + column.max_db_inf + 0.006 * 2)
@@ -95,3 +97,38 @@ def test_draw_longitudinal_unifilar_rectangular_column(column):
 
 def test_list_to_stirrups_rectangular_column(column):
     pass
+
+
+def test_draw_transverse_rectangular_column(column):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = column.draw_transverse(document=doc, x=0.5, y=1, y_section=0.65)
+    entities += column.draw_transverse(document=doc, x=-0.5, y=1, y_section=1.5)
+    entities += column.draw_transverse(document=doc, x=-0.5, y=-1, y_section=3.65)
+    entities += column.draw_transverse(document=doc, x=0.5, y=-1, y_section=4.5)
+    doc.saveas(filename="./tests/column_rectangular_transverse.dxf")
+
+    # General.
+    assert len(entities) == 148
+
+
+def test_draw_longitudinal_rebar_detailing_rectangular_column(column):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = column.draw_longitudinal_rebar_detailing(document=doc, x=-10, y=1, unifilar=False)
+    doc.saveas(filename="./tests/column_recatangular_longitudinal_rebar_detailing.dxf")
+
+    assert entities[0].dxf.align_point == Vec3(-9.98, 7.4, 0.0)
+    assert entities[1].dxf.start == Vec3(-9.784, 1.0, 0.0)
+
+    # General.
+    assert len(entities) == 43
+
+
+def test_draw_transverse_rebar_detailing_recutangular_column(column):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = column.draw_transverse_rebar_detailing(document=doc, x=-10, y=1, y_section=1)
+    doc.saveas(filename="./tests/column_recatangular_transverse_rebar_detailing.dxf")
+
+    assert entities[0].dxf.start == Vec3(-9.984000000000002, 1.1640000000000001, 0.0)
+
+    # General.
+    assert len(entities) == 26

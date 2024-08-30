@@ -21,6 +21,7 @@ class ElementTypes(Enum):
     STIRRUP = 1
     BEAM = 2
     COLUMN = 3
+    CADTABLE = 21
 
 
 class Orientation(Enum):
@@ -34,3 +35,15 @@ STEEL_WEIGHT = 7850  # kg / m3
 
 COS45 = cos(45 * pi / 180)
 SIN45 = sin(45 * pi / 180)
+
+BEAM_SET_TRANSVERSE = {"text_dim_distance": 0.05,
+                       "text_dim_height": 0.05}
+
+BEAM_SET_LONG_REBAR = {"text_height": 0.05}
+
+COLUMN_SET_TRANSVERSE = {"text_dim_distance": 0.05,
+                         "text_dim_height": 0.05}
+
+COLUMN_SET_LONG_REBAR = {"text_height": 0.05}
+
+CADTABLE_SET_DEFAULT = {"row_height": 0.3, "column_width": 0.6}

@@ -1,7 +1,8 @@
 # Local imports.
 from etacad.bar import Bar
-from etacad.drawing_utils import delimit_axe, dim_linear, rect
-from etacad.globals import ColumnTypes, Direction, ElementTypes, Orientation
+from etacad.drawing_utils import delimit_axe, dim_linear, rect, text
+from etacad.globals import (COLUMN_SET_TRANSVERSE, COLUMN_SET_LONG_REBAR, ColumnTypes, Direction, ElementTypes,
+                            Orientation)
 from etacad.stirrup import Stirrup
 from etacad.utils import gen_symmetric_list
 
@@ -17,8 +18,116 @@ class Column:
     Column element, computes geometrics and physics props and manages dxf drawing methods (longitudinal, transversal,
     reinforcement detailing, etc.)
 
-    :param width: Width of column in meters.
-    :param depth: Depth of column in meters.
+    :param width: Width of the column in meters.
+    :type width: float
+    :param depth: Depth of the column in meters.
+    :type depth: float
+    :param height: Height of the column in meters.
+    :type height: float
+    :param diameter: Diameter of the column in meters. Default is None.
+    :type diameter: float, optional
+    :param column_type: Type of column (e.g., rectangular, circular).
+    :type column_type: int
+    :param x: X-coordinate of the column's position.
+    :type x: float
+    :param y: Y-coordinate of the column's position.
+    :type y: float
+    :param direction: Direction of the column (e.g., vertical, horizontal).
+    :type direction: Direction
+    :param orientation: Orientation of the column (e.g., left, right).
+    :type orientation: Orientation
+
+    :ivar as_sup: Dictionary containing the top longitudinal reinforcement details.
+    :vartype as_sup: dict
+    :ivar as_right: Dictionary containing the right longitudinal reinforcement details.
+    :vartype as_right: dict
+    :ivar as_inf: Dictionary containing the bottom longitudinal reinforcement details.
+    :vartype as_inf: dict
+    :ivar as_left: Dictionary containing the left longitudinal reinforcement details.
+    :vartype as_left: dict
+
+    :ivar max_db_sup: Maximum diameter of the top longitudinal bars.
+    :vartype max_db_sup: float
+    :ivar max_db_right: Maximum diameter of the right longitudinal bars.
+    :vartype max_db_right: float
+    :ivar max_db_inf: Maximum diameter of the bottom longitudinal bars.
+    :vartype max_db_inf: float
+    :ivar max_db_left: Maximum diameter of the left longitudinal bars.
+    :vartype max_db_left: float
+    :ivar max_db_hz: Maximum horizontal diameter among the longitudinal bars.
+    :vartype max_db_hz: float
+    :ivar max_db_vt: Maximum vertical diameter among the longitudinal bars.
+    :vartype max_db_vt: float
+
+    :ivar anchor_sup: List of top bar anchorage lengths.
+    :vartype anchor_sup: list
+    :ivar anchor_right: List of right bar anchorage lengths.
+    :vartype anchor_right: list
+    :ivar anchor_inf: List of bottom bar anchorage lengths.
+    :vartype anchor_inf: list
+    :ivar anchor_left: List of left bar anchorage lengths.
+    :vartype anchor_left: list
+
+    :ivar bars_as_sup: List of bars in the top longitudinal reinforcement.
+    :vartype bars_as_sup: list
+    :ivar bars_as_right: List of bars in the right longitudinal reinforcement.
+    :vartype bars_as_right: list
+    :ivar bars_as_inf: List of bars in the bottom longitudinal reinforcement.
+    :vartype bars_as_inf: list
+    :ivar bars_as_left: List of bars in the left longitudinal reinforcement.
+    :vartype bars_as_left: list
+
+    :ivar number_init_sup: Initial number for top longitudinal bars.
+    :vartype number_init_sup: int
+    :ivar number_init_right: Initial number for right longitudinal bars.
+    :vartype number_init_right: int
+    :ivar number_init_inf: Initial number for bottom longitudinal bars.
+    :vartype number_init_inf: int
+    :ivar number_init_left: Initial number for left longitudinal bars.
+    :vartype number_init_left: int
+
+    :ivar cover: Concrete cover thickness.
+    :vartype cover: float
+
+    :ivar stirrups_db: List of stirrup diameters.
+    :vartype stirrups_db: list
+    :ivar stirrups_anchor: List of stirrup anchorage lengths.
+    :vartype stirrups_anchor: list
+    :ivar stirrups_sep: List of stirrup separations.
+    :vartype stirrups_sep: list
+    :ivar stirrups_length: List of stirrup lengths.
+    :vartype stirrups_length: list
+    :ivar stirrups_x: List of stirrup X-coordinates.
+    :vartype stirrups_x: list
+    :ivar stirrups: List of stirrup elements.
+    :vartype stirrups: list
+
+    :ivar beams: List of crossing beams.
+    :vartype beams: list
+    :ivar beams_pos: List of crossing beams' positions.
+    :vartype beams_pos: list
+    :ivar beam_symbol: List of crossing beams' symbols.
+    :vartype beam_symbol: list
+
+    :ivar all_bars: List of all bars in the column.
+    :vartype all_bars: list
+    :ivar all_elements: List of all elements in the column.
+    :vartype all_elements: list
+
+    :ivar concrete_volume: Concrete volume required for the column.
+    :vartype concrete_volume: float
+
+    :ivar box_width: Width of the bounding box for the column.
+    :vartype box_width: float
+    :ivar box_height: Height of the bounding box for the column.
+    :vartype box_height: float
+
+    :ivar nomenclature: Nomenclature for the column reinforcement.
+    :vartype nomenclature: str
+    :ivar num_init: Initial number for bar enumeration.
+    :vartype num_init: int
+    :ivar element_type: Type of element, set to COLUMN by default.
+    :vartype element_type: int
     """
     # Geometric attributes.
     width: float
@@ -28,8 +137,8 @@ class Column:
     column_type: int = field(default=ColumnTypes.RECTANGULAR)
     x: float = field(default=0)
     y: float = field(default=0)
-    direction: int = Direction.VERTICAL
-    orientation: int = Orientation.RIGHT
+    direction: Direction = Direction.VERTICAL
+    orientation: Orientation = Orientation.RIGHT
 
     # Longitudinal steel attributes.
     as_sup: dict = field(default=None)
@@ -73,6 +182,10 @@ class Column:
     beams: list = field(default=None)
     beams_pos: list = field(default=None)
     beam_symbol: list = field(default=None)
+
+    # Entities groups.
+    all_bars: list = field(init=False)
+    all_elements: list = field(init=False)
 
     # Physics attributes.
     concrete_volume: float = field(init=False)
@@ -140,6 +253,10 @@ class Column:
 
         # Stirrups attributes.
         self.stirrups = self.__list_to_stirrups()
+
+        # Entities groups.
+        self.all_bars = self.bars_as_sup + self.bars_as_right + self.bars_as_inf + self.bars_as_left
+        self.all_elements = self.all_bars + self.stirrups
 
         # Concrete attributes.
         self.concrete_volume = self.width * self.depth * self.height
@@ -253,7 +370,8 @@ class Column:
         if dim:
             for stirrup in self.stirrups:
                 entities += dim_linear(document=document,
-                                       p_base=(x - self.width * 3, y + (stirrup.y - self.y) + stirrup.reinforcement_length / 2),
+                                       p_base=(x - self.width * 3,
+                                               y + (stirrup.y - self.y) + stirrup.reinforcement_length / 2),
                                        p1=(x, y + (stirrup.y - self.y)),
                                        p2=(x, y + (stirrup.y - self.y) + stirrup.reinforcement_length),
                                        rotation=90,
@@ -287,35 +405,244 @@ class Column:
 
         return entities
 
-    def draw_transverse(self) -> list:
+    def draw_transverse(self,
+                        document: Drawing,
+                        x: float,
+                        y: float,
+                        y_section: float = None,
+                        unifilar: bool = False,
+                        dimensions: bool = True,
+                        settings: dict = COLUMN_SET_TRANSVERSE) -> list:
         """
-        Draws the transverse view of the column. This method should be implemented to
+        Draws the transverse view of the column at a given y-section.
         generate a drawing from the transverse perspective.
 
+        :param document: The DXF document where the column will be drawn.
+        :type document: Drawing
+        :param x: X-coordinate of the starting point for drawing.
+        :type x: float
+        :param y: Y-coordinate of the starting point for drawing.
+        :type y: float
+        :param y_section: The y-coordinate of the section to be drawn.
+        :type y_section: float, optional
+        :param unifilar: If True, the bars are drawn as unifilar.
+        :type unifilar: bool
+        :param dimensions: If True, dimensions are drawn.
+        :type dimensions: bool
+        :param settings: Dict with column transverse drawing settings.
+        :type settings: dict
         :return: A list of entities representing the transverse view of the column.
         :rtype: list
         """
-        pass
+        if y_section is None:
+            y_section = self.height / 2
 
-    def draw_longitudinal_rebar_detailing(self) -> list:
+        # Checking if y given is in column height.
+        if not 0 <= y_section <= self.height:
+            return []
+
+        # Obtaining elements for given y_section.
+        entities = self.__elements_section(y=y_section)
+
+        # Filtering elements.
+        bars = filter(lambda e: e.element_type == ElementTypes.BAR, entities)
+        stirrups = filter(lambda e: e.element_type == ElementTypes.STIRRUP, entities)
+
+        # Concrete shape drawing.
+        group = rect(doc=document, width=self.width, height=self.depth, x=x, y=y, polyline=True)
+
+        # Drawing of bars.
+        for bar in bars:
+            group += bar.draw_transverse(document=document, x=x, y=y)
+
+        # Drawing of stirrups.
+        for stirrup in stirrups:
+            delta_x = self.cover - max(self.max_db_sup, self.max_db_inf) / 2 - stirrup.diameter
+            delta_y = self.cover - self.max_db_inf / 2 - stirrup.diameter
+
+            group += stirrup.draw_transverse(document=document,
+                                             x=x + delta_x,
+                                             y=y + delta_y,
+                                             unifilar=unifilar)
+
+        # Drawing of dimensions.
+        if dimensions:
+            group += dim_linear(document=document,
+                                p_base=(x - settings["text_dim_distance"], y + self.depth / 2),
+                                p1=(x, y),
+                                p2=(x, y + self.depth),
+                                rotation=90,
+                                dimstyle="EZ_M_10_H25_CM")
+            group += dim_linear(document=document,
+                                p_base=(x + self.width / 2, y + self.depth + settings["text_dim_distance"]),
+                                p1=(x, y + self.depth),
+                                p2=(x + self.width, y + self.depth),
+                                dimstyle="EZ_M_10_H25_CM")
+
+        return group
+
+    def draw_longitudinal_rebar_detailing(self,
+                                          document: Drawing,
+                                          x: float = None,
+                                          y: float = None,
+                                          unifilar: bool = True,
+                                          beam_axes: bool = True,
+                                          settings: dict = COLUMN_SET_LONG_REBAR) -> list:
         """
-        Draws detailed longitudinal reinforcement for the column. This method should
-        be implemented to represent the rebar detailing from a longitudinal view.
+        Draws the longitudinal rebar detailing for the column.
 
-        :return: A list of entities representing the longitudinal rebar detailing.
+        :param document: The DXF document where the detailing will be drawn.
+        :type document: Drawing
+        :param x: X-coordinate of the starting point for drawing.
+        :type x: float, optional
+        :param y: Y-coordinate of the starting point for drawing.
+        :type y: float, optional
+        :param unifilar: If True, the rebar is drawn as unifilar.
+        :type unifilar: bool
+        :param beam_axes: If True, the axes of the beam are drawn.
+        :type beam_axes: bool
+        :param settings: Dict with column longitudinal rebar drawing settings.
+        :type settings: dict
+        :return: A list of graphical entities representing the longitudinal rebar detailing.
         :rtype: list
         """
-        pass
+        def __draw_section_bars(bars: list = None,
+                                spacing: float = 0.2,
+                                rebar_x: float = None,
+                                rebar_y: float = None,
+                                barline=True,
+                                text_reference: str = None) -> tuple:
+            entities = []
+            graph_list = []
 
-    def draw_transverse_rebar_detailing(self) -> list:
+            if text_reference:
+                entities += text(document=document,
+                                 text=text_reference,
+                                 height=settings["text_height"],
+                                 point=(rebar_x + 0.02, rebar_y + self.height + spacing * 2))
+
+            for bar in bars:
+                if bar.denomination not in graph_list:
+                    rebar_x += spacing + bar.box_height
+                    entities += bar.draw_longitudinal(document=document,
+                                                      x=rebar_x,
+                                                      y=rebar_y,
+                                                      unifilar=unifilar,
+                                                      dimensions=True)
+                    graph_list.append(bar.denomination)
+
+            if barline:
+                entities += rect(doc=document,
+                                 width=0,
+                                 height=self.height + self.depth * 4,
+                                 x=rebar_x + spacing,
+                                 y=rebar_y - spacing,
+                                 sides=(0, 1, 0, 0))
+
+            rebar_x += spacing
+
+            return entities, rebar_x, rebar_y
+
+        group, rebar_x, rebar_y = [], x, y
+        if self.as_sup:
+            barline = True if self.as_right or self.bars_as_left or self.bars_as_inf else False
+            entities, rebar_x, rebar_y = __draw_section_bars(bars=self.bars_as_sup,
+                                                             spacing=0.2,
+                                                             rebar_x=rebar_x,
+                                                             rebar_y=rebar_y,
+                                                             barline=barline,
+                                                             text_reference="As sup.")
+            group += entities
+
+        if self.as_left:
+            barline = True if self.bars_as_left or self.bars_as_inf else False
+            entities, rebar_x, rebar_y = __draw_section_bars(bars=self.bars_as_right,
+                                                             spacing=0.2,
+                                                             rebar_x=rebar_x,
+                                                             rebar_y=rebar_y,
+                                                             barline=barline,
+                                                             text_reference="As right.")
+            group += entities
+
+        if self.as_left:
+            barline = True if self.bars_as_inf else False
+            entities, rebar_x, rebar_y = __draw_section_bars(bars=self.bars_as_left,
+                                                             spacing=0.2,
+                                                             rebar_x=rebar_x,
+                                                             rebar_y=rebar_y,
+                                                             barline=barline,
+                                                             text_reference="As left.")
+            group += entities
+
+        if self.as_inf:
+            entities, rebar_x, rebar_y = __draw_section_bars(bars=self.bars_as_inf,
+                                                             spacing=0.2,
+                                                             rebar_x=rebar_x,
+                                                             rebar_y=rebar_y,
+                                                             barline=False,
+                                                             text_reference="As inf.")
+            group += entities
+
+        # if beam_axes:
+        #     for i, x_column in enumerate(self.beams_pos):
+        #         delimit_axe_height = y - rebar_y
+        #         delimit_axe_y = rebar_y
+        #         x_column_relative = x + x_column
+        #         x_delimit_axe_relative = x_column_relative + self.columns[i][0] / 2
+        #
+        #         group += delimit_axe(document=document,
+        #                              x=x_delimit_axe_relative,
+        #                              y=delimit_axe_y,
+        #                              height=delimit_axe_height,
+        #                              radius=0.1,
+        #                              text_height=0.1,
+        #                              attr=GfxAttribs(linetype="CENTER"))
+
+        return group
+
+    def draw_transverse_rebar_detailing(self, document: Drawing,
+                                        x: float = None,
+                                        y: float = None,
+                                        y_section: float = None,
+                                        unifilar: bool = False,
+                                        dimensions: bool = True) -> list:
         """
-        Draws detailed transverse reinforcement for the column. This method should
-        be implemented to represent the rebar detailing from a transverse view.
+        Draws the transverse rebar detailing for the column at a given y-section.
 
-        :return: A list of entities representing the transverse rebar detailing.
+        :param document: The DXF document where the detailing will be drawn.
+        :type document: Drawing
+        :param x: X-coordinate of the starting point for drawing.
+        :type x: float, optional
+        :param y: Y-coordinate of the starting point for drawing.
+        :type y: float, optional
+        :param y_section: The y-coordinate of the section to be drawn.
+        :type y_section: float, optional
+        :param unifilar: If True, the rebar is drawn as unifilar.
+        :type unifilar: bool
+        :param dimensions: If True, dimensions are drawn.
+        :type dimensions: bool
+        :return: A list of graphical entities representing the transverse rebar detailing.
         :rtype: list
         """
-        pass
+        if y_section is None:
+            y_section = self.height / 2
+
+        # Checking if x given is in beam length.
+        if not 0 <= y_section <= self.height:
+            return []
+
+        stirrups = self.__elements_section(elements=self.stirrups,
+                                           y=y_section)
+
+        group = []
+        for stirrup in stirrups:
+            group += stirrup.draw_transverse(document=document,
+                                             x=x,
+                                             y=y,
+                                             unifilar=unifilar,
+                                             dimensions=dimensions)
+
+        return group
 
     def __dict_to_bars(self, bars: dict,
                        width: float,
@@ -373,9 +700,9 @@ class Column:
             # Calculation of x_delta and y_delta.
             if side == Orientation.TOP or side == Orientation.BOTTOM:
                 x_sep += separation
-                delta_x = self.cover - db_max / 2 + (db_max / 2 - db / 2)
+                delta_x = (self.cover - db_max / 2 + (db_max / 2 - db / 2)) * -1
                 if side == Orientation.TOP:
-                    delta_y_transverse = self.height - self.cover + self.max_db_sup / 2 - db
+                    delta_y_transverse = self.depth - self.cover + self.max_db_sup / 2 - db
                 if side == Orientation.BOTTOM:
                     delta_y_transverse = self.cover - self.max_db_inf / 2
             elif side == Orientation.RIGHT or side == Orientation.LEFT:
@@ -427,12 +754,12 @@ class Column:
             elements = self.all_elements
 
         if y is None:
-            y = self.height / 2  # Default value if is nothing entered.
+            y = self.y + self.height / 2  # Default value if is nothing entered.
 
         # Filtering elements by X coordinate.
         entities = []
         for element in elements:
-            if element.y <= y <= element.y + element.reinforcement_length:
+            if element.y <= self.y + y <= element.y + element.reinforcement_length:
                 entities.append(element)
 
         return entities
@@ -469,7 +796,6 @@ class Column:
                                     y=stirrup_y,
                                     mandrel_radius_top=mandrel_radius_sup,
                                     mandrel_radius_bottom=mandrel_radius_inf,
-                                    anchor=stirrup[3],
-                                    direction=Direction.VERTICAL))
+                                    anchor=stirrup[3]))
 
         return entities

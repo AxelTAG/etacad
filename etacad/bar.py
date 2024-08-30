@@ -91,7 +91,7 @@ class Bar:
     weight: float = field(init=False)
 
     # Others.
-    element_type: ElementTypes = field(default=ElementTypes.COLUMN)
+    element_type: ElementTypes = field(default=ElementTypes.BAR)
     denomination: str = field(default=None)
 
     def __attrs_post_init__(self):
@@ -332,14 +332,14 @@ class Bar:
                 group_text += [group[-1]]
 
             group += text(document=document, text="({:.2f})".format(self.box_width), height=text_dim_height,
-                          point=(x + self.box_width / 2, y + self.box_height - text_dim_distance), rotation=0,
+                          point=(x + self.box_width / 2, y + self.box_height + text_dim_distance), rotation=0,
                           attr={"halign": 4, "valign": 0})
             group_text += [group[-1]]
 
         if denomination:
             group += text(document=document, text=self.denomination, height=text_denom_height,
                           point=(x + self.box_width / 2,
-                                 y + self.box_height / 2 + text_denom_height + text_denom_distance),
+                                 y + self.box_height - text_denom_height - text_denom_distance),
                           rotation=0,
                           attr={"halign": 4, "valign": 0})
             group_text += [group[-1]]
@@ -349,7 +349,7 @@ class Bar:
 
         # Orienting the bar (direction and orientation).
         self.__direc_orient(group, x=x, y=y, unifilar=unifilar)
-        if self.orientation == "top":
+        if self.orientation == Orientation.TOP:
             self.__direct_orient_text(group_text)
 
         return group

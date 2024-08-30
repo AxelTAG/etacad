@@ -6,6 +6,8 @@ from etacad.beam import Beam
 import ezdxf
 import pytest
 
+from ezdxf.math import Vec3
+
 
 @pytest.fixture
 def beam():
@@ -66,15 +68,65 @@ def test_attributes_beam(beam):
 
     # Others.
     assert beam.nomenclature == "@"
-    assert beam.number_init == 17
+    assert beam.number_init == 11
 
 
 def test_draw_longitudinal_beam(beam):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
     entities = beam.draw_longitudinal(document=doc, x=2, y=3, unifilar_bars=False)
-    doc.saveas(filename="./tests/beam.dxf")
+    doc.saveas(filename="./tests/beam_longitudinal.dxf")
 
     # Stirrups.
 
     # General.
     assert len(entities) == 51
+
+
+def test_draw_transverse_beam(beam):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = beam.draw_transverse(document=doc, x=2, y=3)
+    doc.saveas(filename="./tests/beam_transverse.dxf")
+
+    # Concrete shape.
+    assert [*entities[0].vertices()] == [(2,  3), (2.2, 3), (2.2, 3.35), (2, 3.35), (2, 3)]
+
+    # Bars.
+    assert entities[1].dxf.center == Vec3(2.0269999999999997, 3.32, 0)  # Top bar.
+    assert entities[2].dxf.center == Vec3(2.1, 3.32, 0)  # Top bar.
+    assert entities[3].dxf.center == Vec3(2.173, 3.32, 0)  # Top bar.
+    assert entities[4].dxf.center == Vec3(2.174, 3.1266666666666665, 0)  # Right bar.
+    assert entities[5].dxf.center == Vec3(2.174, 3.2233333333333333, 0)  # Right bar.
+    assert entities[6].dxf.center == Vec3(2.03, 3.03, 0)  # Bottom bar.
+    assert entities[7].dxf.center == Vec3(2.1, 3.03, 0)  # Bottom bar.
+    assert entities[8].dxf.center == Vec3(2.17, 3.03, 0)  # Bottom bar.
+    assert entities[9].dxf.center == Vec3(2.026, 3.1266666666666665, 0)  # Left bar.
+    assert entities[10].dxf.center == Vec3(2.026, 3.2233333333333333, 0)  # Left bar.
+
+    # Stirrups.
+    assert entities[11].dxf.start == Vec3(2.0269999999999997, 3.3249999999999997, 0)
+    assert entities[11].dxf.end == Vec3(2.173, 3.3249999999999997, 0)
+    assert entities[12].dxf.start == Vec3(2.03, 3.022, 0)
+    assert entities[12].dxf.end == Vec3(2.17, 3.022, 0)
+
+    # General.
+    assert len(entities) == 35
+
+
+def test_draw_longitudinal_rebar_detailing_beam(beam):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = beam.draw_longitudinal_rebar_detailing(document=doc, x=-10, y=1, unifilar=False)
+    doc.saveas(filename="./tests/beam_longitudinal_rebar_detailing.dxf")
+
+    assert entities[0].dxf.align_point == Vec3(-10.56, 0.8175000000000001, 0)
+    assert entities[1].dxf.start == Vec3(-10.0, 0.63, 0)
+
+    # General.
+    assert len(entities) == 53
+
+
+def test_draw_transverse_rebar_detailing_beam(beam):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = beam.draw_transverse_rebar_detailing(document=doc, x=10, y=-5)
+    doc.saveas(filename="./tests/beam_transverse_rebar_detailing.dxf")
+
+    assert entities[0].dxf.start == Vec3(10.011000000000001, -4.691, 0.0)

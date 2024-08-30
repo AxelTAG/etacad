@@ -2,7 +2,7 @@
 # Local imports.
 from etacad.drawing_utils import delimit_axe, dim_linear, rect, text
 from etacad.bar import Bar
-from etacad.globals import Direction, ElementTypes, Orientation
+from etacad.globals import BEAM_SET_LONG_REBAR, BEAM_SET_TRANSVERSE, Direction, ElementTypes, Orientation
 from etacad.stirrup import Stirrup
 from etacad.utils import gen_symmetric_list
 
@@ -79,6 +79,7 @@ class Beam:
     :ivar y: Y-coordinate of the bottom left corner of the beam concrete shape.
     :ivar direction: Direction of the element (HORIZONTAL or VERTICAL).
     :ivar orientation: Orientation of the element (e.g., TOP, RIGHT, DOWN, LEFT).
+
     :ivar as_sup: Dictionary containing reinforcement information for the top side.
     :ivar max_db_sup: Maximum diameter of the top reinforcement bars.
     :ivar anchor_sup: Anchor length for the top reinforcement or list of lengths.
@@ -96,21 +97,26 @@ class Beam:
     :ivar anchor_left: Anchor length for the left reinforcement or list of lengths.
     :ivar number_init_left: Initial numbering for the left reinforcement bars.
     :ivar cover: Concrete cover for the reinforcement.
+
     :ivar stirrups_db: Diameter of stirrups or list of diameters.
     :ivar stirrups_sep: Separation between stirrups or list of separations.
     :ivar stirrups_length: List of lengths for stirrups.
     :ivar stirrups_anchor: Anchor length of stirrups or list of anchor lengths.
     :ivar stirrups_x: List of x-coordinates for stirrups.
+
     :ivar columns: List of lists containing column width and height.
     :ivar columns_pos: List of positions (X-coordinate of start) for columns.
     :ivar columns_symbol: List of symbols representing columns.
+
     :ivar bars_as_sup: List of top reinforcement bars as entities.
     :ivar bars_as_right: List of right reinforcement bars as entities.
     :ivar bars_as_inf: List of bottom reinforcement bars as entities.
     :ivar bars_as_left: List of left reinforcement bars as entities.
+
     :ivar all_bars: List of all reinforcement bars as entities.
     :ivar stirrups: List of stirrups as entities.
     :ivar all_elements: List of all elements/entities in the structure.
+
     :ivar nomenclature: Nomenclature prefix used for labeling elements.
     :ivar number_init: Initial number for labeling elements.
     :ivar element_type: Type of the structural element (e.g., BEAM).
@@ -183,7 +189,7 @@ class Beam:
                 self.anchor_sup = [self.anchor_sup] * sum(self.as_sup.values())
 
             self.number_init_sup = self.number_init if self.number_init is not None else 0
-            self.number_init = self.number_init + sum(self.as_sup.values()) if self.number_init else len(self.as_sup)
+            self.number_init = self.number_init + len(self.as_sup) if self.number_init else len(self.as_sup)
         else:
             self.as_sup, self.max_db_sup, self.anchor_sup = {}, 0, 0
 
@@ -195,7 +201,7 @@ class Beam:
                 self.anchor_right = [self.anchor_right] * sum(self.as_right.values())
 
             self.number_init_right = self.number_init
-            self.number_init += sum(self.as_right.values())
+            self.number_init += len(self.as_right)
         else:
             self.as_right, self.max_db_right, self.anchor_right = {}, 0, 0
 
@@ -207,7 +213,7 @@ class Beam:
                 self.anchor_inf = [self.anchor_inf] * sum(self.as_inf.values())
 
             self.number_init_inf = self.number_init
-            self.number_init += sum(self.as_inf.values())
+            self.number_init += len(self.as_inf)
         else:
             self.as_inf, self.max_db_inf, self.anchor_inf = {}, 0, 0
 
@@ -219,7 +225,7 @@ class Beam:
                 self.anchor_left = [self.anchor_left] * sum(self.as_left.values())
 
             self.number_init_left = self.number_init
-            self.number_init += sum(self.as_left.values())
+            self.number_init += len(self.as_left)
         else:
             self.as_left, self.max_db_left, self.anchor_left = {}, 0, 0
 
@@ -417,10 +423,12 @@ class Beam:
 
     def draw_transverse(self,
                         document: Drawing,
-                        x: float, y: float,
+                        x: float,
+                        y: float,
                         x_section: float = None,
                         unifilar: bool = False,
-                        dimensions: bool = True) -> list:
+                        dimensions: bool = True,
+                        settings: dict = BEAM_SET_TRANSVERSE) -> list:
         """
         Draws the transverse section of the beam at a given x-section.
 
@@ -436,27 +444,24 @@ class Beam:
         :type unifilar: bool
         :param dimensions: If True, dimensions are drawn.
         :type dimensions: bool
+        :param settings: Dict with beam transverse drawing settings.
+        :type settings: dict
         :return: A list of graphical entities representing the transverse section of the beam.
         :rtype: list
         """
-
         if x_section is None:
             x_section = self.length / 2
 
         # Checking if x given is in beam length.
-        if not self.x <= x_section <= self.x + self.length:
+        if not 0 <= x_section <= self.length:
             return []
-
-        # Configurations variables.
-        text_dim_distance = 0.05
-        text_dim_height = 0.05
 
         # Obtaining elements for given x_section.
         entities = self.__elements_section(x=x_section)
 
         # Filtering elements.
-        bars = filter(lambda e: e.type == ElementTypes.BAR, entities)
-        stirrups = filter(lambda e: e.type == ElementTypes.STIRRUP, entities)
+        bars = filter(lambda e: e.element_type == ElementTypes.BAR, entities)
+        stirrups = filter(lambda e: e.element_type == ElementTypes.STIRRUP, entities)
 
         # Concrete shape drawing.
         group = rect(doc=document, width=self.width, height=self.height, x=x, y=y, polyline=True)
@@ -467,17 +472,26 @@ class Beam:
 
         # Drawing of stirrups.
         for stirrup in stirrups:
-            delta_x = self.cover - max(self.max_db_sup, self.max_db_inf) / 2000 - stirrup.diameter
+            delta_x = self.cover - max(self.max_db_sup, self.max_db_inf) / 2 - stirrup.diameter
+            delta_y = self.cover - self.max_db_inf / 2 - stirrup.diameter
 
-            group += stirrup.draw_transverse(document=document, x=x + delta_x, y=y + stirrup.y,
+            group += stirrup.draw_transverse(document=document,
+                                             x=x + delta_x,
+                                             y=y + delta_y,
                                              unifilar=unifilar)
 
         # Drawing of dimensions.
         if dimensions:
-            group += dim_linear(document=document, p_base=(x - text_dim_distance, y + self.height / 2),
-                                p1=(x, y), p2=(x, y + self.height), rotation=90, dimstyle="EZ_M_10_H25_CM")
-            group += dim_linear(document=document, p_base=(x + self.width / 2, y + self.height + text_dim_distance),
-                                p1=(x, y + self.height), p2=(x + self.width, y + self.height),
+            group += dim_linear(document=document,
+                                p_base=(x - settings["text_dim_distance"], y + self.height / 2),
+                                p1=(x, y),
+                                p2=(x, y + self.height),
+                                rotation=90,
+                                dimstyle="EZ_M_10_H25_CM")
+            group += dim_linear(document=document,
+                                p_base=(x + self.width / 2, y + self.height + settings["text_dim_distance"]),
+                                p1=(x, y + self.height),
+                                p2=(x + self.width, y + self.height),
                                 dimstyle="EZ_M_10_H25_CM")
 
         return group
@@ -488,7 +502,8 @@ class Beam:
                                           x: float = None,
                                           y: float = None,
                                           unifilar: bool = True,
-                                          columns_axes: bool = True) -> list:
+                                          columns_axes: bool = True,
+                                          settings: dict = BEAM_SET_LONG_REBAR) -> list:
         """
         Draws the longitudinal rebar detailing for the beam.
 
@@ -502,6 +517,8 @@ class Beam:
         :type unifilar: bool
         :param columns_axes: If True, the axes of the columns are drawn.
         :type columns_axes: bool
+        :param settings: Dict with beam longitudinal rebar drawing settings.
+        :type settings: dict
         :return: A list of graphical entities representing the longitudinal rebar detailing.
         :rtype: list
         """
@@ -511,12 +528,11 @@ class Beam:
                                 rebar_y: float = None,
                                 barline=True,
                                 text_reference: str = None) -> tuple:
-            text_height = 0.05
             entities = []
             graph_list = []
 
             if text_reference:
-                entities += text(document=document, text=text_reference, height=text_height,
+                entities += text(document=document, text=text_reference, height=settings["text_height"],
                                  point=(rebar_x - self.height * 2 * 0.8, rebar_y + self.height * 0.05 - spacing))
 
             for bar in bars:
@@ -602,6 +618,13 @@ class Beam:
         :return: A list of graphical entities representing the transverse rebar detailing.
         :rtype: list
         """
+        if x_section is None:
+            x_section = self.length / 2
+
+        # Checking if x given is in beam length.
+        if not 0 <= x_section <= self.length:
+            return []
+
         stirrups = self.__elements_section(elements=self.stirrups,
                                            x=x_section)
 
@@ -730,12 +753,12 @@ class Beam:
             elements = self.all_elements
 
         if x is None:
-            x = self.length / 2  # Default value if is nothing entered.
+            x = self.x + self.length / 2  # Default value if is nothing entered.
 
         # Filtering elements by X coordinate.
         entities = []
         for element in elements:
-            if element.x <= x <= element.x + element.reinforcement_length:
+            if element.x <= self.x + x <= element.x + element.reinforcement_length:
                 entities.append(element)
 
         return entities
