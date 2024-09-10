@@ -6,6 +6,18 @@ from math import cos, sin, pi
 
 
 # Enums.
+class Aligment(Enum):
+    MTEXT_TOP_LEFT = 1
+    MTEXT_TOP_CENTER = 2
+    MTEXT_TOP_RIGHT = 3
+    MTEXT_MIDDLE_LEFT = 4
+    MTEXT_MIDDLE_CENTER = 5
+    MTEXT_MIDDLE_RIGHT = 6
+    MTEXT_BOTTOM_LEFT = 7
+    MTEXT_BOTTOM_CENTER = 8
+    MTEXT_BOTTOM_RIGHT = 9
+
+
 class ColumnTypes(Enum):
     RECTANGULAR = 0
     CIRCULAR = 1
@@ -46,4 +58,11 @@ COLUMN_SET_TRANSVERSE = {"text_dim_distance": 0.05,
 
 COLUMN_SET_LONG_REBAR = {"text_height": 0.05}
 
-CADTABLE_SET_DEFAULT = {"row_height": 0.3, "column_width": 0.6}
+CADTABLE_SET_DEFAULT = {"content_row_height": 0.3,
+                        "content_column_width": 0.6,
+                        "content_text_height": 0.10,
+                        "content_fit": True,
+                        "labels_row_height": 0.3,
+                        "labels_column_width": 1,
+                        "labels_text_height": 0.2,
+                        "labels_fit": True}

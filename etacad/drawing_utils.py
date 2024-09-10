@@ -1,6 +1,6 @@
 # Imports.
 # Local imports.
-from etacad.globals import Direction
+from etacad.globals import Aligment, Direction
 
 # External imports.
 import ezdxf
@@ -292,6 +292,20 @@ def mirror(objects: list, mirror_type: str, in_situ: bool = False) -> int:
     return 1
 
 
+def mtext(document: Drawing, textstr: str, height: float, x: float, y: float, width: float = 0, rotation: float = 0,
+          aligment: int | Aligment = Aligment.MTEXT_TOP_LEFT.value, attrs: GfxAttribs = None):
+    msp = document.modelspace()
+
+    multi_text = msp.add_mtext(text=textstr, dxfattribs=attrs).set_location(insert=(x, y),
+                                                                            rotation=rotation,
+                                                                            attachment_point=aligment)
+
+    multi_text.dxf.char_height = height
+    multi_text.dxf.width = width
+
+    return [multi_text]
+
+
 # Returns the points ordered in function of X coordinate.
 def point_order(x1: float, y1: float, x2: float, y2: float) -> tuple[float, float, float, float]:
     """
@@ -329,7 +343,7 @@ def rads(degrees: float) -> float:
 
 # Function that draws a rectangle in dxf file given.
 def rect(doc: Drawing, width: float, height: float, x: float, y: float, sides=None, fill: bool = False,
-         polyline: bool = False, attr=None) -> list:
+         polyline: bool = False, attr: GfxAttribs = None) -> list:
     """
     Draws a rectangle in the provided drawing.
 
@@ -438,7 +452,7 @@ def rect_border_curve(doc: Drawing, width: float, height: float, radius: float, 
     # Horizontal lines.
     if sides[0]:
         lines.append(msp.add_line(start=(x + curves_radius[0], y + height),
-                                  end=(x - curves_radius[1] + width, y + height),  dxfattribs=attr))  # Top side.
+                                  end=(x - curves_radius[1] + width, y + height), dxfattribs=attr))  # Top side.
     if sides[2]:
         lines.append(msp.add_line(start=(x + curves_radius[3], y),
                                   end=(x - curves_radius[2] + width, y), dxfattribs=attr))  # Bottom side.
@@ -477,13 +491,16 @@ def rect_border_curve(doc: Drawing, width: float, height: float, radius: float, 
         lines += curve(doc=doc, center_point=(x + curves_radius[0], y - curves_radius[0] + height),
                        start_angle=90, end_angle=180, radius=curves_radius[0], thickness=thickness, attr=attr)
     if (sides[0] or sides[1]) and curves[1]:
-        lines += curve(doc=doc, center_point=(x - curves_radius[1] + width, y - curves_radius[1] + height), start_angle=0, end_angle=90,
+        lines += curve(doc=doc, center_point=(x - curves_radius[1] + width, y - curves_radius[1] + height),
+                       start_angle=0, end_angle=90,
                        radius=curves_radius[1], thickness=thickness, attr=attr)
     if (sides[1] or sides[2]) and curves[2]:
-        lines += curve(doc=doc, center_point=(x - curves_radius[2] + width, y + curves_radius[2]), start_angle=270, end_angle=360,
+        lines += curve(doc=doc, center_point=(x - curves_radius[2] + width, y + curves_radius[2]), start_angle=270,
+                       end_angle=360,
                        radius=curves_radius[2], thickness=thickness, attr=attr)
     if (sides[2] or sides[3]) and curves[3]:
-        lines += curve(doc=doc, center_point=(x + curves_radius[3], y + curves_radius[3]), start_angle=180, end_angle=270,
+        lines += curve(doc=doc, center_point=(x + curves_radius[3], y + curves_radius[3]), start_angle=180,
+                       end_angle=270,
                        radius=curves_radius[3], thickness=thickness, attr=attr)
 
     return lines
