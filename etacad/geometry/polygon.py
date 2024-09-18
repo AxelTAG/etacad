@@ -1,7 +1,7 @@
 # Imports.
 # Local imports.
 from etacad.globals import DRotation
-from etacad.geometry.utils import get_linear_center, get_line_longitud
+from etacad.geometry.utils import get_linear_center, get_line_longitud, get_line_eq, segment_center
 
 # External imports.
 from attrs import define, field
@@ -169,3 +169,45 @@ class Polygon:
                     return self.vertices[index1:index2 + 1]
                 else:
                     return self.vertices[index1:] + self.vertices[:index2 + 1]
+
+    def get_side_equations(self, index1: int = None, index2: int = None):
+        if index1 is None:
+            index1 = 0
+
+        if index2 is None:
+            index2 = len(self.vertices)
+
+        sides = []
+        for point1 in self.vertices[index1:index2]:
+            if self.vertices.index(point1) == len(self.vertices) - 1:
+                point2 = self.vertices[0]
+            else:
+                point2 = self.vertices[self.vertices.index(point1) + 1]
+
+            x1, y1 = point1
+            x2, y2 = point2
+            a, b = get_line_eq(x1=x1, y1=y1, x2=x2, y2=y2)
+            sides.append((a, b))
+
+        return sides
+
+    def get_side_centers(self, index1: int = None, index2: int = None):
+        if index1 is None:
+            index1 = 0
+
+        if index2 is None:
+            index2 = len(self.vertices)
+
+        segment_centers = []
+        for point1 in self.vertices[index1:index2]:
+            if self.vertices.index(point1) == len(self.vertices) - 1:
+                point2 = self.vertices[0]
+            else:
+                point2 = self.vertices[self.vertices.index(point1) + 1]
+
+            x1, y1 = point1
+            x2, y2 = point2
+
+            segment_centers.append(segment_center([x1, y1, x2, y2]))
+
+        return segment_centers

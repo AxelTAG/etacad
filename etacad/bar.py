@@ -1,7 +1,7 @@
 # Imports.
 # Local imports.
 from etacad.drawing_utils import circle, curve, line, mirror, rads, rect, rotate, text, translate
-from etacad.globals import Direction, ElementTypes, Orientation, COS45, SIN45, STEEL_WEIGHT
+from etacad.globals import Direction, ElementTypes, Orientation, STEEL_WEIGHT
 
 # External imports.
 from attrs import define, field

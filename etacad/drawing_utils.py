@@ -6,7 +6,7 @@ from etacad.globals import Aligment, Direction
 import ezdxf
 from ezdxf.gfxattribs import GfxAttribs
 from ezdxf.document import Drawing
-from ezdxf.transform import inplace, scale
+from ezdxf.transform import inplace
 from ezdxf.math import Matrix44
 from ezdxf.enums import TextEntityAlignment
 from ezdxf.tools.standards import linetypes
@@ -198,54 +198,6 @@ def dim_linear(document: Drawing,
     return dims
 
 
-# Returns the a and b constants of the line equation from two poins.
-def get_line_eq(x1, y1, x2, y2):
-    """
-    Returns the constants of the line equation (y = ax + b) given two points.
-
-    :param x1: The x-coordinate of the first point.
-    :type x1: float
-    :param y1: The y-coordinate of the first point.
-    :type y1: float
-    :param x2: The x-coordinate of the second point.
-    :type x2: float
-    :param y2: The y-coordinate of the second point.
-    :type y2: float
-    :return: The constants a and b of the line equation.
-    :rtype: tuple
-    """
-    if x1 == x2:  # For vertical lines.
-        a = float(9999999999)  # Aproximate infinite.
-        b = - a * x1
-
-    else:  # For not vertical lines.
-        a = (y2 - y1) / (x2 - x1)
-        b = y1 - a * x1
-
-    return a, b
-
-
-# Returns the intersection of two lines.
-def get_lines_intersec(a1: float, b1: float, a2: float, b2: float) -> float:
-    """
-    Returns the x-coordinate of the intersection point of two lines.
-
-    :param a1: The slope of the first line.
-    :type a1: float
-    :param b1: The y-intercept of the first line.
-    :type b1: float
-    :param a2: The slope of the second line.
-    :type a2: float
-    :param b2: The y-intercept of the second line.
-    :type b2: float
-    :return: The x-coordinate of the intersection point.
-    :rtype: float
-    """
-    x = (b2 - b1) / (a1 - a2)
-
-    return x
-
-
 # Function that draws a line.
 def line(doc: Drawing, p1: tuple, p2: tuple, attr=None) -> list:
     """
@@ -306,29 +258,38 @@ def mtext(document: Drawing, textstr: str, height: float, x: float, y: float, wi
     return [multi_text]
 
 
-# Returns the points ordered in function of X coordinate.
-def point_order(x1: float, y1: float, x2: float, y2: float) -> tuple[float, float, float, float]:
+def polyline(document: Drawing, vertices: list, closed: bool = True) -> list:
     """
-    Orders two points based on their x-coordinates.
+    Create a 2D polyline in the given DXF document with an option to close the polyline.
 
-    :param x1: The x-coordinate of the first point.
-    :type x1: float
-    :param y1: The y-coordinate of the first point.
-    :type y1: float
-    :param x2: The x-coordinate of the second point.
-    :type x2: float
-    :param y2: The y-coordinate of the second point.
-    :type y2: float
-    :return: A tuple with the points ordered by x-coordinate.
-    :rtype: tuple
+    :param document: The DXF document where the polyline will be added.
+    :type document: ezdxf.document.Drawing
+    :param vertices: A list of tuples representing the (x, y) coordinates of the polyline vertices.
+    :type vertices: list[tuple[float, float]]
+    :param closed: If True, the polyline will be closed (the last vertex connects to the first).
+    :type closed: bool
+    :return: A list containing the polyline entity created in the DXF modelspace.
+    :rtype: list[ezdxf.entities.LWPolyline]
+
+    :Example:
+
+    >>> doc = ezdxf.new(dxfversion='R2010')
+    >>> vertices = [(0, 0), (10, 0), (10, 10), (0, 10)]
+    >>> pline = polyline(doc, vertices, closed=True)
+
+    This function adds a lightweight 2D polyline to the modelspace of the provided DXF document.
+    If the `closed` parameter is set to True, the polyline will loop back to the first vertex.
     """
-    if x1 <= x2:
-        return x1, y1, x2, y2
-    else:
-        return x2, y2, x1, y1
+    if closed:
+        vertices = vertices + vertices[:1]
+
+    msp = document.modelspace()
+
+    pl = msp.add_lwpolyline(vertices)
+
+    return [pl]
 
 
-# Function that transform degrees to radians.
 def rads(degrees: float) -> float:
     """
     Converts degrees to radians.

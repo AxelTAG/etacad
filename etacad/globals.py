@@ -28,6 +28,11 @@ class Direction(Enum):
     VERTICAL = 1
 
 
+class DRotation(Enum):
+    CLOCKWISE = 0
+    COUNTERCLOCKWISE = 1
+
+
 class ElementTypes(Enum):
     BAR = 0
     STIRRUP = 1
@@ -43,10 +48,23 @@ class Orientation(Enum):
     LEFT = 3
 
 
+# Specific weights.
 STEEL_WEIGHT = 7850  # kg / m3
 
+CONCRETE_WEIGHT = 2400  # kg / m3
+
+# General constants.
 COS45 = cos(45 * pi / 180)
 SIN45 = sin(45 * pi / 180)
+
+# Settings dictionaries.
+# Concrete.
+CONCRETE_SET_TRANSVERSE = {"text_dim_distance_horizontal": 0.25,
+                           "text_dim_distance_vertical": 0.25,
+                           "text_dim_inner_perpendicular_distance": 0.05}
+
+CONCRETE_SET_LONG = {"text_dim_distance_horizontal": 0.25,
+                     "text_dim_distance_vertical": 0.25}
 
 BEAM_SET_TRANSVERSE = {"text_dim_distance": 0.05,
                        "text_dim_height": 0.05}

@@ -115,11 +115,11 @@ def test_draw_longitudinal_bar_straight_horizontal(bar_straight_horizontal):
     assert ex_08[0].dxf.end == Vec3(0, 2, 0)
     assert ex_08[0].dxf.end[0] - ex_08[0].dxf.start[0] == 12
 
+    doc.saveas(filename="./tests/bar_straight_horizontal.dxf")
+
     # General.
     entities = ex_01 + ex_02 + ex_03 + ex_04 + ex_05 + ex_06 + ex_07 + ex_08
     assert len(entities) == 38
-
-    doc.saveas(filename="./tests/bar_straight_horizontal.dxf")
 
 
 @pytest.fixture

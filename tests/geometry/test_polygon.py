@@ -48,6 +48,26 @@ def test_polygon_clockwise_get_points_between_index_limits_by_dr(polygon_clockwi
     assert ccw_list_0_4 == [(0, 0), (3, 0), (3, 2)]
 
 
+def test_polygon_clockwise_get_side_normals(polygon_clockwise):
+    sides = polygon_clockwise.get_side_equations()
+
+    assert sides[0] == (1e+16, -0.0)
+    assert sides[1] == (0, 1)
+    assert sides[2] == (1, 0)
+    assert sides[3] == (0, 2)
+    assert sides[4] == (1e+16, -3e+16)
+
+
+def test_polygon_clockwise_get_side_centers(polygon_clockwise):
+    centers = polygon_clockwise.get_side_centers()
+
+    assert centers[0] == (0, 0.5)
+    assert centers[1] == (0.5, 1)
+    assert centers[2] == (1.5, 1.5)
+    assert centers[3] == (2.5, 2)
+    assert centers[4] == (3, 1)
+
+
 @pytest.fixture
 def polygon_counterclockwise():
     return Polygon(vertices=[(3, 0), (3, 2), (2, 2), (1, 1), (0, 1), (0, 0)])
@@ -87,3 +107,5 @@ def test_polygon_counterclockwise_get_points_between_index_limits_by_dr(polygon_
                                                                                   direction_rotation=DRotation.COUNTERCLOCKWISE)
 
     assert ccw_list_0_4 == [(3, 0), (3, 2), (2, 2), (1, 1), (0, 1)]
+
+

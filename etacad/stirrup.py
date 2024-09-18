@@ -1,7 +1,7 @@
 # Imports.
 # Local imports.
-from etacad.drawing_utils import (curve, dim_linear, get_lines_intersec, line, mirror, rect_border_curve, rotate,
-                                  text, translate)
+from etacad.geometry.utils import get_lines_intersec
+from etacad.drawing_utils import curve, dim_linear, line, mirror, rect_border_curve, rotate, text, translate
 from etacad.globals import COS45, Direction, ElementTypes, Orientation, SIN45, STEEL_WEIGHT
 
 # External imports.
@@ -204,10 +204,10 @@ class Stirrup:
                                 - m_45_circle_line * (x + self.mandrel_radius_top))
 
         # Calculations.
-        intersec_top_anchor_int = get_lines_intersec(m_45, b_top_anchor_int, m_45_circle_line, b_45_circle_line)
-        intersec_top_anchor_ext = get_lines_intersec(m_45, b_top_anchor_ext, m_top_side, b_top_side)
-        intersect_bottom_anchor_int = get_lines_intersec(m_45, b_bottom_anchor_int, m_45_circle_line, b_45_circle_line)
-        intersect_bottom_anchor_ext = get_lines_intersec(m_45, b_bottom_anchor_ext, m_45_circle_line, b_45_circle_line)
+        intersec_top_anchor_int = get_lines_intersec(m_45, b_top_anchor_int, m_45_circle_line, b_45_circle_line)[0]
+        intersec_top_anchor_ext = get_lines_intersec(m_45, b_top_anchor_ext, m_top_side, b_top_side)[0]
+        intersect_bottom_anchor_int = get_lines_intersec(m_45, b_bottom_anchor_int, m_45_circle_line, b_45_circle_line)[0]
+        intersect_bottom_anchor_ext = get_lines_intersec(m_45, b_bottom_anchor_ext, m_45_circle_line, b_45_circle_line)[0]
 
         if unifilar:
             # Calculations.
