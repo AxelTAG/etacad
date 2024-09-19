@@ -28,7 +28,11 @@ def test_concrete_length_hexagon_attributes(concrete_length_hexagon):
 
 def test_concrete_length_hexagon_draw_longitudinal(concrete_length_hexagon):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
-    entities = concrete_length_hexagon.draw_longitudinal(document=doc, dimensions=True, dimensions_inner=True)
+    entities = concrete_length_hexagon.draw_longitudinal(document=doc,
+                                                         x=1,
+                                                         y=1,
+                                                         dimensions=True,
+                                                         dimensions_inner=True)
     doc.saveas(filename="./tests/concrete_length_hexagon_draw_longitudinal.dxf")
 
     assert len(entities["concrete_lines"]) == 5

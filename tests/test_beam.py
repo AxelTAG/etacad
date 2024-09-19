@@ -79,7 +79,7 @@ def test_draw_longitudinal_beam(beam):
     # Stirrups.
 
     # General.
-    assert len(entities) == 51
+    assert len(entities) == 53
 
 
 def test_draw_transverse_beam(beam):
@@ -88,7 +88,7 @@ def test_draw_transverse_beam(beam):
     doc.saveas(filename="./tests/beam_transverse.dxf")
 
     # Concrete shape.
-    assert [*entities[0].vertices()] == [(2,  3), (2.2, 3), (2.2, 3.35), (2, 3.35), (2, 3)]
+    assert [*entities[0].vertices()] == [(2,  3), (2, 3.35), (2.2, 3.35), (2.2, 3), (2, 3)]
 
     # Bars.
     assert entities[1].dxf.center == Vec3(2.0269999999999997, 3.32, 0)  # Top bar.
@@ -109,7 +109,7 @@ def test_draw_transverse_beam(beam):
     assert entities[12].dxf.end == Vec3(2.17, 3.022, 0)
 
     # General.
-    assert len(entities) == 35
+    assert len(entities) == 33
 
 
 def test_draw_longitudinal_rebar_detailing_beam(beam):

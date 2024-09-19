@@ -1,7 +1,7 @@
 # Imports.
 # Locals imports.
 from etacad.drawing_utils import line, polyline, translate, dim_linear
-from etacad.globals import CONCRETE_WEIGHT, DRotation, CONCRETE_SET_LONG, CONCRETE_SET_TRANSVERSE
+from etacad.globals import CONCRETE_WEIGHT, DRotation, CONCRETE_SET_LONG, CONCRETE_SET_TRANSVERSE, ElementTypes
 from etacad.geometry.polygon import Polygon
 from etacad.geometry.utils import displace_perpendicular, get_angle
 
@@ -27,6 +27,8 @@ class Concrete:
     :type y: float, optional
     :param specific_weight: Specific weight of the concrete. Defaults to CONCRETE_WEIGHT.
     :type specific_weight: float, optional
+    :param element_type: Type of the structural element (e.g., CONCRETE).
+    :type element_type: ElementTypes, optional
 
     :ivar dim3D: The third dimension (either height or length) of the concrete section.
     :vartype dim3D: float
@@ -42,6 +44,8 @@ class Concrete:
     :vartype box_width_transverse: float
     :ivar box_height_transverse: Height of the bounding box in the transverse direction.
     :vartype box_height_transverse: float
+    :ivar element_type: Type of the structural element (e.g., CONCRETE).
+    :vartype element_type: ElementTypes, optional
 
     :raises TypeError: If neither height nor length is provided.
 
@@ -76,6 +80,9 @@ class Concrete:
     box_height: float = field(init=False)
     box_width_transverse: float = field(init=False)
     box_height_transverse: float = field(init=False)
+
+    # Others.
+    element_type: ElementTypes = field(default=ElementTypes.CONCRETE)
 
     def __attrs_post_init__(self):
         # Geometric attributes.
@@ -218,13 +225,15 @@ class Concrete:
                                   p_base=(x + self.box_width / 2,
                                           y + self.box_height + settings["text_dim_distance_horizontal"]),
                                   p1=(x, y + self.box_height),
-                                  p2=(x + self.box_width, y + self.box_height))
+                                  p2=(x + self.box_width, y + self.box_height),
+                                  dimstyle=settings["dim_style_boxing"])
                 dim += dim_linear(document=document,
                                   p_base=(x - settings["text_dim_distance_vertical"] * 2,
                                           y + self.box_height / 2),
                                   p1=(x, y),
                                   p2=(x, y + self.box_height),
-                                  rotation=90)
+                                  rotation=90,
+                                  dimstyle=settings["dim_style_boxing"])
 
                 if dimensions_inner:
                     # Polygon dimensions.
@@ -234,7 +243,8 @@ class Concrete:
                                                   y + abs(right_points[i][1] - right_points[i + 1][1]) / 2),
                                           p1=(x, y + right_points[i][1]),
                                           p2=(x, y + right_points[i + 1][1]),
-                                          rotation=90)
+                                          rotation=90,
+                                          dimstyle=settings["dim_style_inner"])
 
             if self.height:
                 # Boxing dimensions.
@@ -242,13 +252,15 @@ class Concrete:
                                   p_base=(x + self.box_width / 2,
                                           y + self.box_height + settings["text_dim_distance_horizontal"] * 2),
                                   p1=(x, y + self.box_height),
-                                  p2=(x + self.box_width, y + self.box_height))
+                                  p2=(x + self.box_width, y + self.box_height),
+                                  dimstyle=settings["dim_style_boxing"])
                 dim += dim_linear(document=document,
                                   p_base=(x - settings["text_dim_distance_vertical"],
                                           y + self.box_height / 2),
                                   p1=(x, y),
                                   p2=(x, y + self.box_height),
-                                  rotation=90)
+                                  rotation=90,
+                                  dimstyle=settings["dim_style_boxing"])
 
                 if dimensions_inner:
                     # Polygon dimensions.
@@ -257,7 +269,8 @@ class Concrete:
                                           p_base=(x + abs(front_points[i][0] - front_points[i + 1][0]) / 2,
                                                   y + self.height + settings["text_dim_distance_vertical"]),
                                           p1=(x + front_points[i][0], y + self.height),
-                                          p2=(x + front_points[i + 1][0], y + self.height))
+                                          p2=(x + front_points[i + 1][0], y + self.height),
+                                          dimstyle=settings["dim_style_inner"])
 
         # Setting elements dict.
         elements["concrete_lines"] = concrete_lines
@@ -320,13 +333,15 @@ class Concrete:
                                   p_base=(x + self.box_width_transverse / 2,
                                           y + self.box_height_transverse + settings["text_dim_distance_horizontal"]),
                                   p1=(x, y + self.box_height_transverse),
-                                  p2=(x + self.box_width_transverse, y + self.box_height_transverse))
+                                  p2=(x + self.box_width_transverse, y + self.box_height_transverse),
+                                  dimstyle=settings["dim_style_boxing"])
                 dim += dim_linear(document=document,
                                   p_base=(x - settings["text_dim_distance_vertical"] * 2,
                                           y + self.box_height_transverse / 2),
                                   p1=(x, y),
                                   p2=(x, y + self.box_height_transverse),
-                                  rotation=90)
+                                  rotation=90,
+                                  dimstyle=settings["dim_style_boxing"])
 
             # Inner dimensions.
             if dimensions_inner:
@@ -349,7 +364,7 @@ class Concrete:
                                       p1=(point1[0] + vector_translate[0], point1[1] + vector_translate[1]),
                                       p2=(point2[0] + vector_translate[0], point2[1] + vector_translate[1]),
                                       rotation=angle,
-                                      dimstyle="EZ_M_5_H25_CM")
+                                      dimstyle=settings["dim_style_inner"])
 
         # Setting elements dict.
         elements["concrete_lines"] = concrete_lines
