@@ -7,6 +7,7 @@ import ezdxf
 import pytest
 
 from ezdxf.math import Vec3
+from itertools import chain
 
 
 @pytest.fixture
@@ -76,10 +77,14 @@ def test_draw_longitudinal_beam(beam):
     entities = beam.draw_longitudinal(document=doc, x=2, y=3, unifilar_bars=False)
     doc.saveas(filename="./tests/beam_longitudinal.dxf")
 
-    # Stirrups.
+    # Concrete.
+    assert len(entities["concrete"]["concrete_elements"]) == 4
 
-    # General.
-    assert len(entities) == 51
+    # Dimensions.
+    assert len(entities["dimensions_elements"]) == 1
+
+    # Stirrups.
+    assert len(entities["stirrups"][0]["steel_elements"]) == 35
 
 
 def test_draw_transverse_beam(beam):
@@ -88,28 +93,31 @@ def test_draw_transverse_beam(beam):
     doc.saveas(filename="./tests/beam_transverse.dxf")
 
     # Concrete shape.
-    assert [*entities[0].vertices()] == [(2,  3), (2.2, 3), (2.2, 3.35), (2, 3.35), (2, 3)]
+    assert [*entities["concrete"]["concrete_elements"][0].vertices()] == [(2,  3), (2, 3.35), (2.2, 3.35), (2.2, 3), (2, 3)]
 
     # Bars.
-    assert entities[1].dxf.center == Vec3(2.0269999999999997, 3.32, 0)  # Top bar.
-    assert entities[2].dxf.center == Vec3(2.1, 3.32, 0)  # Top bar.
-    assert entities[3].dxf.center == Vec3(2.173, 3.32, 0)  # Top bar.
-    assert entities[4].dxf.center == Vec3(2.174, 3.1266666666666665, 0)  # Right bar.
-    assert entities[5].dxf.center == Vec3(2.174, 3.2233333333333333, 0)  # Right bar.
-    assert entities[6].dxf.center == Vec3(2.03, 3.03, 0)  # Bottom bar.
-    assert entities[7].dxf.center == Vec3(2.1, 3.03, 0)  # Bottom bar.
-    assert entities[8].dxf.center == Vec3(2.17, 3.03, 0)  # Bottom bar.
-    assert entities[9].dxf.center == Vec3(2.026, 3.1266666666666665, 0)  # Left bar.
-    assert entities[10].dxf.center == Vec3(2.026, 3.2233333333333333, 0)  # Left bar.
+    assert entities["bars"][0]["steel_elements"][0].dxf.center == Vec3(2.0269999999999997, 3.32, 0)  # Top bar.
+    assert entities["bars"][1]["steel_elements"][0].dxf.center == Vec3(2.1, 3.32, 0)  # Top bar.
+    assert entities["bars"][2]["steel_elements"][0].dxf.center == Vec3(2.173, 3.32, 0)  # Top bar.
+    assert entities["bars"][3]["steel_elements"][0].dxf.center == Vec3(2.174, 3.1266666666666665, 0)  # Right bar.
+    assert entities["bars"][4]["steel_elements"][0].dxf.center == Vec3(2.174, 3.2233333333333333, 0)  # Right bar.
+    assert entities["bars"][5]["steel_elements"][0].dxf.center == Vec3(2.03, 3.03, 0)  # Bottom bar.
+    assert entities["bars"][6]["steel_elements"][0].dxf.center == Vec3(2.1, 3.03, 0)  # Bottom bar.
+    assert entities["bars"][7]["steel_elements"][0].dxf.center == Vec3(2.17, 3.03, 0)  # Bottom bar.
+    assert entities["bars"][8]["steel_elements"][0].dxf.center == Vec3(2.026, 3.1266666666666665, 0)  # Left bar.
+    assert entities["bars"][9]["steel_elements"][0].dxf.center == Vec3(2.026, 3.2233333333333333, 0)  # Left bar.
 
     # Stirrups.
-    assert entities[11].dxf.start == Vec3(2.0269999999999997, 3.3249999999999997, 0)
-    assert entities[11].dxf.end == Vec3(2.173, 3.3249999999999997, 0)
-    assert entities[12].dxf.start == Vec3(2.03, 3.022, 0)
-    assert entities[12].dxf.end == Vec3(2.17, 3.022, 0)
+    assert entities["stirrups"][0]["steel_elements"][0].dxf.start == Vec3(2.0269999999999997, 3.3249999999999997, 0)
+    assert entities["stirrups"][0]["steel_elements"][0].dxf.end == Vec3(2.173, 3.3249999999999997, 0)
+    assert entities["stirrups"][0]["steel_elements"][1].dxf.start == Vec3(2.03, 3.022, 0)
+    assert entities["stirrups"][0]["steel_elements"][1].dxf.end == Vec3(2.17, 3.022, 0)
 
     # General.
-    assert len(entities) == 35
+    assert len(entities["concrete"]["all_elements"]) == 3
+    assert len(list(chain(*[bar_dict["all_elements"] for bar_dict in entities["bars"]]))) == 10
+    assert len(list(chain(*[stirrup_dict["all_elements"] for stirrup_dict in entities["stirrups"]]))) == 22
+    assert len(entities["all_elements"]) == 35
 
 
 def test_draw_longitudinal_rebar_detailing_beam(beam):
@@ -117,11 +125,14 @@ def test_draw_longitudinal_rebar_detailing_beam(beam):
     entities = beam.draw_longitudinal_rebar_detailing(document=doc, x=-10, y=1, unifilar=False)
     doc.saveas(filename="./tests/beam_longitudinal_rebar_detailing.dxf")
 
-    assert entities[0].dxf.align_point == Vec3(-10.56, 0.8175000000000001, 0)
-    assert entities[1].dxf.start == Vec3(-10.0, 0.63, 0)
+    assert entities["text_elements"][0].dxf.align_point == Vec3(-10.56, 0.8175000000000001, 0)
+    assert entities["barline_elements"][0].dxf.start == Vec3(-10.7, 0.43, 0.0)
 
     # General.
-    assert len(entities) == 53
+    assert len(entities["text_elements"]) == 4
+    assert len(entities["bars"]) == 4
+    assert len(entities["barline_elements"]) == 3
+    assert len(entities["all_elements"]) == 53
 
 
 def test_draw_transverse_rebar_detailing_beam(beam):
@@ -129,4 +140,12 @@ def test_draw_transverse_rebar_detailing_beam(beam):
     entities = beam.draw_transverse_rebar_detailing(document=doc, x=10, y=-5)
     doc.saveas(filename="./tests/beam_transverse_rebar_detailing.dxf")
 
-    assert entities[0].dxf.start == Vec3(10.011000000000001, -4.691, 0.0)
+    # Steel elements.
+    assert entities["stirrups"][0]["steel_elements"][0].dxf.start == Vec3(10.011000000000001, -4.691, 0.0)
+
+    # General.
+    assert len(entities["stirrups"][0]["steel_elements"]) == 22
+    assert len(entities["stirrups"][0]["dimensions_elements"]) == 4
+    assert len(entities["all_elements"]) == 26
+
+
