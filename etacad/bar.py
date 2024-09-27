@@ -547,6 +547,12 @@ class Bar:
             entitie.set_placement([-coordinates[i][0], coordinates[i][1], coordinates[i][2]])
 
     def data(self):
+        """
+        Collects and returns the essential attributes of the bar element in a dictionary format.
+
+        :return: Dictionary containing key attributes of the bar such as denomination, length, diameter and weight.
+        :rtype: dict
+        """
         data = {"denomination": self.denomination,
                 "length": self.length,
                 "diameter": self.diameter,
@@ -555,6 +561,15 @@ class Bar:
         return data
 
     def extract_data(self, labels: list[str] = None):
+        """
+        Extracts specific data attributes based on the provided list of labels.
+        If no labels are provided, it defaults to extracting "denomination", "length", "diameter", and "weight".
+
+        :param labels: List of attribute names to extract. Defaults to common attributes if not provided.
+        :type labels: list[str], optional
+        :return: A list of values corresponding to the requested labels.
+        :rtype: list
+        """
         if labels is None:
             labels = ["denomination", "length", "diameter", "weight"]
 

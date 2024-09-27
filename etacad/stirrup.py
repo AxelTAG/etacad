@@ -85,6 +85,7 @@ class Stirrup:
 
     # Others.
     element_type: ElementTypes = field(default=ElementTypes.STIRRUP)
+    denomination: str = field(default=None)
 
     def __attrs_post_init__(self):
         # Stirrups attributes.
@@ -386,3 +387,37 @@ class Stirrup:
                     translate(group, vector=(self.reinforcement_length + x * 2, 0))
                 else:
                     translate(group, vector=(self.box_width + x * 2, 0))
+
+    def data(self):
+        """
+        Collects and returns the essential attributes of the stirrup element in a dictionary format.
+
+        :return: Dictionary containing key attributes of the bar such as denomination, length, diameter, weight and
+        quantity.
+        :rtype: dict
+        """
+        data = {"denomination": self.denomination,
+                "length": self.length,
+                "diameter": self.diameter,
+                "weight": self.weight,
+                "quantity": self.quantity}
+
+        return data
+
+    def extract_data(self, labels: list[str] = None):
+        """
+        Extracts specific data attributes based on the provided list of labels.
+        If no labels are provided, it defaults to extracting "denomination", "length", "diameter", "weight" and
+        quantity.
+
+        :param labels: List of attribute names to extract. Defaults to common attributes if not provided.
+        :type labels: list[str], optional
+        :return: A list of values corresponding to the requested labels.
+        :rtype: list
+        """
+        if labels is None:
+            labels = ["denomination", "length", "diameter", "weight", "quantity"]
+
+        data = self.data()
+
+        return [data[key] for key in labels if key in data]
