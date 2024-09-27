@@ -786,7 +786,9 @@ class Beam:
         if side < 0 or side > 3:
             raise ValueError
 
-        list_bars, list_denom = gen_symmetric_list(dictionary=bars, nomenclature=nomenclature, number_init=number_init,
+        list_bars, list_denom = gen_symmetric_list(dictionary=bars,
+                                                   nomenclature=nomenclature,
+                                                   number_init=number_init,
                                                    factor=1)  # Creating symetric list of bars.
 
         # Calculating separtion and definition of initial x_sep and y_sep.
@@ -836,11 +838,16 @@ class Beam:
             y_bar_long = y + y_sep + delta_y
             y_bar_transverse = y_sep + delta_y_transverse
 
-            entities.append(Bar(reinforcement_length=self.length - self.cover * 2, diameter=db,
-                                x=x_bar_long, y=y_bar_long,
-                                left_anchor=anchor[i], right_anchor=anchor[i], mandrel_radius=db,
+            entities.append(Bar(reinforcement_length=self.length - self.cover * 2,
+                                diameter=db,
+                                x=x_bar_long,
+                                y=y_bar_long,
+                                left_anchor=anchor[i],
+                                right_anchor=anchor[i],
+                                mandrel_radius=db,
                                 orientation=orientation,
-                                transverse_center=(x_bar_transverse, y_bar_transverse), denomination=list_denom[i]))
+                                transverse_center=(x_bar_transverse, y_bar_transverse),
+                                denomination=list_denom[i]))
 
         return entities
 

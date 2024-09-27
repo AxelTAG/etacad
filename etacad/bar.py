@@ -41,24 +41,28 @@ class Bar:
     :param transverse_center: Transverse center of the drawing of cross-section.
     :type transverse_center: tuple
 
-    :ivar bend_longitud: Bending longitud of the bar at center of bar.
-    :ivar bend_angle: Bending declination angle.
-    :ivar bend_height: Bending height of the bar at center of bar.
-    :ivar bending_proyection: Proyection of the bend bar.
-    :ivar left_anchor: Left anchor length of stirrup.
-    :ivar right_anchor: Right anchor length of stirrup.
-    :ivar mandrel_radius: Mandrel radius of bar.
-    :ivar mandrel_radius_ext: Mandrel radius plus diameter of bar.
-    :ivar diameter: Diameter of bar.
-    :ivar radius: Radius of bar.
+    :ivar reinforcement_length: Total length of the reinforcement bar.
+    :ivar diameter: Diameter of the bar.
+    :ivar radius: Radius of the bar (half of the diameter).
+    :ivar length: Overall length of the bar, including bends and anchors.
+    :ivar x: X coordinate of the bottom left corner of the bounding box.
+    :ivar y: Y coordinate of the bottom left corner of the bounding box.
     :ivar direction: Direction of the bar (horizontal or vertical).
-    :ivar orientation: Orientation of the bar (top, right, down, left).
-    :ivar transverse_center: Transverse center of the drawing of cross-section.
-    :ivar reinforcement_length: Length of the reinforcement.
-    :ivar length: Length of the bar.
-    :ivar weight: Weight of the reinforcement, considering 7850 kg / m3.
-    :ivar box_width: Width of the box that contains the bar.
-    :ivar box_height: Height of the box that contains the bar.
+    :ivar orientation: Positioning of the bar (top, right, down, left).
+    :ivar transverse_center: Coordinates of the transverse center of the cross-section.
+    :ivar left_anchor: Length of the left anchor.
+    :ivar right_anchor: Length of the right anchor.
+    :ivar mandrel_radius: Radius of the mandrel used for bending.
+    :ivar mandrel_radius_ext: External radius of the mandrel plus the bar's diameter.
+    :ivar bend_longitud: Length of the bar bend at its center.
+    :ivar bend_angle: Angle of the bar bend.
+    :ivar bend_height: Height of the bar at the bend.
+    :ivar bending_proyection: Projection length caused by the bar's bend.
+    :ivar box_width: Width of the bounding box containing the bar.
+    :ivar box_height: Height of the bounding box containing the bar.
+    :ivar weight: Weight of the bar, calculated using a steel density of 7850 kg/m³.
+    :ivar element_type: Type of the element (BAR).
+    :ivar denomination: Optional denomination for the bar element.
     """
     # Geometric attributes.
     reinforcement_length: float
@@ -541,3 +545,19 @@ class Bar:
 
         for i, entitie in enumerate(group):
             entitie.set_placement([-coordinates[i][0], coordinates[i][1], coordinates[i][2]])
+
+    def data(self):
+        data = {"denomination": self.denomination,
+                "length": self.length,
+                "diameter": self.diameter,
+                "weight": self.weight}
+
+        return data
+
+    def extract_data(self, labels: list[str] = None):
+        if labels is None:
+            labels = ["denomination", "length", "diameter", "weight"]
+
+        data = self.data()
+
+        return [data[key] for key in labels if key in data]

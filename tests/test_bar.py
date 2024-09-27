@@ -123,6 +123,10 @@ def test_draw_longitudinal_bar_straight_horizontal(bar_straight_horizontal):
     assert len(entities) == 38
 
 
+def test_extract_data_bar_straight_horizontal(bar_straight_horizontal):
+    assert bar_straight_horizontal.extract_data(["diameter", "length"]) == [0.012, 12]
+
+
 @pytest.fixture
 def bar_straight_vertical():
     return Bar(reinforcement_length=12,
