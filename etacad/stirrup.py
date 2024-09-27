@@ -2,7 +2,7 @@
 # Local imports.
 from etacad.geometry.utils import get_lines_intersec
 from etacad.drawing_utils import curve, dim_linear, line, mirror, rect_border_curve, rotate, text, translate
-from etacad.globals import COS45, Direction, ElementTypes, Orientation, SIN45, STEEL_WEIGHT
+from etacad.globals import COS45, Direction, ElementTypes, Orientation, SIN45, STEEL_WEIGHT, STIRRUP_SET_TRANSVERSE
 
 # External imports.
 from attrs import define, field
@@ -106,7 +106,7 @@ class Stirrup:
                           document: Drawing,
                           x: float = None,
                           y: float = None,
-                          unifilar=True):
+                          unifilar=True) -> dict:
         """
         Draw the longitudinal reinforcement of the stirrup in the dxf file.
 
@@ -127,17 +127,24 @@ class Stirrup:
         if y is None:
             y = self.y
 
+        elements = {}
+
+        # Drawing stirrup steel bars.
         if unifilar:
-            group = [line(doc=document, p1=(x + self.spacing * i, y), p2=(x + self.spacing * i, y + self.height))[0]
+            steel = [line(doc=document, p1=(x + self.spacing * i, y), p2=(x + self.spacing * i, y + self.height))[0]
                      for i in range(self.quantity)]
         else:
-            group = [line(doc=document, p1=(x + self.spacing * i, y), p2=(x + self.spacing * i, y + self.height))[0]
+            steel = [line(doc=document, p1=(x + self.spacing * i, y), p2=(x + self.spacing * i, y + self.height))[0]
                      for i in range(self.quantity)]
 
-        # Orienting the bar (direction and orientation).
-        self.__direc_orient(group, x=x, y=y, longitudinal=True)
+        # Setting groups of elements in dictionary.
+        elements["steel_elements"] = steel
+        elements["all_elements"] = elements["steel_elements"]
 
-        return group
+        # Orienting the bar (direction and orientation).
+        self.__direc_orient(elements["steel_elements"], x=x, y=y, longitudinal=True)
+
+        return elements
 
     # Drawing transverse section of stirrup function.
     def draw_transverse(self,
@@ -145,7 +152,8 @@ class Stirrup:
                         x: float = None,
                         y: float = None,
                         unifilar: bool = False,
-                        dimensions: bool = False) -> list:
+                        dimensions: bool = False,
+                        settings: dict = STIRRUP_SET_TRANSVERSE) -> dict:
         """
         Draw the cross-section of the stirrup in the dxf file.
 
@@ -159,6 +167,8 @@ class Stirrup:
         :type unifilar: bool
         :param dimensions: Dimensions drawing.
         :type dimensions: bool
+        :param settings: Dictionary of settings for dimensioning. Defaults to `STIRRUP_SET_TRANSVERSE`.
+        :type settings: dict, optional
         :return: None.
         :rtype: None
         """
@@ -168,9 +178,9 @@ class Stirrup:
         if y is None:
             y = self.y
 
-        # Configurations variables.
-        text_dim_distance = 0.05
-        text_dim_height = 0.05
+        elements = {}
+        steel_elements = []
+        dim_elements = []
 
         # Curves radius of rect border bordes.
         curves_radius = [self.mandrel_radius_top, self.mandrel_radius_top, self.mandrel_radius_bottom,
@@ -181,18 +191,18 @@ class Stirrup:
         m_45 = -1
         b_top_anchor_int = ((y + self.height - self.mandrel_radius_top - diff + self.mandrel_radius_top * SIN45)
                             - (m_45 * (x + self.mandrel_radius_top + diff + self.mandrel_radius_top * COS45)))
-        b_top_anchor_ext = ((y + self.height - self.mandrel_radius_top - diff + (self.mandrel_radius_top + diff) * SIN45)
-                            - (m_45 * (x + self.mandrel_radius_top + diff + (self.mandrel_radius_top + diff) * COS45)))
+        b_top_anchor_ext = (
+                (y + self.height - self.mandrel_radius_top - diff + (self.mandrel_radius_top + diff) * SIN45)
+                - (m_45 * (x + self.mandrel_radius_top + diff + (self.mandrel_radius_top + diff) * COS45)))
         b_bottom_anchor_int = ((y + self.height - self.mandrel_radius_top - diff - self.mandrel_radius_top * SIN45)
                                - (m_45 * (x + self.mandrel_radius_top + diff - self.mandrel_radius_top * COS45)))
-        b_bottom_anchor_ext = ((y + self.height - self.mandrel_radius_top - diff - (self.mandrel_radius_top + diff) * SIN45)
-                               - (m_45 * (x + self.mandrel_radius_top + diff - (self.mandrel_radius_top + diff) * COS45)))
+        b_bottom_anchor_ext = (
+                (y + self.height - self.mandrel_radius_top - diff - (self.mandrel_radius_top + diff) * SIN45)
+                - (m_45 * (x + self.mandrel_radius_top + diff - (self.mandrel_radius_top + diff) * COS45)))
 
         # Constants equation calculations of sides (top/left) lines.
         m_top_side = 0
         b_top_side = y + self.height if unifilar else y + self.height - self.diameter
-        m_left_side = 9999999999
-        b_left_side = -x * m_left_side if unifilar else -(x + self.diameter) * m_left_side
 
         # Constants equation of 45° circle line.
         m_45_circle_line = 1
@@ -206,8 +216,10 @@ class Stirrup:
         # Calculations.
         intersec_top_anchor_int = get_lines_intersec(m_45, b_top_anchor_int, m_45_circle_line, b_45_circle_line)[0]
         intersec_top_anchor_ext = get_lines_intersec(m_45, b_top_anchor_ext, m_top_side, b_top_side)[0]
-        intersect_bottom_anchor_int = get_lines_intersec(m_45, b_bottom_anchor_int, m_45_circle_line, b_45_circle_line)[0]
-        intersect_bottom_anchor_ext = get_lines_intersec(m_45, b_bottom_anchor_ext, m_45_circle_line, b_45_circle_line)[0]
+        intersect_bottom_anchor_int = get_lines_intersec(m_45, b_bottom_anchor_int, m_45_circle_line, b_45_circle_line)[
+            0]
+        intersect_bottom_anchor_ext = get_lines_intersec(m_45, b_bottom_anchor_ext, m_45_circle_line, b_45_circle_line)[
+            0]
 
         if unifilar:
             # Calculations.
@@ -225,24 +237,27 @@ class Stirrup:
             p2_bottom_anchor_ext = p2_bottom_anchor_int
 
             # Anchor drawing.
-            group = line(doc=document, p1=p1_top_anchor_int, p2=p2_top_anchor_int)  # Internal line top anchor.
-            group += line(doc=document, p1=p1_bottom_anchor_int, p2=p2_bottom_anchor_int)  # Internal line bot anchor.
+            steel_elements += line(doc=document, p1=p1_top_anchor_int,
+                                   p2=p2_top_anchor_int)  # Internal line top anchor.
+            steel_elements += line(doc=document, p1=p1_bottom_anchor_int,
+                                   p2=p2_bottom_anchor_int)  # Internal line bot anchor.
 
             # Rectangle drawing (circle borders).
-            group += rect_border_curve(doc=document, width=self.width, height=self.height,
-                                       radius=self.mandrel_radius_top, x=x, y=y, thickness=0, sides=[1, 1, 1, 1],
-                                       curves_radius=curves_radius)
+            steel_elements += rect_border_curve(doc=document, width=self.width, height=self.height,
+                                                radius=self.mandrel_radius_top, x=x, y=y, thickness=0,
+                                                sides=[1, 1, 1, 1],
+                                                curves_radius=curves_radius)
 
         else:
             # Drawing of side borders.
-            group = rect_border_curve(doc=document, width=self.width - 2 * self.diameter,
-                                      height=self.height - 2 * self.diameter, radius=self.mandrel_radius_top,
-                                      x=x + self.diameter, y=y + self.diameter, thickness=self.diameter,
-                                      sides=[1, 1, 1, 0], curves=[0, 1, 1, 1], curves_radius=curves_radius)
+            steel_elements = rect_border_curve(doc=document, width=self.width - 2 * self.diameter,
+                                               height=self.height - 2 * self.diameter, radius=self.mandrel_radius_top,
+                                               x=x + self.diameter, y=y + self.diameter, thickness=self.diameter,
+                                               sides=[1, 1, 1, 0], curves=[0, 1, 1, 1], curves_radius=curves_radius)
 
             # External left side border.
-            group += line(doc=document, p1=(x, y + self.mandrel_radius_ext_bottom),
-                          p2=(x, y + self.box_height - self.mandrel_radius_ext_top))
+            steel_elements += line(doc=document, p1=(x, y + self.mandrel_radius_ext_bottom),
+                                   p2=(x, y + self.box_height - self.mandrel_radius_ext_top))
 
             # Drawing of anchors.
             # Calculatios of points.
@@ -267,44 +282,69 @@ class Stirrup:
             center_point_curve = (x + self.mandrel_radius_ext_top, y + self.box_height - self.mandrel_radius_ext_top)
 
             # Drawing of lines anchors.
-            group += line(doc=document, p1=p1_top_anchor_ext, p2=p2_top_anchor_ext)
-            group += line(doc=document, p1=p1_top_anchor_int, p2=p2_top_anchor_int)
-            group += line(doc=document, p1=p1_bottom_anchor_int, p2=p2_bottom_anchor_int)
-            group += line(doc=document, p1=p1_bottom_anchor_ext, p2=p2_bottom_anchor_ext)
+            steel_elements += line(doc=document, p1=p1_top_anchor_ext, p2=p2_top_anchor_ext)
+            steel_elements += line(doc=document, p1=p1_top_anchor_int, p2=p2_top_anchor_int)
+            steel_elements += line(doc=document, p1=p1_bottom_anchor_int, p2=p2_bottom_anchor_int)
+            steel_elements += line(doc=document, p1=p1_bottom_anchor_ext, p2=p2_bottom_anchor_ext)
 
-            group += line(doc=document, p1=p2_bottom_anchor_int, p2=p2_bottom_anchor_ext)  # Closed lines bottom.
-            group += line(doc=document, p1=p2_top_anchor_int, p2=p2_top_anchor_ext)  # Closed lines top.
+            steel_elements += line(doc=document, p1=p2_bottom_anchor_int,
+                                   p2=p2_bottom_anchor_ext)  # Closed lines bottom.
+            steel_elements += line(doc=document, p1=p2_top_anchor_int, p2=p2_top_anchor_ext)  # Closed lines top.
 
             # Left internal side.
-            group += line(doc=document, p1=(x + self.diameter, y + self.mandrel_radius_ext_bottom),
-                          p2=(p1_top_anchor_ext[0] - (self.diameter * 2 + self.mandrel_radius_top * 2) * COS45,
-                              p1_top_anchor_ext[1] - (self.diameter * 2 + self.mandrel_radius_top * 2) * SIN45))
+            steel_elements += line(doc=document, p1=(x + self.diameter, y + self.mandrel_radius_ext_bottom),
+                                   p2=(p1_top_anchor_ext[0] - (self.diameter * 2 + self.mandrel_radius_top * 2) * COS45,
+                                       p1_top_anchor_ext[1] - (
+                                               self.diameter * 2 + self.mandrel_radius_top * 2) * SIN45))
 
             # Top left curve.
-            group += curve(doc=document, center_point=center_point_curve, start_angle=90, end_angle=225,
-                           radius=self.mandrel_radius_top + self.diameter, thickness=0)  # Internal.
-            group += curve(doc=document, center_point=center_point_curve, start_angle=45, end_angle=225,
-                           radius=self.mandrel_radius_top, thickness=0)  # External.
+            steel_elements += curve(doc=document, center_point=center_point_curve, start_angle=90, end_angle=225,
+                                    radius=self.mandrel_radius_top + self.diameter, thickness=0)  # Internal.
+            steel_elements += curve(doc=document, center_point=center_point_curve, start_angle=45, end_angle=225,
+                                    radius=self.mandrel_radius_top, thickness=0)  # External.
 
         if dimensions:
-            group += dim_linear(document=document, p_base=(x - text_dim_distance, y + self.height / 2),
-                                p1=(x, y), p2=(x, y + self.height), rotation=90,
-                                dimstyle="EZ_M_10_H25_CM")
-            group += dim_linear(document=document,
-                                p_base=(x + self.width / 2 - text_dim_distance * 2.5,
-                                        y + self.height - text_dim_distance * 2.5),
-                                p1=p1_bottom_anchor_ext, p2=p2_bottom_anchor_ext, rotation=315,
-                                dimstyle="EZ_M_10_H25_CM")
-            group += dim_linear(document=document, p_base=(x + self.width / 2, y + self.height + text_dim_distance),
-                                p1=(x, y + self.height), p2=(x + self.width, y + self.height),
-                                dimstyle="EZ_M_10_H25_CM")
-            group += text(document=document, text="L: {0:.2f}".format(self.length), height=text_dim_height,
-                          point=(x + self.width / 2, y - 2 * text_dim_distance), attr={"halign": 4, "valign": 0})
+            # Anchor dimension.
+            dim_elements += dim_linear(document=document,
+                                       p_base=(x + self.width / 2 - settings["text_dim_distance_anchor"],
+                                               y + self.height - settings["text_dim_distance_anchor"]),
+                                       p1=p1_bottom_anchor_ext,
+                                       p2=p2_bottom_anchor_ext, rotation=315,
+                                       dimstyle=settings["dim_style"])
+
+            # Vertical dimension.
+            dim_elements += dim_linear(document=document,
+                                       p_base=(x - settings["text_dim_distance_vertical"], y + self.height / 2),
+                                       p1=(x, y),
+                                       p2=(x, y + self.height),
+                                       rotation=90,
+                                       dimstyle=settings["dim_style"])
+
+            # Anchor horizontal.
+            dim_elements += dim_linear(document=document,
+                                       p_base=(x + self.width / 2,
+                                               y + self.height + settings["text_dim_distance_horizontal"]),
+                                       p1=(x, y + self.height),
+                                       p2=(x + self.width, y + self.height),
+                                       dimstyle=settings["dim_style"])
+
+            # Text for length count.
+            dim_elements += text(document=document,
+                                 text="L: {0:.2f}".format(self.length),
+                                 height=settings["text_length_count_height"],
+                                 point=(x + self.width / 2, y - settings["text_distance_length_count"]),
+                                 attr={"halign": 4, "valign": 0})
+
+        # Setting groups of elements in dictionary.
+        elements["steel_elements"] = steel_elements
+        elements["dimensions_elements"] = dim_elements
+        elements["all_elements"] = (elements["steel_elements"] +
+                                    elements["dimensions_elements"])
 
         # Orienting the bar (direction and orientation).
-        self.__direc_orient(group, x=x, y=y, longitudinal=False)
+        self.__direc_orient(elements["steel_elements"], x=x, y=y, longitudinal=False)
 
-        return group
+        return elements
 
     # Function that orients drawing.
     def __direc_orient(self,

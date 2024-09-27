@@ -1,7 +1,7 @@
 # Imports.
 # Local imports.
 from etacad.drawing_utils import circle, curve, line, mirror, rads, rect, rotate, text, translate
-from etacad.globals import Direction, ElementTypes, Orientation, STEEL_WEIGHT
+from etacad.globals import Direction, ElementTypes, Orientation, STEEL_WEIGHT, BAR_SET_LONG, BAR_SET_TRANSVERSE
 
 # External imports.
 from attrs import define, field
@@ -125,7 +125,8 @@ class Bar:
                           y: float = None,
                           unifilar: bool = False,
                           dimensions: bool = True,
-                          denomination: bool = True) -> list:
+                          denomination: bool = True,
+                          settings: dict = BAR_SET_LONG) -> dict:
         """
         Draws the longitudinal view of the bar in a DXF document.
 
@@ -141,8 +142,10 @@ class Bar:
         :type dimensions: bool, optional
         :param denomination: Whether to include the denomination label, defaults to True.
         :type denomination: bool, optional
-        :return: List of drawing entities for the longitudinal view.
-        :rtype: list
+        :param settings: Dictionary of settings for dimensioning. Defaults to `BAR_SET_LONG`.
+        :type settings: dict, optional
+        :return: Dict of drawing entities for the longitudinal view.
+        :rtype: dict
         """
         if x is None:
             x = self.x
@@ -160,16 +163,12 @@ class Bar:
             sides_left_anchor = [0, 0, 0, 1]
             sides_right_anchor = [0, 1, 0, 0]
 
-        # Configurations variables.
-        text_dim_distance = 0.05
-        text_dim_height = 0.05
-        text_denom_distance = 0.05
-        text_denom_height = 0.05
+        elements = {}
+        steel_elements = []
+        dimension_elements = []
+        denomination_elements = []
 
         # Drawing of simple entities and setting of variables for progressive draw.
-        group = []  # Variable that cointains elements objetcs.
-        group_text = []  # Variable that cointains text elements objetcs.
-
         length_first_rect_bar = self.reinforcement_length
         x_first_rect_bar = x
         sides_first_rect_bar = [1, 1, 1, 1]
@@ -190,13 +189,19 @@ class Bar:
 
             # From left to right.
             # First anchor rect bar (left).
-            group += rect(doc=document, width=diameter, height=self.left_anchor, x=x_lab, y=y_lab,
-                          sides=sides_left_anchor)
+            steel_elements += rect(doc=document,
+                                   width=diameter,
+                                   height=self.left_anchor, x=x_lab, y=y_lab,
+                                   sides=sides_left_anchor)
 
             if not unifilar:
                 # First bend curve.
-                group += curve(doc=document, center_point=center_point_lac, radius=self.mandrel_radius,
-                               start_angle=90, end_angle=180, thickness=diameter)
+                steel_elements += curve(doc=document,
+                                        center_point=center_point_lac,
+                                        radius=self.mandrel_radius,
+                                        start_angle=90,
+                                        end_angle=180,
+                                        thickness=diameter)
 
         # Right anchor.
         if self.right_anchor:
@@ -213,12 +218,16 @@ class Bar:
             # From left to right.
             # Sixth bend curve.
             if not unifilar:
-                group += curve(doc=document, center_point=center_point_rac, radius=self.mandrel_radius, start_angle=0,
-                               end_angle=90, thickness=diameter)
+                steel_elements += curve(doc=document, center_point=center_point_rac,
+                                        radius=self.mandrel_radius,
+                                        start_angle=0,
+                                        end_angle=90, thickness=diameter)
 
             # Second anchor rect bar (right).
-            group += rect(doc=document, width=diameter, height=self.right_anchor, x=x_rab, y=y_rab,
-                          sides=sides_right_anchor)
+            steel_elements += rect(doc=document,
+                                   width=diameter,
+                                   height=self.right_anchor, x=x_rab, y=y_rab,
+                                   sides=sides_right_anchor)
 
         # Bending bar.
         if self.bend_longitud:
@@ -245,117 +254,180 @@ class Bar:
             # From left to right.
             # First piece of rect bar.
             sides_first_rect_bar = sides_first_rect_bar if not unifilar else [1, 0, 0, 0]
-            group += rect(doc=document, width=length_first_rect_bar, height=diameter, x=x_first_rect_bar,
-                          y=y + self.box_height - diameter, sides=sides_first_rect_bar)
+            steel_elements += rect(doc=document,
+                                   width=length_first_rect_bar,
+                                   height=diameter,
+                                   x=x_first_rect_bar,
+                                   y=y + self.box_height - diameter,
+                                   sides=sides_first_rect_bar)
 
             if not unifilar:
                 # First curve of bend.
-                group += curve(doc=document, center_point=center_point_bc_first, radius=diameter,
-                               start_angle=90 - self.bend_angle, end_angle=90, thickness=diameter)
+                steel_elements += curve(doc=document,
+                                        center_point=center_point_bc_first,
+                                        radius=diameter,
+                                        start_angle=90 - self.bend_angle,
+                                        end_angle=90,
+                                        thickness=diameter)
 
             # First bend rect bar.
             if not unifilar:
-                group += line(doc=document,
-                              p1=(x + (self.reinforcement_length - self.bend_longitud) / 2 - dx1,
-                                  y + self.box_height - self.bend_height - diameter + dy1),
-                              p2=(x + (self.reinforcement_length - self.bend_longitud) / 2 - dx1 - longitud_proyeccion,
-                                  y + self.box_height - dy2))
+                steel_elements += line(doc=document,
+                                       p1=(x + (self.reinforcement_length - self.bend_longitud) / 2 - dx1,
+                                           y + self.box_height - self.bend_height - diameter + dy1),
+                                       p2=(x + (
+                                               self.reinforcement_length - self.bend_longitud) / 2 - dx1 - longitud_proyeccion,
+                                           y + self.box_height - dy2))
 
-            group += line(doc=document,
-                          p1=(x + (self.reinforcement_length - self.bend_longitud) / 2 - dx2,
-                              y + self.box_height - self.bend_height - diameter * 2 + dy2),
-                          p2=(x + (self.reinforcement_length - self.bend_longitud) / 2 - dx2 - longitud_proyeccion,
-                              y + self.box_height - diameter - dy1))
+            steel_elements += line(doc=document,
+                                   p1=(x + (self.reinforcement_length - self.bend_longitud) / 2 - dx2,
+                                       y + self.box_height - self.bend_height - diameter * 2 + dy2),
+                                   p2=(
+                                       x + (
+                                               self.reinforcement_length - self.bend_longitud) / 2 - dx2 - longitud_proyeccion,
+                                       y + self.box_height - diameter - dy1))
 
             # Second curve of bend.
             if not unifilar:
-                group += curve(doc=document, center_point=center_point_bc_second, radius=diameter,
-                               start_angle=270 - self.bend_angle, end_angle=270, thickness=diameter)
+                steel_elements += curve(doc=document,
+                                        center_point=center_point_bc_second,
+                                        radius=diameter,
+                                        start_angle=270 - self.bend_angle,
+                                        end_angle=270,
+                                        thickness=diameter)
 
             # Second rect bar.
             sides_second_rect_bar = [1, 0, 1, 0] if not unifilar else [1, 0, 0, 0]
-            group += rect(doc=document, width=self.bend_longitud, height=diameter,
-                          x=x + (self.reinforcement_length - self.bend_longitud) / 2,
-                          y=y + self.box_height - diameter * 2 - self.bend_height, sides=sides_second_rect_bar)
+            steel_elements += rect(doc=document,
+                                   width=self.bend_longitud,
+                                   height=diameter,
+                                   x=x + (self.reinforcement_length - self.bend_longitud) / 2,
+                                   y=y + self.box_height - diameter * 2 - self.bend_height,
+                                   sides=sides_second_rect_bar)
 
             # Third bend curve.
             if not unifilar:
-                group += curve(doc=document, center_point=(x + longitud_mid,
-                                                           y + self.box_height - self.bend_height),
-                               radius=diameter, start_angle=270, end_angle=270 + self.bend_angle, thickness=diameter)
+                steel_elements += curve(doc=document,
+                                        center_point=(x + longitud_mid,
+                                                      y + self.box_height - self.bend_height),
+                                        radius=diameter,
+                                        start_angle=270,
+                                        end_angle=270 + self.bend_angle,
+                                        thickness=diameter)
 
             # Second bend bar.
             if not unifilar:
-                group += line(doc=document,
-                              p1=(x + longitud_mid + dx1,
-                                  y + self.box_height - self.bend_height - diameter + dy1),
-                              p2=(x + longitud_mid + dx1 + longitud_proyeccion,
-                                  y + self.box_height - dy2))
+                steel_elements += line(doc=document,
+                                       p1=(x + longitud_mid + dx1,
+                                           y + self.box_height - self.bend_height - diameter + dy1),
+                                       p2=(x + longitud_mid + dx1 + longitud_proyeccion,
+                                           y + self.box_height - dy2))
 
-            group += line(doc=document,
-                          p1=(x + longitud_mid + dx2,
-                              y + self.box_height - self.bend_height - diameter * 2 + dy2),
-                          p2=(x + longitud_mid + dx2 + longitud_proyeccion,
-                              y + self.box_height - diameter - dy1))
+            steel_elements += line(doc=document,
+                                   p1=(x + longitud_mid + dx2,
+                                       y + self.box_height - self.bend_height - diameter * 2 + dy2),
+                                   p2=(x + longitud_mid + dx2 + longitud_proyeccion,
+                                       y + self.box_height - diameter - dy1))
 
             # Fourth bend curve.
             if not unifilar:
-                group += curve(doc=document, center_point=(x + longitud_mid + longitud_curves + longitud_proyeccion,
-                                                           y + self.box_height - diameter * 2),
-                               radius=diameter, start_angle=90, end_angle=90 + self.bend_angle, thickness=diameter)
+                steel_elements += curve(doc=document,
+                                        center_point=(x + longitud_mid + longitud_curves + longitud_proyeccion,
+                                                      y + self.box_height - diameter * 2),
+                                        radius=diameter,
+                                        start_angle=90,
+                                        end_angle=90 + self.bend_angle,
+                                        thickness=diameter)
 
             # Third rect bar.
             sides_third_rect_bar = sides_third_rect_bar if not unifilar else [1, 0, 0, 0]
-            group += rect(doc=document, width=length_third_rect_bar, height=diameter,
-                          x=x + longitud_mid + longitud_curves + longitud_proyeccion,
-                          y=y + self.box_height - diameter, sides=sides_third_rect_bar)
+            steel_elements += rect(doc=document,
+                                   width=length_third_rect_bar,
+                                   height=diameter,
+                                   x=x + longitud_mid + longitud_curves + longitud_proyeccion,
+                                   y=y + self.box_height - diameter,
+                                   sides=sides_third_rect_bar)
 
         else:
             # From left to right.
             # First rect bar (body).
             sides_first_rect_bar = sides_first_rect_bar if not unifilar else [1, 0, 0, 0]
             mandrel_radius_ext = 0 if not self.left_anchor and not self.right_anchor else mandrel_radius_ext
-            group += rect(doc=document, width=length_first_rect_bar, height=diameter, x=x + mandrel_radius_ext,
-                          y=y + self.box_height - diameter, sides=sides_first_rect_bar)
+            steel_elements += rect(doc=document,
+                                   width=length_first_rect_bar,
+                                   height=diameter,
+                                   x=x + mandrel_radius_ext,
+                                   y=y + self.box_height - diameter,
+                                   sides=sides_first_rect_bar)
 
         if dimensions:
             if self.left_anchor:
-                group += text(document=document, text="({:.2f})".format(self.left_anchor), height=text_dim_height,
-                              point=(x_lab - text_dim_distance, y + self.left_anchor / 2), rotation=90,
-                              attr={"halign": 4, "valign": 0})
-                group_text += [group[-1]]
+                dimension_elements += text(document=document,
+                                           text="({:.2f})".format(self.left_anchor),
+                                           height=settings["text_dim_height"],
+                                           point=(x_lab - settings["text_dim_distance_vertical"],
+                                                  y + self.left_anchor / 2),
+                                           rotation=90,
+                                           attr={"halign": 4, "valign": 0})
 
             if self.right_anchor:
-                group += text(document=document, text="({:.2f})".format(self.right_anchor), height=text_dim_height,
-                              point=(x_rab + text_dim_distance, y + self.right_anchor / 2), rotation=90,
-                              attr={"halign": 4, "valign": 0})
-                group_text += [group[-1]]
+                dimension_elements += text(document=document,
+                                           text="({:.2f})".format(self.right_anchor),
+                                           height=settings["text_dim_height"],
+                                           point=(x_rab + settings["text_dim_distance_vertical"],
+                                                  y + self.right_anchor / 2),
+                                           rotation=90,
+                                           attr={"halign": 4, "valign": 0})
 
-            group += text(document=document, text="({:.2f})".format(self.box_width), height=text_dim_height,
-                          point=(x + self.box_width / 2, y + self.box_height + text_dim_distance), rotation=0,
-                          attr={"halign": 4, "valign": 0})
-            group_text += [group[-1]]
+            dimension_elements += text(document=document,
+                                       text="({:.2f})".format(self.box_width),
+                                       height=settings["text_dim_height"],
+                                       point=(x + self.box_width / 2,
+                                              y + self.box_height + settings["text_dim_distance_horizontal"]),
+                                       rotation=0,
+                                       attr={"halign": 4, "valign": 0})
 
         if denomination:
-            group += text(document=document, text=self.denomination, height=text_denom_height,
-                          point=(x + self.box_width / 2,
-                                 y + self.box_height - text_denom_height - text_denom_distance),
-                          rotation=0,
-                          attr={"halign": 4, "valign": 0})
-            group_text += [group[-1]]
+            denomination_elements += text(document=document,
+                                          text=self.denomination,
+                                          height=settings["text_denomination_height"],
+                                          point=(x + self.box_width / 2,
+                                                 y + self.box_height - settings["text_denomination_height"] - settings[
+                                                     "text_denomination_distance"]),
+                                          rotation=0,
+                                          attr={"halign": 4, "valign": 0})
+
+        # Setting groups of elements in dictionary.
+        elements["steel_elements"] = steel_elements
+        elements["dimension_elements"] = dimension_elements
+        elements["denomination_elements"] = denomination_elements
+        elements["text_elements"] = (elements["dimension_elements"] +
+                                     elements["denomination_elements"])
+        elements["all_elements"] = (elements["steel_elements"] +
+                                    elements["dimension_elements"] +
+                                    elements["denomination_elements"])
 
         if unifilar:
-            translate(objects=group, vector=(0, -self.mandrel_radius_ext))
+            translate(objects=elements["all_elements"],
+                      vector=(0, -self.mandrel_radius_ext))
 
         # Orienting the bar (direction and orientation).
-        self.__direc_orient(group, x=x, y=y, unifilar=unifilar)
-        if self.orientation == Orientation.TOP:
-            self.__direct_orient_text(group_text)
+        self.__direc_orient(elements["all_elements"],
+                            x=x,
+                            y=y,
+                            unifilar=unifilar)
 
-        return group
+        if self.orientation == Orientation.TOP:
+            self.__direct_orient_text(elements["text_elements"])
+
+        return elements
 
     # Drawing of transverse section of bar function.
-    def draw_transverse(self, document: Drawing, x: float = None, y: float = None):
+    def draw_transverse(self,
+                        document: Drawing,
+                        x: float = None,
+                        y: float = None,
+                        settings: dict = BAR_SET_TRANSVERSE) -> dict:
         """
         Draws the transverse section of the bar in a DXF document.
 
@@ -365,8 +437,10 @@ class Bar:
         :type x: float, optional
         :param y: Y coordinate for the drawing, defaults to self.y.
         :type y: float, optional
-        :return: List of drawing entities for the transverse section.
-        :rtype: list
+        :param settings: Dictionary of settings for dimensioning. Defaults to `BAR_SET_TRANSVERSE`.
+        :type settings: dict, optional
+        :return: Dict of drawing entities for the transverse section.
+        :rtype: dict
         """
         if x is None:
             x = self.x
@@ -374,23 +448,27 @@ class Bar:
         if y is None:
             y = self.y
 
+        elements = {}
+        steel_elements = []
+
         # Checking if there is a defined transverse center.
         if self.transverse_center:
             x += self.transverse_center[0]
             y += self.transverse_center[1]
 
         # Drawing of circle.
-        group = circle(doc=document, center_point=(x + self.radius, y + self.radius), radius=self.radius)
+        steel_elements += circle(doc=document,
+                                 center_point=(x + self.radius, y + self.radius),
+                                 radius=self.radius)
 
-        return group
+        # Setting groups of elements in dictionary.
+        elements["steel_elements"] = steel_elements
+        elements["all_elements"] = elements["steel_elements"]
+
+        return elements
 
     # Function that orients drawing.
     def __direc_orient(self, group: list, x: float = None, y: float = None, unifilar: bool = False):
-        if x is None:
-            x = self.x
-
-        if y is None:
-            y = self.y
         """
         Adjusts the orientation of the drawing based on the direction and orientation of the bar.
 
@@ -403,6 +481,12 @@ class Bar:
         :param unifilar: Whether to apply unifilar adjustments, defaults to False.
         :type unifilar: bool, optional
         """
+        if x is None:
+            x = self.x
+
+        if y is None:
+            y = self.y
+
         # Orienting the bar (direction and orientation).
         # Direction.
         if self.direction == Direction.VERTICAL:

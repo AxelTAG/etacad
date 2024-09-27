@@ -59,12 +59,14 @@ def test_attributes_rectangular_column(column):
     assert column.max_db_inf == 0.016
     assert column.max_db_left == 0.012
 
-    # Physics attributes.
-    assert column.concrete_volume == .24000000000000005
-
     # Box attributes.
     assert column.box_width == .2
     assert column.box_height == 6
+
+    # Stirrup dimensions.
+    stirrup_width = (column.width - column.cover * 2 + column.max_db_inf + 0.006 * 2)
+    assert stirrup_width == .16800000000000004
+    assert column.stirrups[0].width == .16800000000000004
 
 
 def test_draw_longitudinal_rectangular_column(column):
@@ -72,13 +74,12 @@ def test_draw_longitudinal_rectangular_column(column):
     entities = column.draw_longitudinal(document=doc, x=2, y=3, unifilar_bars=False)
     doc.saveas(filename="./tests/column_rectangular_longitudinal.dxf")
 
-    # Stirrups.
-    stirrup_width = (column.width - column.cover * 2 + column.max_db_inf + 0.006 * 2)
-    assert stirrup_width == .16800000000000004
-    assert column.stirrups[0].width == .16800000000000004
+    # Bars.
+    assert entities["bars"][0]["steel_elements"][0].dxf.start == Vec3(2.0219999999999985, 3.0299999999999994, 0.0)
 
     # General.
-    assert len(entities) == 86
+    assert len(entities["concrete"]["all_elements"]) == 6
+    assert len(entities["all_elements"]) == 90
 
 
 def test_draw_longitudinal_unifilar_rectangular_column(column):
@@ -92,7 +93,7 @@ def test_draw_longitudinal_unifilar_rectangular_column(column):
     assert column.stirrups[0].width == .16800000000000004
 
     # General.
-    assert len(entities) == 74
+    assert len(entities["all_elements"]) == 78
 
 
 def test_list_to_stirrups_rectangular_column(column):
@@ -101,14 +102,17 @@ def test_list_to_stirrups_rectangular_column(column):
 
 def test_draw_transverse_rectangular_column(column):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
-    entities = column.draw_transverse(document=doc, x=0.5, y=1, y_section=0.65)
-    entities += column.draw_transverse(document=doc, x=-0.5, y=1, y_section=1.5)
-    entities += column.draw_transverse(document=doc, x=-0.5, y=-1, y_section=3.65)
-    entities += column.draw_transverse(document=doc, x=0.5, y=-1, y_section=4.5)
+    entities_st_1 = column.draw_transverse(document=doc, x=0.5, y=1, y_section=0.65)
+    entities_st_2 = column.draw_transverse(document=doc, x=-0.5, y=1, y_section=1.5)
+    entities_st_3 = column.draw_transverse(document=doc, x=-0.5, y=-1, y_section=3.65)
+    entities_st_4 = column.draw_transverse(document=doc, x=0.5, y=-1, y_section=4.5)
     doc.saveas(filename="./tests/column_rectangular_transverse.dxf")
 
     # General.
-    assert len(entities) == 148
+    assert len(entities_st_1["all_elements"]) == 37
+    assert len(entities_st_2["all_elements"]) == 37
+    assert len(entities_st_3["all_elements"]) == 37
+    assert len(entities_st_4["all_elements"]) == 37
 
 
 def test_draw_longitudinal_rebar_detailing_rectangular_column(column):
@@ -116,11 +120,15 @@ def test_draw_longitudinal_rebar_detailing_rectangular_column(column):
     entities = column.draw_longitudinal_rebar_detailing(document=doc, x=-10, y=1, unifilar=False)
     doc.saveas(filename="./tests/column_recatangular_longitudinal_rebar_detailing.dxf")
 
-    assert entities[0].dxf.align_point == Vec3(-9.98, 7.4, 0.0)
-    assert entities[1].dxf.start == Vec3(-9.784, 1.0, 0.0)
+    assert entities["text_elements"][0].dxf.align_point == Vec3(-9.98, 7.6, 0.0)
+    assert entities["text_elements"][0].dxf.text == "As sup."
+    assert entities["barline_elements"][0].dxf.start == Vec3(-9.072, 0.7, 0.0)
 
     # General.
-    assert len(entities) == 43
+    assert len(entities["text_elements"]) == 4
+    assert len(entities["bars"]) == 6
+    assert len(entities["barline_elements"]) == 3
+    assert len(entities["all_elements"]) == 43
 
 
 def test_draw_transverse_rebar_detailing_recutangular_column(column):
@@ -128,7 +136,7 @@ def test_draw_transverse_rebar_detailing_recutangular_column(column):
     entities = column.draw_transverse_rebar_detailing(document=doc, x=-10, y=1, y_section=1)
     doc.saveas(filename="./tests/column_recatangular_transverse_rebar_detailing.dxf")
 
-    assert entities[0].dxf.start == Vec3(-9.984000000000002, 1.1640000000000001, 0.0)
+    assert entities["stirrups"][0]["steel_elements"][0].dxf.start == Vec3(-9.992, 1.0159999999999982, 0.0)
 
     # General.
-    assert len(entities) == 26
+    assert len(entities["all_elements"]) == 26

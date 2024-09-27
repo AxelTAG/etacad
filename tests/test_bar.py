@@ -62,63 +62,64 @@ def test_draw_longitudinal_bar_straight_horizontal(bar_straight_horizontal):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
 
     ex_01 = bar_straight_horizontal.draw_longitudinal(document=doc, x=2, y=1, unifilar=False, dimensions=False)
-    assert len(ex_01) == 5
-    assert ex_01[0].dxf.start == Vec3(2, 1.012, 0)  # Top side start.
-    assert ex_01[0].dxf.end == Vec3(14, 1.012, 0)  # Top side end.
-    assert ex_01[1].dxf.start == Vec3(2, 1, 0)  # Bottom side start.
-    assert ex_01[1].dxf.end == Vec3(14, 1, 0)  # Bottom side end.
+    assert len(ex_01["all_elements"]) == 5
+    assert ex_01["steel_elements"][0].dxf.start == Vec3(2, 1.012, 0)  # Top side start.
+    assert ex_01["steel_elements"][0].dxf.end == Vec3(14, 1.012, 0)  # Top side end.
+    assert ex_01["steel_elements"][1].dxf.start == Vec3(2, 1, 0)  # Bottom side start.
+    assert ex_01["steel_elements"][1].dxf.end == Vec3(14, 1, 0)  # Bottom side end.
 
     ex_02 = bar_straight_horizontal.draw_longitudinal(document=doc, x=2, y=0, unifilar=False, denomination=False)
-    assert len(ex_02) == 5
-    assert ex_02[0].dxf.start == Vec3(2, 0.012, 0)  # Top side start.
-    assert ex_02[0].dxf.end == Vec3(14, 0.012, 0)  # Top side end.
-    assert ex_02[1].dxf.start == Vec3(2, 0, 0)  # Bottom side start.
-    assert ex_02[1].dxf.end == Vec3(14, 0, 0)  # Bottom side end.
+    assert len(ex_02["all_elements"]) == 5
+    assert ex_02["steel_elements"][0].dxf.start == Vec3(2, 0.012, 0)  # Top side start.
+    assert ex_02["steel_elements"][0].dxf.end == Vec3(14, 0.012, 0)  # Top side end.
+    assert ex_02["steel_elements"][1].dxf.start == Vec3(2, 0, 0)  # Bottom side start.
+    assert ex_02["steel_elements"][1].dxf.end == Vec3(14, 0, 0)  # Bottom side end.
 
     ex_03 = bar_straight_horizontal.draw_longitudinal(document=doc, x=2, y=-1, unifilar=False)
-    assert len(ex_03) == 6
-    assert ex_03[0].dxf.start == Vec3(2, -0.988, 0)  # Top side start.
-    assert ex_03[0].dxf.end == Vec3(14, -0.988, 0)  # Top side end.
-    assert ex_03[1].dxf.start == Vec3(2, -1, 0)  # Bottom side start.
-    assert ex_03[1].dxf.end == Vec3(14, -1, 0)  # Bottom side end.
+    assert len(ex_03["all_elements"]) == 6
+    assert ex_03["steel_elements"][0].dxf.start == Vec3(2, -0.988, 0)  # Top side start.
+    assert ex_03["steel_elements"][0].dxf.end == Vec3(14, -0.988, 0)  # Top side end.
+    assert ex_03["steel_elements"][1].dxf.start == Vec3(2, -1, 0)  # Bottom side start.
+    assert ex_03["steel_elements"][1].dxf.end == Vec3(14, -1, 0)  # Bottom side end.
 
     ex_04 = bar_straight_horizontal.draw_longitudinal(document=doc, x=-12, y=1, unifilar=False, dimensions=False)
-    assert len(ex_04) == 5
-    assert ex_04[0].dxf.start == Vec3(-12, 1.012, 0)  # Top side start.
-    assert ex_04[0].dxf.end == Vec3(0, 1.012, 0)  # Top side end.
-    assert ex_04[1].dxf.start == Vec3(-12, 1, 0)  # Bottom side start.
-    assert ex_04[1].dxf.end == Vec3(0, 1, 0)  # Bottom side end.
+    assert len(ex_04["all_elements"]) == 5
+    assert ex_04["steel_elements"][0].dxf.start == Vec3(-12, 1.012, 0)  # Top side start.
+    assert ex_04["steel_elements"][0].dxf.end == Vec3(0, 1.012, 0)  # Top side end.
+    assert ex_04["steel_elements"][1].dxf.start == Vec3(-12, 1, 0)  # Bottom side start.
+    assert ex_04["steel_elements"][1].dxf.end == Vec3(0, 1, 0)  # Bottom side end.
 
     ex_05 = bar_straight_horizontal.draw_longitudinal(document=doc, x=-12, y=0, unifilar=False, denomination=False)
-    assert len(ex_05) == 5
-    assert ex_05[0].dxf.start == Vec3(-12, 0.012, 0)  # Top side start.
-    assert ex_05[0].dxf.end == Vec3(0, 0.012, 0)  # Top side end.
-    assert ex_05[1].dxf.start == Vec3(-12, 0, 0)  # Bottom side start.
-    assert ex_05[1].dxf.end == Vec3(0, 0, 0)  # Bottom side end.
+    assert len(ex_05["all_elements"]) == 5
+    assert ex_05["steel_elements"][0].dxf.start == Vec3(-12, 0.012, 0)  # Top side start.
+    assert ex_05["steel_elements"][0].dxf.end == Vec3(0, 0.012, 0)  # Top side end.
+    assert ex_05["steel_elements"][1].dxf.start == Vec3(-12, 0, 0)  # Bottom side start.
+    assert ex_05["steel_elements"][1].dxf.end == Vec3(0, 0, 0)  # Bottom side end.
 
     ex_06 = bar_straight_horizontal.draw_longitudinal(document=doc, x=-12, y=-1, unifilar=False)
-    assert len(ex_06) == 6
-    assert ex_06[0].dxf.start == Vec3(-12, -0.988, 0)  # Top side start.
-    assert ex_06[0].dxf.end == Vec3(0, -0.988, 0)  # Top side end.
-    assert ex_06[1].dxf.start == Vec3(-12, -1, 0)  # Bottom side start.
-    assert ex_06[1].dxf.end == Vec3(0, -1, 0)  # Bottom side end.
+    assert len(ex_06["all_elements"]) == 6
+    assert ex_06["steel_elements"][0].dxf.start == Vec3(-12, -0.988, 0)  # Top side start.
+    assert ex_06["steel_elements"][0].dxf.end == Vec3(0, -0.988, 0)  # Top side end.
+    assert ex_06["steel_elements"][1].dxf.start == Vec3(-12, -1, 0)  # Bottom side start.
+    assert ex_06["steel_elements"][1].dxf.end == Vec3(0, -1, 0)  # Bottom side end.
 
     ex_07 = bar_straight_horizontal.draw_longitudinal(document=doc, x=2, y=2, unifilar=True)
-    assert len(ex_07) == 3
-    assert ex_07[0].dxf.start == Vec3(2, 2, 0)  # Top side start.
-    assert ex_07[0].dxf.end == Vec3(14, 2, 0)  # Top side end.
-    assert ex_07[0].dxf.end[0] - ex_07[0].dxf.start[0] == 12
+    assert len(ex_07["all_elements"]) == 3
+    assert ex_07["steel_elements"][0].dxf.start == Vec3(2, 2, 0)  # Top side start.
+    assert ex_07["steel_elements"][0].dxf.end == Vec3(14, 2, 0)  # Top side end.
+    assert ex_07["steel_elements"][0].dxf.end[0] - ex_07["steel_elements"][0].dxf.start[0] == 12
 
     ex_08 = bar_straight_horizontal.draw_longitudinal(document=doc, x=-12, y=2, unifilar=True)
-    assert len(ex_08) == 3
-    assert ex_08[0].dxf.start == Vec3(-12, 2, 0)
-    assert ex_08[0].dxf.end == Vec3(0, 2, 0)
-    assert ex_08[0].dxf.end[0] - ex_08[0].dxf.start[0] == 12
+    assert len(ex_08["all_elements"]) == 3
+    assert ex_08["steel_elements"][0].dxf.start == Vec3(-12, 2, 0)
+    assert ex_08["steel_elements"][0].dxf.end == Vec3(0, 2, 0)
+    assert ex_08["steel_elements"][0].dxf.end[0] - ex_08["steel_elements"][0].dxf.start[0] == 12
 
     doc.saveas(filename="./tests/bar_straight_horizontal.dxf")
 
     # General.
-    entities = ex_01 + ex_02 + ex_03 + ex_04 + ex_05 + ex_06 + ex_07 + ex_08
+    entities = (ex_01["all_elements"] + ex_02["all_elements"] + ex_03["all_elements"] + ex_04["all_elements"] +
+                ex_05["all_elements"] + ex_06["all_elements"] + ex_07["all_elements"] + ex_08["all_elements"])
     assert len(entities) == 38
 
 
@@ -174,38 +175,39 @@ def test_draw_longitudinal_bar_straight_vertical(bar_straight_vertical):
     doc = ezdxf.new(dxfversion="R2010", setup=True)
 
     ex_01 = bar_straight_vertical.draw_longitudinal(document=doc, x=-2, y=1, unifilar=False, dimensions=False)
-    assert len(ex_01) == 5
-    assert ex_01[0].dxf.start == Vec3(-2, 1, 0)  # Top side start.
-    assert ex_01[0].dxf.end == Vec3(-1.9999999999999991, 13, 0)  # Top side end.
-    assert ex_01[1].dxf.start == Vec3(-1.99, 1, 0)  # Bottom side start.
-    assert ex_01[1].dxf.end == Vec3(-1.989999999999999, 13, 0)  # Bottom side end.
+    assert len(ex_01["all_elements"]) == 5
+    assert ex_01["steel_elements"][0].dxf.start == Vec3(-2, 1, 0)  # Top side start.
+    assert ex_01["steel_elements"][0].dxf.end == Vec3(-1.9999999999999991, 13, 0)  # Top side end.
+    assert ex_01["steel_elements"][1].dxf.start == Vec3(-1.99, 1, 0)  # Bottom side start.
+    assert ex_01["steel_elements"][1].dxf.end == Vec3(-1.989999999999999, 13, 0)  # Bottom side end.
 
     ex_02 = bar_straight_vertical.draw_longitudinal(document=doc, x=-1, y=1, unifilar=False, denomination=False)
-    assert len(ex_02) == 5
-    assert ex_02[0].dxf.start == Vec3(-1, 1, 0)  # Top side start.
-    assert ex_02[0].dxf.end == Vec3(-0.9999999999999993, 13, 0)  # Top side end.
-    assert ex_02[1].dxf.start == Vec3(-0.99, 1, 0)  # Bottom side start.
-    assert ex_02[1].dxf.end == Vec3(-0.9899999999999993, 13, 0)  # Bottom side end.
+    assert len(ex_02["all_elements"]) == 5
+    assert ex_02["steel_elements"][0].dxf.start == Vec3(-1, 1, 0)  # Top side start.
+    assert ex_02["steel_elements"][0].dxf.end == Vec3(-0.9999999999999993, 13, 0)  # Top side end.
+    assert ex_02["steel_elements"][1].dxf.start == Vec3(-0.99, 1, 0)  # Bottom side start.
+    assert ex_02["steel_elements"][1].dxf.end == Vec3(-0.9899999999999993, 13, 0)  # Bottom side end.
 
     ex_03 = bar_straight_vertical.draw_longitudinal(document=doc, x=0, y=1, unifilar=False)
-    assert len(ex_03) == 6
-    assert ex_03[0].dxf.start == Vec3(0, 1, 0)  # Top side start.
-    assert ex_03[0].dxf.end == Vec3(6.661338147750939e-16, 13, 0)  # Top side end.
-    assert ex_03[1].dxf.start == Vec3(0.010000000000000009, 1, 0)  # Bottom side start.
-    assert ex_03[1].dxf.end == Vec3(0.010000000000000786, 13, 0)  # Bottom side end.
+    assert len(ex_03["all_elements"]) == 6
+    assert ex_03["steel_elements"][0].dxf.start == Vec3(0, 1, 0)  # Top side start.
+    assert ex_03["steel_elements"][0].dxf.end == Vec3(6.661338147750939e-16, 13, 0)  # Top side end.
+    assert ex_03["steel_elements"][1].dxf.start == Vec3(0.010000000000000009, 1, 0)  # Bottom side start.
+    assert ex_03["steel_elements"][1].dxf.end == Vec3(0.010000000000000786, 13, 0)  # Bottom side end.
 
     ex_04 = bar_straight_vertical.draw_longitudinal(document=doc, x=1, y=1, unifilar=True, dimensions=False)
-    assert len(ex_04) == 2
-    assert ex_04[0].dxf.start == Vec3(0.9999999999999998, 1, 0)  # Top side start.
-    assert ex_04[0].dxf.end == Vec3(1.0000000000000007, 13, 0)  # Top side end.
+    assert len(ex_04["all_elements"]) == 2
+    assert ex_04["steel_elements"][0].dxf.start == Vec3(0.9999999999999998, 1, 0)  # Top side start.
+    assert ex_04["steel_elements"][0].dxf.end == Vec3(1.0000000000000007, 13, 0)  # Top side end.
 
     ex_05 = bar_straight_vertical.draw_longitudinal(document=doc, x=2, y=1, unifilar=True)
-    assert len(ex_05) == 3
-    assert ex_05[0].dxf.start == Vec3(1.9999999999999998, 1, 0)  # Top side start.
-    assert ex_05[0].dxf.end == Vec3(2.000000000000001, 13, 0)  # Top side end.
+    assert len(ex_05["all_elements"]) == 3
+    assert ex_05["steel_elements"][0].dxf.start == Vec3(1.9999999999999998, 1, 0)  # Top side start.
+    assert ex_05["steel_elements"][0].dxf.end == Vec3(2.000000000000001, 13, 0)  # Top side end.
 
     # General.
-    entities = ex_01 + ex_02 + ex_03 + ex_04 + ex_05
+    entities = (ex_01["all_elements"] + ex_02["all_elements"] + ex_03["all_elements"] + ex_04["all_elements"] +
+                ex_05["all_elements"])
     assert len(entities) == 21
 
     doc.saveas(filename="./tests/bar_straight_vertical.dxf")

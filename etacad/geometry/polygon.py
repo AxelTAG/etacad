@@ -80,7 +80,7 @@ class Polygon:
         """
         max_x = max(self.vertices, key=lambda vertice: vertice[0])[0]
         right_points = [point for point in self.vertices if point[0] == max_x]
-        right_points.sort(key=lambda point: point[0])
+        right_points.sort(key=lambda point: point[1])
 
         return right_points
 
@@ -112,7 +112,7 @@ class Polygon:
         """
         min_x = min(self.vertices, key=lambda vertice: vertice[0])[0]
         left_points = [point for point in self.vertices if point[0] == min_x]
-        left_points.sort(key=lambda point: point[0])
+        left_points.sort(key=lambda point: point[1])
 
         return left_points
 

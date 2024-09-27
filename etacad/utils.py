@@ -91,7 +91,7 @@ def max_per_position(*lists):
     :return: A list containing the maximum value at each position.
     :rtype: list
 
-    :Example:
+    :example:
 
     >>> list1 = [1.5, 3.2, 4.7, 2.9]
     >>> list2 = [2.1, 2.8, 5.0, 1.7]
@@ -161,3 +161,52 @@ def str_to_dict_bar(data: str) -> dict:
     data_dict_ordered = {k: v for k, v in sorted(data_dict.items(), key=lambda item: item[0], reverse=False)}
 
     return data_dict_ordered
+
+
+def unpack_nested_dicts(nested_dict: dict | list[dict]):
+    """
+    Recursively unpacks all values from a (potentially) nested dictionary and returns them in a single list.
+
+    :param dict nested_dict: The nested dictionary to unpack.
+    :return: A list of all the values from the dictionary, including nested dictionaries.
+    :rtype: list
+
+    The function handles dictionaries with multiple levels of nesting. If a value is a dictionary, it recursively
+    processes it. Non-dictionary values are directly appended to the result list.
+
+    :example:
+    >>> nested_dict = {
+           'key1': {'a': 1, 'b': {'x': 7, 'y': 8}, 'c': 3},
+           'key2': {'d': 4, 'e': 5},
+           'key3': 6,
+           'key4': {'f': {'g': 9, 'h': 10}},
+           'key5': 'value'}
+
+    >>> result = unpack_nested_dicts(nested_dict)
+    [1, 7, 8, 3, 4, 5, 6, 9, 10, 'value']
+    """
+    print(nested_dict)
+    result = []
+    if isinstance(nested_dict, list) and all([isinstance(dictionary, dict) for dictionary in nested_dict]):
+        for dictionary in nested_dict:
+            for value in dictionary.values():
+                if isinstance(value, dict):  # If the value is another dictionary, process it recursively.
+                    result.extend(unpack_nested_dicts(value))
+                elif isinstance(value, list):
+                    result += value  # If not a dictionary, add the value directly.
+                else:
+                    result.append(value)
+        return result
+
+    elif isinstance(nested_dict, dict):
+        for value in nested_dict.values():
+            if isinstance(value, dict):  # If the value is another dictionary, process it recursively.
+                result.extend(unpack_nested_dicts(value))
+            elif isinstance(value, list):
+                result += value  # If not a dictionary, add the value directly.
+            else:
+                result.append(value)
+        return result
+
+    else:
+        return nested_dict

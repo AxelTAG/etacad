@@ -35,7 +35,7 @@ def test_concrete_length_hexagon_draw_longitudinal(concrete_length_hexagon):
                                                          dimensions_inner=True)
     doc.saveas(filename="./tests/concrete_length_hexagon_draw_longitudinal.dxf")
 
-    assert len(entities["concrete_lines"]) == 5
+    assert len(entities["concrete_elements"]) == 5
     assert len(entities["dimensions"]) == 4
     assert len(entities["all_elements"]) == 9
 
@@ -45,7 +45,7 @@ def test_concrete_length_hexagon_draw_transverse(concrete_length_hexagon):
     entities = concrete_length_hexagon.draw_transverse(document=doc)
     doc.saveas(filename="./tests/concrete_length_hexagon_draw_transverse.dxf")
 
-    assert len(entities["concrete_lines"]) == 1
+    assert len(entities["concrete_elements"]) == 1
 
 
 @pytest.fixture
@@ -61,7 +61,7 @@ def test_concrete_height_hexagon_draw_longitudinal(concrete_height_hexagon):
     entities = concrete_height_hexagon.draw_longitudinal(document=doc, dimensions=True, dimensions_inner=True)
     doc.saveas(filename="./tests/concrete_height_hexagon_draw_longitudinal.dxf")
 
-    assert len(entities["concrete_lines"]) == 6
+    assert len(entities["concrete_elements"]) == 6
 
 
 @pytest.fixture
@@ -86,7 +86,7 @@ def test_concrete_length_polygon_draw_longitudinal(concrete_polygon):
     entities = concrete_polygon.draw_longitudinal(document=doc, dimensions=True, dimensions_inner=True)
     doc.saveas(filename="./tests/concrete_length_polygon_draw_longitudinal.dxf")
 
-    assert len(entities["concrete_lines"]) == 10
+    assert len(entities["concrete_elements"]) == 10
     assert len(entities["dimensions"]) == 9
     assert len(entities["all_elements"]) == 19
 
@@ -96,4 +96,4 @@ def test_concrete_length_polygon_draw_transverse(concrete_polygon):
     entities = concrete_polygon.draw_transverse(document=doc, dimensions=True, dimensions_boxing=True, dimensions_inner=True)
     doc.saveas(filename="./tests/concrete_length_polygon_draw_transverse.dxf")
 
-    assert len(entities["concrete_lines"]) == 1
+    assert len(entities["concrete_elements"]) == 1

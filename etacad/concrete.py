@@ -141,7 +141,7 @@ class Concrete:
         :param settings: Dictionary of settings for dimensioning. Defaults to `CONCRETE_SET_LONG`.
         :type settings: dict, optional
 
-        :return: A dictionary with keys "concrete_lines", "dimensions", and "all_elements", each containing the
+        :return: A dictionary with keys "concrete_elements", "dimensions", and "all_elements", each containing the
         corresponding drawing elements.
         :rtype: dict
         """
@@ -151,8 +151,8 @@ class Concrete:
             y = self.y
 
         elements = {}
-        concrete_lines = []
-        dim = []
+        concrete_elements = []
+        dim_elements = []
 
         if self.length is not None:
             # Getting right points between top and bottom points of concrete section.
@@ -160,122 +160,102 @@ class Concrete:
             bottom_point = self.polygon.get_bottom_point()[-1]
             top_index = self.vertices.index(top_point)
             bottom_index = self.vertices.index(bottom_point)
-            rotation_direction = self.polygon.get_points_direction_of_rotation()
 
-            if rotation_direction == DRotation.CLOCKWISE:
-                if top_index < bottom_index:
-                    right_points = self.vertices[top_index:bottom_index + 1]
-                else:
-                    right_points = self.vertices[top_index:] + self.vertices[:bottom_index + 1]
-            else:
-                if bottom_index < top_index:
-                    right_points = self.vertices[bottom_index:top_index + 1]
-                else:
-                    right_points = self.vertices[:top_index + 1] + self.vertices[bottom_index:]
+            right_points = self.polygon.get_points_between_index_limits_by_dr(index1=top_index, index2=bottom_index)
 
             # Drawing concrete section.
             for point in right_points:
-                concrete_lines += line(doc=document,
-                                       p1=(x, y + point[1]),
-                                       p2=(x + self.length, y + point[1]))
-            concrete_lines += line(doc=document,
-                                   p1=(x, y + top_point[1]),
-                                   p2=(x, y + bottom_point[1]))
-            concrete_lines += line(doc=document,
-                                   p1=(x + self.length, y + top_point[1]),
-                                   p2=(x + self.length, y + bottom_point[1]))
+                concrete_elements += line(doc=document,
+                                          p1=(x, y + point[1]),
+                                          p2=(x + self.length, y + point[1]))
+            concrete_elements += line(doc=document,
+                                      p1=(x, y + top_point[1]),
+                                      p2=(x, y + bottom_point[1]))
+            concrete_elements += line(doc=document,
+                                      p1=(x + self.length, y + top_point[1]),
+                                      p2=(x + self.length, y + bottom_point[1]))
 
         if self.height is not None:
             # Getting front points between right and left points of concrete section.
-            left_point = self.polygon.get_left_point()[-1]
-            right_point = self.polygon.get_right_point()[-1]
+            left_point = self.polygon.get_left_point()[0]
+            right_point = self.polygon.get_right_point()[0]
             left_index = self.vertices.index(left_point)
             right_index = self.vertices.index(right_point)
-            rotation_direction = self.polygon.get_points_direction_of_rotation()
 
-            if rotation_direction == DRotation.CLOCKWISE:
-                if right_index < left_index:
-                    front_points = self.vertices[right_index:left_index + 1]
-                else:
-                    front_points = self.vertices[right_index:] + self.vertices[:left_index + 1]
-            else:
-                if left_index < right_index:
-                    front_points = self.vertices[left_index:right_index + 1]
-                else:
-                    front_points = self.vertices[left_index:] + self.vertices[:right_index]
+            front_points = self.polygon.get_points_between_index_limits_by_dr(index1=right_index, index2=left_index)
 
             # Drawing concrete section.
             for point in front_points:
-                concrete_lines += line(doc=document,
-                                       p1=(x + point[0], y),
-                                       p2=(x + point[0], y + self.height))
-            concrete_lines += line(doc=document,
-                                   p1=(x + left_point[0], y),
-                                   p2=(x + right_point[0], y))
-            concrete_lines += line(doc=document,
-                                   p1=(x + left_point[0], y + self.height),
-                                   p2=(x + right_point[0], y + self.height))
+                concrete_elements += line(doc=document,
+                                          p1=(x + point[0], y),
+                                          p2=(x + point[0], y + self.height))
+            concrete_elements += line(doc=document,
+                                      p1=(x + left_point[0], y),
+                                      p2=(x + right_point[0], y))
+            concrete_elements += line(doc=document,
+                                      p1=(x + left_point[0], y + self.height),
+                                      p2=(x + right_point[0], y + self.height))
 
         # Drawing of dimensions.
         if dimensions:
-            dim = []
+            dim_elements = []
             if self.length:
                 # Boxing dimensions.
-                dim += dim_linear(document=document,
-                                  p_base=(x + self.box_width / 2,
-                                          y + self.box_height + settings["text_dim_distance_horizontal"]),
-                                  p1=(x, y + self.box_height),
-                                  p2=(x + self.box_width, y + self.box_height),
-                                  dimstyle=settings["dim_style_boxing"])
-                dim += dim_linear(document=document,
-                                  p_base=(x - settings["text_dim_distance_vertical"] * 2,
-                                          y + self.box_height / 2),
-                                  p1=(x, y),
-                                  p2=(x, y + self.box_height),
-                                  rotation=90,
-                                  dimstyle=settings["dim_style_boxing"])
+                dim_elements += dim_linear(document=document,
+                                           p_base=(x + self.box_width / 2,
+                                                   y + self.box_height + settings["text_dim_distance_horizontal"]),
+                                           p1=(x, y + self.box_height),
+                                           p2=(x + self.box_width, y + self.box_height),
+                                           dimstyle=settings["dim_style_boxing"])
+                dim_elements += dim_linear(document=document,
+                                           p_base=(x - settings["text_dim_distance_vertical"],
+                                                   y + self.box_height / 2),
+                                           p1=(x, y),
+                                           p2=(x, y + self.box_height),
+                                           rotation=90,
+                                           dimstyle=settings["dim_style_boxing"])
 
                 if dimensions_inner:
                     # Polygon dimensions.
                     for i in range(len(right_points) - 1):
-                        dim += dim_linear(document=document,
-                                          p_base=(x - settings["text_dim_distance_vertical"],
-                                                  y + abs(right_points[i][1] - right_points[i + 1][1]) / 2),
-                                          p1=(x, y + right_points[i][1]),
-                                          p2=(x, y + right_points[i + 1][1]),
-                                          rotation=90,
-                                          dimstyle=settings["dim_style_inner"])
+                        dim_elements += dim_linear(document=document,
+                                                   p_base=(x - settings["text_dim_distance_vertical"],
+                                                           y + abs(right_points[i][1] - right_points[i + 1][1]) / 2),
+                                                   p1=(x, y + right_points[i][1]),
+                                                   p2=(x, y + right_points[i + 1][1]),
+                                                   rotation=90,
+                                                   dimstyle=settings["dim_style_inner"])
 
             if self.height:
                 # Boxing dimensions.
-                dim += dim_linear(document=document,
-                                  p_base=(x + self.box_width / 2,
-                                          y + self.box_height + settings["text_dim_distance_horizontal"] * 2),
-                                  p1=(x, y + self.box_height),
-                                  p2=(x + self.box_width, y + self.box_height),
-                                  dimstyle=settings["dim_style_boxing"])
-                dim += dim_linear(document=document,
-                                  p_base=(x - settings["text_dim_distance_vertical"],
-                                          y + self.box_height / 2),
-                                  p1=(x, y),
-                                  p2=(x, y + self.box_height),
-                                  rotation=90,
-                                  dimstyle=settings["dim_style_boxing"])
+                dim_elements += dim_linear(document=document,
+                                           p_base=(x + self.box_width / 2,
+                                                   y + self.box_height + settings["text_dim_distance_horizontal"] * 2),
+                                           p1=(x, y + self.box_height),
+                                           p2=(x + self.box_width, y + self.box_height),
+                                           dimstyle=settings["dim_style_boxing"])
+                dim_elements += dim_linear(document=document,
+                                           p_base=(x - settings["text_dim_distance_vertical"],
+                                                   y + self.box_height / 2),
+                                           p1=(x, y),
+                                           p2=(x, y + self.box_height),
+                                           rotation=90,
+                                           dimstyle=settings["dim_style_boxing"])
 
                 if dimensions_inner:
                     # Polygon dimensions.
                     for i in range(len(front_points) - 1):
-                        dim += dim_linear(document=document,
-                                          p_base=(x + abs(front_points[i][0] - front_points[i + 1][0]) / 2,
-                                                  y + self.height + settings["text_dim_distance_vertical"]),
-                                          p1=(x + front_points[i][0], y + self.height),
-                                          p2=(x + front_points[i + 1][0], y + self.height),
-                                          dimstyle=settings["dim_style_inner"])
+                        dim_elements += dim_linear(document=document,
+                                                   p_base=(x + abs(front_points[i][0] - front_points[i + 1][0]) / 2,
+                                                           y + self.height + settings["text_dim_distance_vertical"]),
+                                                   p1=(x + front_points[i][0], y + self.height),
+                                                   p2=(x + front_points[i + 1][0], y + self.height),
+                                                   dimstyle=settings["dim_style_inner"])
 
         # Setting elements dict.
-        elements["concrete_lines"] = concrete_lines
-        elements["dimensions"] = dim
-        elements["all_elements"] = concrete_lines + dim
+        elements["concrete_elements"] = concrete_elements
+        elements["dimensions"] = dim_elements
+        elements["all_elements"] = concrete_elements + dim_elements
 
         return elements
 
@@ -292,9 +272,11 @@ class Concrete:
 
         :param document: The drawing document to which the concrete section will be added.
         :type document: Drawing
-        :param x: X-coordinate for the placement of the concrete section. Defaults to None, in which case `self.x` is used.
+        :param x: X-coordinate for the placement of the concrete section. Defaults to None, in which case `self.x` is
+         used.
         :type x: float, optional
-        :param y: Y-coordinate for the placement of the concrete section. Defaults to None, in which case `self.y` is used.
+        :param y: Y-coordinate for the placement of the concrete section. Defaults to None, in which case `self.y` is
+         used.
         :type y: float, optional
         :param dimensions: Flag to indicate whether to draw dimensions. Defaults to True.
         :type dimensions: bool, optional
@@ -305,7 +287,8 @@ class Concrete:
         :param settings: Dictionary of settings for dimensioning. Defaults to `CONCRETE_SET_TRANSVERSE`.
         :type settings: dict, optional
 
-        :return: A dictionary with keys "concrete_lines" and "all_elements", each containing the corresponding drawing elements.
+        :return: A dictionary with keys "concrete_elements" and "all_elements", each containing the corresponding drawing
+         elements.
         :rtype: dict
         """
         if x is None:
@@ -314,34 +297,35 @@ class Concrete:
             y = self.y
 
         elements = {}
-        concrete_lines = []
-        dim = []
+        concrete_elements = []
+        dim_elements = []
 
         # Drawing concrete shape.
-        concrete_lines += polyline(document=document, vertices=self.vertices, closed=True)
+        concrete_elements += polyline(document=document, vertices=self.vertices, closed=True)
 
         # Moves all elements to x, y coordinates given.
         min_x = self.polygon.get_left_point()[0][0]
         min_y = self.polygon.get_bottom_point()[0][1]
         vector_translate = (x - min_x, y - min_y)
-        translate(objects=concrete_lines, vector=vector_translate)
+        translate(objects=concrete_elements, vector=vector_translate)
 
         if dimensions:
             if dimensions_boxing:
                 # Boxing dimensions.
-                dim += dim_linear(document=document,
-                                  p_base=(x + self.box_width_transverse / 2,
-                                          y + self.box_height_transverse + settings["text_dim_distance_horizontal"]),
-                                  p1=(x, y + self.box_height_transverse),
-                                  p2=(x + self.box_width_transverse, y + self.box_height_transverse),
-                                  dimstyle=settings["dim_style_boxing"])
-                dim += dim_linear(document=document,
-                                  p_base=(x - settings["text_dim_distance_vertical"] * 2,
-                                          y + self.box_height_transverse / 2),
-                                  p1=(x, y),
-                                  p2=(x, y + self.box_height_transverse),
-                                  rotation=90,
-                                  dimstyle=settings["dim_style_boxing"])
+                dim_elements += dim_linear(document=document,
+                                           p_base=(x + self.box_width_transverse / 2,
+                                                   y + self.box_height_transverse + settings[
+                                                       "text_dim_distance_horizontal"]),
+                                           p1=(x, y + self.box_height_transverse),
+                                           p2=(x + self.box_width_transverse, y + self.box_height_transverse),
+                                           dimstyle=settings["dim_style_boxing"])
+                dim_elements += dim_linear(document=document,
+                                           p_base=(x - settings["text_dim_distance_vertical"],
+                                                   y + self.box_height_transverse / 2),
+                                           p1=(x, y),
+                                           p2=(x, y + self.box_height_transverse),
+                                           rotation=90,
+                                           dimstyle=settings["dim_style_boxing"])
 
             # Inner dimensions.
             if dimensions_inner:
@@ -359,15 +343,16 @@ class Concrete:
                                                         y0=sides_centers[i][1],
                                                         a=sides_equations[i][0],
                                                         d=-settings["text_dim_inner_perpendicular_distance"])
-                    dim += dim_linear(document=document,
-                                      p_base=(point_base[0] + vector_translate[0], point_base[1] + vector_translate[1]),
-                                      p1=(point1[0] + vector_translate[0], point1[1] + vector_translate[1]),
-                                      p2=(point2[0] + vector_translate[0], point2[1] + vector_translate[1]),
-                                      rotation=angle,
-                                      dimstyle=settings["dim_style_inner"])
+                    dim_elements += dim_linear(document=document,
+                                               p_base=(point_base[0] + vector_translate[0],
+                                                       point_base[1] + vector_translate[1]),
+                                               p1=(point1[0] + vector_translate[0], point1[1] + vector_translate[1]),
+                                               p2=(point2[0] + vector_translate[0], point2[1] + vector_translate[1]),
+                                               rotation=angle,
+                                               dimstyle=settings["dim_style_inner"])
 
         # Setting elements dict.
-        elements["concrete_lines"] = concrete_lines
-        elements["all_elements"] = concrete_lines + dim
+        elements["concrete_elements"] = concrete_elements
+        elements["all_elements"] = concrete_elements + dim_elements
 
         return elements
