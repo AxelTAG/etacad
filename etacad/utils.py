@@ -21,7 +21,10 @@ def expand_dictionary(dictionary) -> list:
     return expanded_list
 
 
-def gen_symmetric_list(dictionary: dict, nomenclature: str = None, number_init: int = None, factor: float = 1) -> tuple:
+def gen_symmetric_list(dictionary: dict,
+                       nomenclature: str = None,
+                       number_init: int = None,
+                       factor: float = 1) -> tuple:
     """
     Generates a symmetric list and a list of denominations based on the provided dictionary.
 
@@ -47,6 +50,8 @@ def gen_symmetric_list(dictionary: dict, nomenclature: str = None, number_init: 
     first_odd = False
     symmetryc_list = []
     denomination_list = []
+    position_list = []
+    quantity_list = []
 
     for key, value in sorted([*dictionary.items()]):
         key_factored = key / factor
@@ -55,17 +60,44 @@ def gen_symmetric_list(dictionary: dict, nomenclature: str = None, number_init: 
             symmetryc_list.insert(len(symmetryc_list), key_factored)
             denomination_list.insert(0, "{2}{3} {0}Ø{1}".format(value, key, nomenclature, n))
             denomination_list.insert(len(denomination_list), "{2}{3} {0}Ø{1}".format(value, key, nomenclature, n))
+            position_list.insert(0, "{0}{1}".format(nomenclature, n))
+            position_list.insert(len(position_list), "{0}{1}".format(nomenclature, n))
+            quantity_list.insert(0, value)
+            quantity_list.insert(len(position_list), value)
 
         if is_odd(value):
             symmetryc_list.insert(len(symmetryc_list) // 2, key_factored)
             denomination_list.insert(len(denomination_list) // 2, "{2}{3} {0}Ø{1}".format(value, key, nomenclature, n))
+            position_list.insert(len(position_list) // 2, "{0}{1}".format(nomenclature, n))
+            quantity_list.insert(len(position_list) // 2, value)
             if first_odd:
                 return ()
             else:
                 first_odd = True
         n += 1
 
-    return symmetryc_list, denomination_list
+    return symmetryc_list, denomination_list, position_list, quantity_list
+
+
+def gen_position_bars(dictionaries: list,
+                      nomenclature: str = None,
+                      number_init: int = None) -> dict:
+    if nomenclature is None:
+        nomenclature = "#"
+
+    if number_init is None:
+        n = 0
+    else:
+        n = number_init
+
+    positions = {}
+    for dict_as in dictionaries:
+        for key, value in [*dict_as.items()]:
+            position_name = "{0}{1}".format(nomenclature, n)
+            positions[position_name] = {"diameter": key, "quantity": value}
+            n += 1
+
+    return positions
 
 
 def is_odd(number):
@@ -134,6 +166,12 @@ def text_width_estimation(text: str, text_height: float, proportion: float = 1) 
        is based on a typical average and might need adjustment for different fonts
        or styles.
     """
+    if not type(text) == str:
+        try:
+            text = str(text)
+        except TypeError:
+            raise TypeError("Text must be a string, integer or float.")
+
     text_width = 0
     for character in text:
         text_width += text_height * proportion
