@@ -11,6 +11,48 @@ from itertools import chain
 
 
 @pytest.fixture
+def beam_concrete():
+    return Beam(width=0.4,
+                height=0.8,
+                length=12,
+                x=-1,
+                y=-1)
+
+
+def test_attributes_beam_concrete(beam_concrete):
+    # Geometric attributes.
+    assert beam_concrete.width == .4
+    assert beam_concrete.height == .8
+    assert beam_concrete.length == 12
+    assert beam_concrete.x == -1
+    assert beam_concrete.y == -1
+
+    # Concrete attributes.
+    assert beam_concrete.concrete.volume == 0.4 * 0.8 * 12
+
+
+def test_draw_longitudinal_beam_concrete(beam_concrete):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = beam_concrete.draw_longitudinal(document=doc, unifilar_bars=False)
+    doc.saveas(filename="./tests/beam_concrete_longitudinal.dxf")
+
+    # Concrete.
+    assert len(entities["concrete"]["concrete_elements"]) == 4
+
+    # Dimensions.
+    assert len(entities["dimensions_elements"]) == 0
+
+
+def test_draw_transverse_beam_concrete(beam_concrete):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = beam_concrete.draw_transverse(document=doc)
+    doc.saveas(filename="./tests/beam_concrete_transverse.dxf")
+
+    # Concrete.
+    assert len(entities["concrete"]["concrete_elements"]) == 1
+
+
+@pytest.fixture
 def beam():
     return Beam(width=.2,
                 height=.35,

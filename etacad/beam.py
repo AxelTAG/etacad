@@ -258,26 +258,34 @@ class Beam:
                                  specific_weight=CONCRETE_WEIGHT)
 
         # Stirrups attributes.
-        if type(self.stirrups_db) == float:
-            self.stirrups_db = [self.stirrups_db]
+        if self.stirrups_db is not None:
+            if type(self.stirrups_db) == float:
+                self.stirrups_db = [self.stirrups_db]
 
-        if self.stirrups_anchor is None:
-            self.stirrups_anchor = [0.1] * len(self.stirrups_db)
-        elif type(self.stirrups_anchor) == float:
-            self.stirrups_anchor = [self.stirrups_anchor] * len(self.stirrups_db)
+            if self.stirrups_anchor is None:
+                self.stirrups_anchor = [0.1] * len(self.stirrups_db)
 
-        if type(self.stirrups_sep) == float:
-            self.stirrups_sep = [self.stirrups_sep] * len(self.stirrups_db)
+            elif type(self.stirrups_anchor) == float:
+                self.stirrups_anchor = [self.stirrups_anchor] * len(self.stirrups_db)
 
-        if self.stirrups_length is None:
-            self.stirrups_length = [self.length - (self.height + self.cover) * 2]
+            if type(self.stirrups_sep) == float:
+                self.stirrups_sep = [self.stirrups_sep] * len(self.stirrups_db)
 
-        if self.stirrups_x is None:
-            self.stirrups_x = [self.height + self.cover]
+            if self.stirrups_length is None:
+                self.stirrups_length = [self.length - (self.height + self.cover) * 2]
+
+            if self.stirrups_x is None:
+                self.stirrups_x = [self.height + self.cover]
+
+            self.stirrups = self.__list_to_stirrups()
+
+        else:
+            self.stirrups = []
 
         # Column attributes.
-        if self.columns_symbol is None:
-            self.columns_symbol = [*range(1, len(self.columns) + 1)]
+        if self.columns is not None:
+            if self.columns_symbol is None:
+                self.columns_symbol = [*range(1, len(self.columns) + 1)]
 
         # Position bar attributes.
         self.positions = gen_position_bars(dictionaries=[self.as_sup, self.as_right, self.as_inf, self.as_left],
@@ -298,8 +306,6 @@ class Beam:
                                                 anchor=self.anchor_left, nomenclature=self.nomenclature,
                                                 number_init=self.number_init_left) if self.as_left else []
         self.all_bars = self.bars_as_sup + self.bars_as_right + self.bars_as_inf + self.bars_as_left
-
-        self.stirrups = self.__list_to_stirrups()
 
         self.all_elements = self.all_bars + self.stirrups
 
@@ -387,26 +393,27 @@ class Beam:
                                                             settings=settings["concrete_settings"])
 
         # Drawing columns.
-        for i, x_column in enumerate(self.columns_pos):
-            x_column_relative = x + x_column
-            x_delimit_axe_relative = x_column_relative + self.columns[i][0] / 2
-            if columns:
-                columns_elements += rect(doc=document,
-                                         width=self.columns[i][0],
-                                         height=self.columns[i][1],
-                                         x=x_column_relative,
-                                         y=y,
-                                         fill=True,
-                                         polyline=True)
-            if columns_axes:
-                columns_axes_elements += delimit_axe(document=document,
-                                                     x=x_delimit_axe_relative,
-                                                     y=delimit_axe_y,
-                                                     height=delimit_axe_height,
-                                                     radius=0.1,
-                                                     text_height=0.1,
-                                                     symbol=self.columns_symbol[i],
-                                                     attr=GfxAttribs(linetype="CENTER"))
+        if self.columns:
+            for i, x_column in enumerate(self.columns_pos):
+                x_column_relative = x + x_column
+                x_delimit_axe_relative = x_column_relative + self.columns[i][0] / 2
+                if columns:
+                    columns_elements += rect(doc=document,
+                                             width=self.columns[i][0],
+                                             height=self.columns[i][1],
+                                             x=x_column_relative,
+                                             y=y,
+                                             fill=True,
+                                             polyline=True)
+                if columns_axes:
+                    columns_axes_elements += delimit_axe(document=document,
+                                                         x=x_delimit_axe_relative,
+                                                         y=delimit_axe_y,
+                                                         height=delimit_axe_height,
+                                                         radius=0.1,
+                                                         text_height=0.1,
+                                                         symbol=self.columns_symbol[i],
+                                                         attr=GfxAttribs(linetype="CENTER"))
 
         # Drawing axe.
         if middle_axe:
@@ -417,46 +424,47 @@ class Beam:
                                              symbol=middle_axe_symbol,
                                              direction=Direction.HORIZONTAL,
                                              attr=GfxAttribs(linetype="CENTER"))
-
         # Drawing of stirrups.
-        if stirrups:
-            for stirrup in self.stirrups:
-                stirrup_dict_list.append(stirrup.draw_longitudinal(document=document,
-                                                                   x=x + (stirrup.x - self.x),
-                                                                   y=y + (stirrup.y - self.y),
-                                                                   unifilar=unifilar_stirrups))
+        if self.stirrups:
+            if stirrups:
+                for stirrup in self.stirrups:
+                    stirrup_dict_list.append(stirrup.draw_longitudinal(document=document,
+                                                                       x=x + (stirrup.x - self.x),
+                                                                       y=y + (stirrup.y - self.y),
+                                                                       unifilar=unifilar_stirrups))
+            # Drawing dimensions.
+            if dim:
+                dim_y = y + self.height * 2
+                for stirrup in self.stirrups:
+                    dim_elements += dim_linear(document=document,
+                                               p_base=(
+                                               x + (stirrup.x - self.x) + stirrup.reinforcement_length / 2, dim_y),
+                                               p1=(x + (stirrup.x - self.x), dim_y),
+                                               p2=(x + (stirrup.x - self.x) + stirrup.reinforcement_length, dim_y),
+                                               dimstyle=dim_style)
 
         # Drawing of bars.
-        if bars:
-            bar_dict_list.append(self.bars_as_sup[0].draw_longitudinal(document=document,
-                                                                       x=x + (self.bars_as_sup[0].x - self.x),
-                                                                       y=y + (self.bars_as_sup[0].y - self.y),
-                                                                       unifilar=unifilar_bars,
-                                                                       dimensions=False,
-                                                                       denomination=False))  # Only mayor bar.
-            bar_dict_list.append(self.bars_as_inf[0].draw_longitudinal(document=document,
-                                                                       x=x + (self.bars_as_inf[0].x - self.x),
-                                                                       y=y + (self.bars_as_inf[0].y - self.y),
-                                                                       unifilar=unifilar_bars,
-                                                                       dimensions=False,
-                                                                       denomination=False))  # Only inferior mayor bar.
-            for bar in self.bars_as_left:
-                bar_dict_list.append(bar.draw_longitudinal(document=document,
-                                                           x=x + (bar.x - self.x),
-                                                           y=y + (bar.y - self.y),
-                                                           unifilar=unifilar_bars,
-                                                           dimensions=False,
-                                                           denomination=False))  # Only left bars.
-
-        # Drawing dimensions.
-        if dim:
-            dim_y = y + self.height * 2
-            for stirrup in self.stirrups:
-                dim_elements += dim_linear(document=document,
-                                           p_base=(x + (stirrup.x - self.x) + stirrup.reinforcement_length / 2, dim_y),
-                                           p1=(x + (stirrup.x - self.x), dim_y),
-                                           p2=(x + (stirrup.x - self.x) + stirrup.reinforcement_length, dim_y),
-                                           dimstyle=dim_style)
+        if self.as_sup or self.as_right or self.as_inf or self.as_left:
+            if bars:
+                bar_dict_list.append(self.bars_as_sup[0].draw_longitudinal(document=document,
+                                                                           x=x + (self.bars_as_sup[0].x - self.x),
+                                                                           y=y + (self.bars_as_sup[0].y - self.y),
+                                                                           unifilar=unifilar_bars,
+                                                                           dimensions=False,
+                                                                           denomination=False))  # Only mayor bar.
+                bar_dict_list.append(self.bars_as_inf[0].draw_longitudinal(document=document,
+                                                                           x=x + (self.bars_as_inf[0].x - self.x),
+                                                                           y=y + (self.bars_as_inf[0].y - self.y),
+                                                                           unifilar=unifilar_bars,
+                                                                           dimensions=False,
+                                                                           denomination=False))  # Only inferior mayor bar.
+                for bar in self.bars_as_left:
+                    bar_dict_list.append(bar.draw_longitudinal(document=document,
+                                                               x=x + (bar.x - self.x),
+                                                               y=y + (bar.y - self.y),
+                                                               unifilar=unifilar_bars,
+                                                               dimensions=False,
+                                                               denomination=False))  # Only left bars.
 
         # Setting groups of elements in dictionary.
         elements["concrete"] = concrete_dict
@@ -478,8 +486,8 @@ class Beam:
 
     def draw_transverse(self,
                         document: Drawing,
-                        x: float,
-                        y: float,
+                        x: float = None,
+                        y: float = None,
                         x_section: float = None,
                         unifilar: bool = False,
                         dimensions: bool = True,
@@ -504,6 +512,11 @@ class Beam:
         :return: A dict of graphical entities representing the transverse section of the beam.
         :rtype: dict
         """
+        if x is None:
+            x = self.x
+        if y is None:
+            y = self.y
+
         if x_section is None:
             x_section = self.length / 2
 
@@ -545,15 +558,15 @@ class Beam:
                                                              y=y + delta_y,
                                                              unifilar=unifilar))
 
-            # Setting groups of elements in dictionary.
-            elements["concrete"] = concrete_dict
-            elements["bars"] = bar_dict_list
-            elements["stirrups"] = stirrup_dict_list
-            elements["all_elements"] = (elements["concrete"]["all_elements"] +
-                                        list(chain(
-                                            *[bar_dict["all_elements"] for bar_dict in elements["bars"]])) +
-                                        list(chain(
-                                            *[stirrup_dict["all_elements"] for stirrup_dict in elements["stirrups"]])))
+        # Setting groups of elements in dictionary.
+        elements["concrete"] = concrete_dict
+        elements["bars"] = bar_dict_list
+        elements["stirrups"] = stirrup_dict_list
+        elements["all_elements"] = (elements["concrete"]["all_elements"] +
+                                    list(chain(
+                                        *[bar_dict["all_elements"] for bar_dict in elements["bars"]])) +
+                                    list(chain(
+                                        *[stirrup_dict["all_elements"] for stirrup_dict in elements["stirrups"]])))
 
         return elements
 
