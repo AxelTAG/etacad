@@ -86,6 +86,7 @@ class Stirrup:
     # Others.
     element_type: ElementTypes = field(default=ElementTypes.STIRRUP)
     denomination: str = field(default=None)
+    position: str = field(default=None)
 
     def __attrs_post_init__(self):
         # Stirrups attributes.
@@ -420,4 +421,11 @@ class Stirrup:
 
         data = self.data()
 
-        return [data[key] for key in labels if key in data]
+        data_required = []
+        for key in labels:
+            if key in data:
+                data_required.append(data)
+            else:
+                data_required.append("-")
+
+        return data_required

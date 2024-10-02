@@ -140,3 +140,12 @@ def test_draw_transverse_rebar_detailing_recutangular_column(column):
 
     # General.
     assert len(entities["all_elements"]) == 26
+
+
+def test_draw_table_rebar_detailing_column(column):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = column.draw_table_rebar_detailing(document=doc, x=-20, y=-5)
+    doc.saveas(filename="./tests/column_recatangular_table_rebar_detailing.dxf")
+
+    # General.
+    assert len(entities["all_elements"]) == 122

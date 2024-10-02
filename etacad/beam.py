@@ -2,11 +2,12 @@
 # Local imports.
 from etacad.drawing_utils import delimit_axe, dim_linear, rect, text
 from etacad.bar import Bar
+from etacad.cadtable import CADTable
 from etacad.concrete import Concrete
 from etacad.globals import (BEAM_SET_LONG, BEAM_SET_LONG_REBAR, BEAM_SET_TRANSVERSE, CONCRETE_WEIGHT, Direction,
                             ElementTypes, Orientation)
 from etacad.stirrup import Stirrup
-from etacad.utils import gen_symmetric_list, unpack_nested_dicts
+from etacad.utils import gen_symmetric_list, gen_position_bars
 
 # External imports.
 from attrs import define, field
@@ -138,10 +139,12 @@ class Beam:
     orientation: Orientation = field(default=Orientation.RIGHT)
 
     # Steel attributes.
+    number_init: int = field(default=None)
+
     as_sup: dict = field(default=None)
     max_db_sup: float = field(init=False)
     anchor_sup: float | list = field(default=0)
-    number_init_sup: int = field(init=False)
+    number_init_sup: int = field(default=0, converter=int)
 
     as_right: dict = field(default=None)
     max_db_right: float = field(init=False)
@@ -185,58 +188,60 @@ class Beam:
     stirrups: list = field(init=False)
     all_elements: list = field(init=False)
 
-    # Others.
+    # Position bar attributes.
     nomenclature: str = field(default="#")
-    number_init: int = field(default=None)
+    positions: dict = field(init=False)
+
+    # Beam attributes.
+    denomination: str = field(default=None)
     element_type: ElementTypes = field(default=ElementTypes.BEAM)
 
     def __attrs_post_init__(self):
-        # Steel attributes.
+        # Longitudinal steel attributes.
+        if self.number_init is None:
+            self.number_init = 0
+
         # Top bars.
         if self.as_sup:
             self.max_db_sup = max(self.as_sup.keys())
+            self.number_init_sup = self.number_init if self.number_init else 0
+            self.number_init = self.number_init + len(self.as_sup) if self.number_init else len(self.as_sup)
 
             if not type(self.anchor_sup) == list:
                 self.anchor_sup = [self.anchor_sup] * sum(self.as_sup.values())
-
-            self.number_init_sup = self.number_init if self.number_init is not None else 0
-            self.number_init = self.number_init + len(self.as_sup) if self.number_init else len(self.as_sup)
         else:
             self.as_sup, self.max_db_sup = {}, 0
 
         # Right bars.
         if self.as_right:
             self.max_db_right = max(self.as_right.keys())
+            self.number_init_right = self.number_init if self.number_init is not None else 0
+            self.number_init = self.number_init + len(self.as_right) if self.number_init else len(self.as_right)
 
             if not type(self.anchor_right) == list:
                 self.anchor_right = [self.anchor_right] * sum(self.as_right.values())
-
-            self.number_init_right = self.number_init
-            self.number_init += len(self.as_right)
         else:
             self.as_right, self.max_db_right = {}, 0
 
         # Inferior bars.
         if self.as_inf:
             self.max_db_inf = max(self.as_inf.keys())
+            self.number_init_inf = self.number_init if self.number_init is not None else 0
+            self.number_init = self.number_init + len(self.as_inf) if self.number_init else len(self.as_inf)
 
             if not type(self.anchor_inf) == list:
                 self.anchor_inf = [self.anchor_inf] * sum(self.as_inf.values())
-
-            self.number_init_inf = self.number_init
-            self.number_init += len(self.as_inf)
         else:
             self.as_inf, self.max_db_inf = {}, 0
 
         # Left bars.
         if self.as_left:
             self.max_db_left = max(self.as_left.keys())
+            self.number_init_left = self.number_init if self.number_init is not None else 0
+            self.number_init = self.number_init + len(self.as_left) if self.number_init else len(self.as_left)
 
             if not type(self.anchor_left) == list:
                 self.anchor_left = [self.anchor_left] * sum(self.as_left.values())
-
-            self.number_init_left = self.number_init
-            self.number_init += len(self.as_left)
         else:
             self.as_left, self.max_db_left = {}, 0
 
@@ -274,6 +279,11 @@ class Beam:
         if self.columns_symbol is None:
             self.columns_symbol = [*range(1, len(self.columns) + 1)]
 
+        # Position bar attributes.
+        self.positions = gen_position_bars(dictionaries=[self.as_sup, self.as_right, self.as_inf, self.as_left],
+                                           nomenclature=self.nomenclature,
+                                           number_init=self.number_init_sup)
+
         # Elements/Entities.
         self.bars_as_sup = self.__dict_to_bars(self.as_sup, width=self.width, x=self.x, y=self.y, side=0,
                                                anchor=self.anchor_sup, nomenclature=self.nomenclature,
@@ -292,6 +302,10 @@ class Beam:
         self.stirrups = self.__list_to_stirrups()
 
         self.all_elements = self.all_bars + self.stirrups
+
+        # Beam attributes.
+        if self.denomination is None:
+            self.denomination = "Beam {0:.2f}x{1:.2f}".format(self.width, self.height)
 
     # Function that draws beam along longitudinal axe.
     def draw_longitudinal(self,
@@ -746,11 +760,6 @@ class Beam:
 
         return elements
 
-    def draw_table_rebar_detailing(self, x: float = None,
-                                   y: float = None,
-                                   unifilar: bool = False):
-        pass
-
     def __dict_to_bars(self, bars: dict,
                        width: float,
                        x: float,
@@ -786,10 +795,10 @@ class Beam:
         if side < 0 or side > 3:
             raise ValueError
 
-        list_bars, list_denom = gen_symmetric_list(dictionary=bars,
-                                                   nomenclature=nomenclature,
-                                                   number_init=number_init,
-                                                   factor=1)  # Creating symetric list of bars.
+        list_bars, list_denom, list_pos, list_quantity = gen_symmetric_list(dictionary=bars,
+                                                                            nomenclature=nomenclature,
+                                                                            number_init=number_init,
+                                                                            factor=1)  # Creating symetric list of bars.
 
         # Calculating separtion and definition of initial x_sep and y_sep.
         if side == 0 or side == 2:  # Sides top (0) or bottom (2).
@@ -847,7 +856,9 @@ class Beam:
                                 mandrel_radius=db,
                                 orientation=orientation,
                                 transverse_center=(x_bar_transverse, y_bar_transverse),
-                                denomination=list_denom[i]))
+                                denomination=list_denom[i],
+                                position=list_pos[i],
+                                quantity=list_quantity[i]))
 
         return entities
 
@@ -895,6 +906,7 @@ class Beam:
 
         # Generating stirrups.
         entities = []  # Empty list that will contain stirrups elements.
+        n = 1
         for stirrup in stirrups:
             stirrup_x = self.x + stirrup[4]  # Difining x coordinate.
             stirrup_y = self.y + self.cover - self.max_db_inf / 2 - stirrup[0]  # Subract of thick of stirrup.
@@ -909,6 +921,52 @@ class Beam:
                                     y=stirrup_y,
                                     mandrel_radius_top=mandrel_radius_sup,
                                     mandrel_radius_bottom=mandrel_radius_inf,
-                                    anchor=stirrup[3]))
+                                    anchor=stirrup[3],
+                                    position="{0}S{0}".format(self.nomenclature, n)))
+            n += 1
 
         return entities
+
+    def __dict_to_position_bars(self):
+        positions = {}
+        for bar in self.all_bars:
+            if bar.denomination not in positions:
+                positions[bar.denomination] = {"denomination:": bar.denomination, "quantity": 1, "bar": bar}
+            else:
+                positions[bar.denomination]["quantity"] += 1
+
+    def draw_table_rebar_detailing(self,
+                                   document: Drawing,
+                                   x: float = None,
+                                   y: float = None) -> dict:
+        # Getting data.
+        data = self.extract_data()
+
+        # Creating table.
+        table = CADTable(data=data, labels=["POSITION", "DIAMETER", "SPACING", "QUANTITY", "LENGTH", "TOTAL LENGTH",
+                                            "WEIGHT"])
+
+        # Drawing table.
+        elements = table.draw_table(document=document, x=x, y=y)
+
+        return elements
+
+    def extract_data(self) -> list:
+        data = []
+        position_list = []
+        for element in (self.all_bars + self.stirrups):
+            if element.position not in position_list:
+                position = element.position
+                diameter = element.diameter
+                spacing = "{0}".format(element.spacing) if element.element_type == ElementTypes.STIRRUP else "-"
+                quantity = element.quantity if element.element_type == ElementTypes.STIRRUP else self.positions[element.position]["quantity"]
+                length = "{0:.2f}".format(float(element.length))
+                total_length = "{0:.2f}".format(element.quantity * element.length)
+
+                weight = "{0:.2f}".format(element.quantity * element.weight)
+                total_weight = 0
+
+                data.append([position, diameter, spacing, quantity, length, total_length, weight])
+                position_list.append(element.position)
+
+        return data

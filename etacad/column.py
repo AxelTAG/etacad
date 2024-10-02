@@ -1,11 +1,12 @@
 # Local imports.
 from etacad.bar import Bar
+from etacad.cadtable import CADTable
 from etacad.concrete import Concrete
 from etacad.drawing_utils import delimit_axe, dim_linear, rect, text
 from etacad.globals import (COLUMN_SET_TRANSVERSE, COLUMN_SET_LONG_REBAR, ColumnTypes, Direction, ElementTypes,
                             Orientation, CONCRETE_WEIGHT, COLUMN_SET_LONG, COLUMN_SET_TRANSVERSE_REBAR)
 from etacad.stirrup import Stirrup
-from etacad.utils import gen_symmetric_list
+from etacad.utils import gen_symmetric_list, gen_position_bars
 
 # External imports.
 from attrs import define, field
@@ -76,8 +77,6 @@ class Column:
     :type beam_symbol: list, optional
     :param nomenclature: Column identification string or nomenclature.
     :type nomenclature: str, optional
-    :param num_init: Initial number for enumeration or identification purposes.
-    :type num_init: int, optional
 
     :ivar as_sup: Dictionary containing the top longitudinal reinforcement details.
     :vartype as_sup: dict
@@ -163,8 +162,6 @@ class Column:
 
     :ivar nomenclature: Nomenclature for the column reinforcement.
     :vartype nomenclature: str
-    :ivar num_init: Initial number for bar enumeration.
-    :vartype num_init: int
     :ivar element_type: Type of element, set to COLUMN by default.
     :vartype element_type: int
     """
@@ -202,10 +199,10 @@ class Column:
     bars_as_inf: list = field(init=False)
     bars_as_left: list = field(init=False)
 
-    number_init_sup: int = field(default=0, converter=int)
-    number_init_right: int = field(default=0, converter=int)
-    number_init_inf: int = field(default=0, converter=int)
-    number_init_left: int = field(default=0, converter=int)
+    number_init_sup: int = field(init=False)
+    number_init_right: int = field(init=False)
+    number_init_inf: int = field(init=False)
+    number_init_left: int = field(init=False)
 
     cover: float = field(default=0, converter=float)
 
@@ -234,26 +231,63 @@ class Column:
     box_width: float = field(init=False)
     box_height: float = field(init=False)
 
-    # Others.
+    # Position bar attributes.
     nomenclature: str = field(default="#")
-    num_init: int = field(default=0)
+    positions: dict = field(init=False)
+
+    # Column attributes.
+    denomination: str = field(default=None)
+    number_init: int = field(default=None)
     element_type: ElementTypes = field(default=ElementTypes.COLUMN)
 
     def __attrs_post_init__(self):
         # Longitudinal steel attributes.
-        self.anchor_sup = self.anchor_sup if type(self.anchor_sup) == list else [self.anchor_sup] * sum(
-            self.as_sup.values())
-        self.anchor_right = self.anchor_right if type(self.anchor_right) == list else [self.anchor_right] * sum(
-            self.as_right.values())
-        self.anchor_inf = self.anchor_inf if type(self.anchor_inf) == list else [self.anchor_inf] * sum(
-            self.as_inf.values())
-        self.anchor_left = self.anchor_left if type(self.anchor_left) == list else [self.anchor_left] * sum(
-            self.as_left.values())
+        if self.number_init is None:
+            self.number_init = 0
 
-        self.max_db_sup = max(self.as_sup.keys()) if self.as_sup is not None else 0
-        self.max_db_right = max(self.as_right.keys()) if self.as_right is not None else 0
-        self.max_db_inf = max(self.as_inf.keys()) if self.as_inf is not None else 0
-        self.max_db_left = max(self.as_left.keys()) if self.as_left is not None else 0
+        # Top bars.
+        if self.as_sup:
+            self.max_db_sup = max(self.as_sup.keys())
+            self.number_init_sup = self.number_init if self.number_init else 0
+            self.number_init = self.number_init + len(self.as_sup) if self.number_init else len(self.as_sup)
+
+            self.anchor_sup = self.anchor_sup if type(self.anchor_sup) == list else [self.anchor_sup] * sum(
+                self.as_sup.values())
+        else:
+            self.as_sup, self.max_db_sup = {}, 0
+
+        # Right bars.
+        if self.as_right:
+            self.max_db_right = max(self.as_right.keys())
+            self.number_init_right = self.number_init if self.number_init is not None else 0
+            self.number_init = self.number_init + len(self.as_right) if self.number_init else len(self.as_right)
+
+            self.anchor_right = self.anchor_right if type(self.anchor_right) == list else [self.anchor_right] * sum(
+                self.as_right.values())
+        else:
+            self.as_right, self.max_db_right = {}, 0
+
+        # Inferior bars.
+        if self.as_inf:
+            self.max_db_inf = max(self.as_inf.keys())
+            self.number_init_inf = self.number_init if self.number_init is not None else 0
+            self.number_init = self.number_init + len(self.as_inf) if self.number_init else len(self.as_inf)
+
+            self.anchor_inf = self.anchor_inf if type(self.anchor_inf) == list else [self.anchor_inf] * sum(
+                self.as_inf.values())
+        else:
+            self.as_inf, self.max_db_inf = {}, 0
+
+        # Left bars.
+        if self.as_left:
+            self.max_db_left = max(self.as_left.keys())
+            self.number_init_left = self.number_init if self.number_init is not None else 0
+            self.number_init = self.number_init + len(self.as_left) if self.number_init else len(self.as_left)
+
+            self.anchor_left = self.anchor_left if type(self.anchor_left) == list else [self.anchor_left] * sum(
+                self.as_left.values())
+        else:
+            self.as_left, self.max_db_left = {}, 0
 
         self.max_db_hz = max(self.max_db_sup, self.max_db_inf)
         self.max_db_vt = max(self.max_db_right, self.max_db_left)
@@ -305,6 +339,11 @@ class Column:
 
         # Stirrups attributes.
         self.stirrups = self.__list_to_stirrups()
+
+        # Position bar attributes.
+        self.positions = gen_position_bars(dictionaries=[self.as_sup, self.as_right, self.as_inf, self.as_left],
+                                           nomenclature=self.nomenclature,
+                                           number_init=self.number_init_sup)
 
         # Entities groups.
         self.all_bars = self.bars_as_sup + self.bars_as_right + self.bars_as_inf + self.bars_as_left
@@ -783,7 +822,9 @@ class Column:
         :raises ValueError: If the side is not within the range [0, 3].
         """
         # Creating symetric list of bars.
-        list_bars, list_denom = gen_symmetric_list(dictionary=bars, nomenclature=nomenclature, number_init=number_init)
+        list_bars, list_denom, list_pos, list_quantity = gen_symmetric_list(dictionary=bars,
+                                                                            nomenclature=nomenclature,
+                                                                            number_init=number_init)
 
         # Calculating separation and definition of initial x_sep and y_sep.
         if side == Orientation.TOP or side == Orientation.BOTTOM:  # Sides top (0) or bottom (2).
@@ -839,7 +880,9 @@ class Column:
                                 direction=Direction.VERTICAL,
                                 orientation=Orientation.BOTTOM,
                                 transverse_center=(x_bar_transverse, y_bar_transverse),
-                                denomination=list_denom[i]))
+                                denomination=list_denom[i],
+                                position=list_pos[i],
+                                quantity=list_quantity[i]))
 
         return entities
 
@@ -888,11 +931,13 @@ class Column:
 
         # Generating stirrups.
         entities = []  # Empty list that will contain stirrups elements.
+        n = 0
         for stirrup in stirrups:
             stirrup_x = self.x + self.cover - self.max_db_inf / 2 - stirrup[0]  # Subract of thick of stirrup.
             stirrup_y = self.y + stirrup[4]  # Difining y coordinate.
 
             # Creating of stirrup.
+
             entities.append(Stirrup(width=stirrup_width + stirrup[0] * 2,
                                     height=stirrup_height + stirrup[0] * 2,
                                     diameter=stirrup[0],
@@ -903,6 +948,44 @@ class Column:
                                     mandrel_radius_top=mandrel_radius_sup,
                                     mandrel_radius_bottom=mandrel_radius_inf,
                                     anchor=stirrup[3],
-                                    direction=Direction.VERTICAL))
+                                    direction=Direction.VERTICAL,
+                                    position="{0}S{1}".format(self.nomenclature, n)))
+            n += 1
 
         return entities
+
+    def draw_table_rebar_detailing(self,
+                                   document: Drawing,
+                                   x: float = None,
+                                   y: float = None) -> dict:
+        # Getting data.
+        data = self.extract_data()
+
+        # Creating table.
+        table = CADTable(data=data, labels=["POSITION", "DIAMETER", "SPACING", "QUANTITY", "LENGTH", "TOTAL LENGTH",
+                                            "WEIGHT"])
+
+        # Drawing table.
+        elements = table.draw_table(document=document, x=x, y=y)
+
+        return elements
+
+    def extract_data(self) -> list:
+        data = []
+        position_list = []
+        for element in (self.all_bars + self.stirrups):
+            if element.position not in position_list:
+                position = element.position
+                diameter = element.diameter
+                spacing = "{0}".format(element.spacing) if element.element_type == ElementTypes.STIRRUP else "-"
+                quantity = element.quantity if element.element_type == ElementTypes.STIRRUP else self.positions[element.position]["quantity"]
+                length = "{0:.2f}".format(float(element.length))
+                total_length = "{0:.2f}".format(element.quantity * element.length)
+
+                weight = "{0:.2f}".format(element.quantity * element.weight)
+                total_weight = 0
+
+                data.append([position, diameter, spacing, quantity, length, total_length, weight])
+                position_list.append(element.position)
+
+        return data

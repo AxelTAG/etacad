@@ -149,3 +149,10 @@ def test_draw_transverse_rebar_detailing_beam(beam):
     assert len(entities["all_elements"]) == 26
 
 
+def test_draw_table_rebar_detailing_beam(beam):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = beam.draw_table_rebar_detailing(document=doc, x=-20, y=-5)
+    doc.saveas(filename="./tests/beam_table_rebar_detailing.dxf")
+
+    # General.
+    assert len(entities["all_elements"]) == 66

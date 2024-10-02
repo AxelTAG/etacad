@@ -97,6 +97,8 @@ class Bar:
     # Others.
     element_type: ElementTypes = field(default=ElementTypes.BAR)
     denomination: str = field(default=None)
+    position: str = field(default=None)
+    quantity: float = field(default=None)
 
     def __attrs_post_init__(self):
         # Bending attributes.
@@ -546,7 +548,7 @@ class Bar:
         for i, entitie in enumerate(group):
             entitie.set_placement([-coordinates[i][0], coordinates[i][1], coordinates[i][2]])
 
-    def data(self):
+    def data(self) -> dict:
         """
         Collects and returns the essential attributes of the bar element in a dictionary format.
 
@@ -575,4 +577,11 @@ class Bar:
 
         data = self.data()
 
-        return [data[key] for key in labels if key in data]
+        data_required = []
+        for key in labels:
+            if key in data:
+                data_required.append(data[key])
+            else:
+                data_required.append("-")
+
+        return data_required

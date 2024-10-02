@@ -117,7 +117,10 @@ class CADTable:
                                   sides=sides)
             x_vt_lines += column_widths[i]
 
-        elements = {"grid_hz_lines": grid_hz_lines, "grid_vt_lines": grid_vt_lines}
+        # Setting groups of elements in dictionary.
+        elements = {"grid_hz_lines": grid_hz_lines,
+                    "grid_vt_lines": grid_vt_lines,
+                    "all_elements": grid_hz_lines + grid_vt_lines}
 
         return elements
 
@@ -159,6 +162,9 @@ class CADTable:
                            aligment=Aligment.MTEXT_MIDDLE_CENTER.value)
             x_mtext += column_widths[i] / 2
         elements["texts"] = texts
+
+        # Setting groups of elements in dictionary.
+        elements["all_elements"] = elements["all_elements"] + elements["texts"]
 
         return elements
 
@@ -206,6 +212,7 @@ class CADTable:
                 x_mtext += column_widths[i] / 2
             y_mtext += row_height[j] / 2
             elements["texts_row" + str(j)] = texts
+            elements["all_elements"] += texts
 
         return elements
 
@@ -235,5 +242,7 @@ class CADTable:
                                                  y=y,
                                                  row_height=row_height,
                                                  column_widths=column_widths)}
+        # Setting groups of elements in dictionary.
+        elements["all_elements"] = elements["labels"]["all_elements"] + elements["content"]["all_elements"]
 
         return elements
