@@ -144,7 +144,7 @@ class Beam:
     as_sup: dict = field(default=None)
     max_db_sup: float = field(init=False)
     anchor_sup: float | list = field(default=0)
-    number_init_sup: int = field(default=0, converter=int)
+    number_init_sup: int = field(init=False)
 
     as_right: dict = field(default=None)
     max_db_right: float = field(init=False)
@@ -204,13 +204,13 @@ class Beam:
         # Top bars.
         if self.as_sup:
             self.max_db_sup = max(self.as_sup.keys())
-            self.number_init_sup = self.number_init if self.number_init else 0
+            self.number_init_sup = self.number_init if self.number_init is not None else 0
             self.number_init = self.number_init + len(self.as_sup) if self.number_init else len(self.as_sup)
 
             if not type(self.anchor_sup) == list:
                 self.anchor_sup = [self.anchor_sup] * sum(self.as_sup.values())
         else:
-            self.as_sup, self.max_db_sup = {}, 0
+            self.as_sup, self.max_db_sup, self.number_init_sup = {}, 0, 0
 
         # Right bars.
         if self.as_right:
@@ -221,7 +221,7 @@ class Beam:
             if not type(self.anchor_right) == list:
                 self.anchor_right = [self.anchor_right] * sum(self.as_right.values())
         else:
-            self.as_right, self.max_db_right = {}, 0
+            self.as_right, self.max_db_right, self.number_init_right = {}, 0, 0
 
         # Inferior bars.
         if self.as_inf:
@@ -232,7 +232,7 @@ class Beam:
             if not type(self.anchor_inf) == list:
                 self.anchor_inf = [self.anchor_inf] * sum(self.as_inf.values())
         else:
-            self.as_inf, self.max_db_inf = {}, 0
+            self.as_inf, self.max_db_inf, self.number_init_inf = {}, 0, 0
 
         # Left bars.
         if self.as_left:
@@ -243,7 +243,7 @@ class Beam:
             if not type(self.anchor_left) == list:
                 self.anchor_left = [self.anchor_left] * sum(self.as_left.values())
         else:
-            self.as_left, self.max_db_left = {}, 0
+            self.as_left, self.max_db_left, self.number_init_left = {}, 0, 0
 
         # Concrete attributes.
         vertices = [(0, 0),
@@ -288,9 +288,11 @@ class Beam:
                 self.columns_symbol = [*range(1, len(self.columns) + 1)]
 
         # Position bar attributes.
+        min_number_init = min(self.number_init_sup, self.number_init_right, self.number_init_inf, self.number_init_left)
+
         self.positions = gen_position_bars(dictionaries=[self.as_sup, self.as_right, self.as_inf, self.as_left],
                                            nomenclature=self.nomenclature,
-                                           number_init=self.number_init_sup)
+                                           number_init=min_number_init)
 
         # Elements/Entities.
         self.bars_as_sup = self.__dict_to_bars(self.as_sup, width=self.width, x=self.x, y=self.y, side=0,

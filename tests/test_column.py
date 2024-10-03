@@ -10,6 +10,48 @@ from ezdxf.math import Vec3
 
 
 @pytest.fixture
+def column_concrete():
+    return Column(width=0.8,
+                  depth=0.8,
+                  height=6,
+                  x=-1,
+                  y=-1)
+
+
+def test_attributes_column_concrete(column_concrete):
+    # Geometric attributes.
+    assert column_concrete.width == .8
+    assert column_concrete.depth == .8
+    assert column_concrete.height == 6
+    assert column_concrete.x == -1
+    assert column_concrete.y == -1
+
+    # Concrete attributes.
+    assert column_concrete.concrete.volume == .8 * .8 * 6
+
+
+def test_draw_longitudinal_column_concrete(column_concrete):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = column_concrete.draw_longitudinal(document=doc, unifilar_bars=False)
+    doc.saveas(filename="./tests/column_concrete_longitudinal.dxf")
+
+    # Concrete.
+    assert len(entities["concrete"]["concrete_elements"]) == 4
+
+    # Dimensions.
+    assert len(entities["dimensions_elements"]) == 0
+
+
+def test_draw_transverse_column_concrete(column_concrete):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities = column_concrete.draw_transverse(document=doc)
+    doc.saveas(filename="./tests/column_concrete_transverse.dxf")
+
+    # Concrete.
+    assert len(entities["concrete"]["concrete_elements"]) == 1
+
+
+@pytest.fixture
 def column():
     return Column(width=.2,
                   depth=.2,

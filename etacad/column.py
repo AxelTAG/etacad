@@ -254,7 +254,7 @@ class Column:
             self.anchor_sup = self.anchor_sup if type(self.anchor_sup) == list else [self.anchor_sup] * sum(
                 self.as_sup.values())
         else:
-            self.as_sup, self.max_db_sup = {}, 0
+            self.as_sup, self.max_db_sup, self.number_init_sup = {}, 0, 0
 
         # Right bars.
         if self.as_right:
@@ -265,7 +265,7 @@ class Column:
             self.anchor_right = self.anchor_right if type(self.anchor_right) == list else [self.anchor_right] * sum(
                 self.as_right.values())
         else:
-            self.as_right, self.max_db_right = {}, 0
+            self.as_right, self.max_db_right, self.number_init_right = {}, 0, 0
 
         # Inferior bars.
         if self.as_inf:
@@ -276,7 +276,7 @@ class Column:
             self.anchor_inf = self.anchor_inf if type(self.anchor_inf) == list else [self.anchor_inf] * sum(
                 self.as_inf.values())
         else:
-            self.as_inf, self.max_db_inf = {}, 0
+            self.as_inf, self.max_db_inf, self.number_init_inf = {}, 0, 0
 
         # Left bars.
         if self.as_left:
@@ -287,7 +287,7 @@ class Column:
             self.anchor_left = self.anchor_left if type(self.anchor_left) == list else [self.anchor_left] * sum(
                 self.as_left.values())
         else:
-            self.as_left, self.max_db_left = {}, 0
+            self.as_left, self.max_db_left, self.number_init_left = {}, 0, 0
 
         self.max_db_hz = max(self.max_db_sup, self.max_db_inf)
         self.max_db_vt = max(self.max_db_right, self.max_db_left)
@@ -341,9 +341,11 @@ class Column:
         self.stirrups = self.__list_to_stirrups()
 
         # Position bar attributes.
+        min_number_init = min(self.number_init_sup, self.number_init_right, self.number_init_inf, self.number_init_left)
+
         self.positions = gen_position_bars(dictionaries=[self.as_sup, self.as_right, self.as_inf, self.as_left],
                                            nomenclature=self.nomenclature,
-                                           number_init=self.number_init_sup)
+                                           number_init=min_number_init)
 
         # Entities groups.
         self.all_bars = self.bars_as_sup + self.bars_as_right + self.bars_as_inf + self.bars_as_left
@@ -428,28 +430,29 @@ class Column:
                                                                    settings=COLUMN_SET_LONG["concrete_settings"])
 
         # Drawing beams.
-        if beams:
-            for i, y_beam in enumerate(self.beams_pos):
-                y_column_relative = y + y_beam
-                y_delimit_axe_relative = y_column_relative + self.beams[i][1] / 2
-                if beams:
-                    elements["beam_elements"] += rect(doc=document,
-                                                      width=self.beams[i][0],
-                                                      height=self.beams[i][1],
-                                                      x=x,
-                                                      y=y_column_relative,
-                                                      fill=True,
-                                                      polyline=True)
-                if beams_axes:
-                    elements["beam_axe_elements"] += delimit_axe(document=document,
-                                                                 x=delimit_axe_x,
-                                                                 y=y_delimit_axe_relative,
-                                                                 height=delimit_axe_width,
-                                                                 radius=0.1,
-                                                                 text_height=0.1,
-                                                                 symbol=self.beam_symbol[i],
-                                                                 direction=Direction.HORIZONTAL,
-                                                                 attr=GfxAttribs(linetype="CENTER"))
+        if self.beams:
+            if beams:
+                for i, y_beam in enumerate(self.beams_pos):
+                    y_column_relative = y + y_beam
+                    y_delimit_axe_relative = y_column_relative + self.beams[i][1] / 2
+                    if beams:
+                        elements["beam_elements"] += rect(doc=document,
+                                                          width=self.beams[i][0],
+                                                          height=self.beams[i][1],
+                                                          x=x,
+                                                          y=y_column_relative,
+                                                          fill=True,
+                                                          polyline=True)
+                    if beams_axes:
+                        elements["beam_axe_elements"] += delimit_axe(document=document,
+                                                                     x=delimit_axe_x,
+                                                                     y=y_delimit_axe_relative,
+                                                                     height=delimit_axe_width,
+                                                                     radius=0.1,
+                                                                     text_height=0.1,
+                                                                     symbol=self.beam_symbol[i],
+                                                                     direction=Direction.HORIZONTAL,
+                                                                     attr=GfxAttribs(linetype="CENTER"))
 
         # Drawing axe.
         if middle_axe:
@@ -461,19 +464,6 @@ class Column:
                                                            direction=Direction.VERTICAL,
                                                            attr=GfxAttribs(linetype="CENTER"))
 
-        # Drawing dimensions.
-        if dim:
-            for stirrup in self.stirrups:
-                elements["dimensions_elements"] += dim_linear(document=document,
-                                                              p_base=(x - self.width * 3,
-                                                                      y + (
-                                                                              stirrup.y - self.y) + stirrup.reinforcement_length / 2),
-                                                              p1=(x, y + (stirrup.y - self.y)),
-                                                              p2=(x, y + (
-                                                                      stirrup.y - self.y) + stirrup.reinforcement_length),
-                                                              rotation=90,
-                                                              dimstyle=dim_style)
-
         # Drawing of stirrups.
         if stirrups:
             for stirrup in self.stirrups:
@@ -481,17 +471,28 @@ class Column:
                                                                       x=x + (stirrup.x - self.x),
                                                                       y=y + (stirrup.y - self.y),
                                                                       unifilar=unifilar_stirrups))
+            # Drawing dimensions.
+            if dim:
+                for stirrup in self.stirrups:
+                    elements["dimensions_elements"] += dim_linear(document=document,
+                                                                  p_base=(x - self.width * 3,
+                                                                          y + (stirrup.y - self.y) + stirrup.reinforcement_length / 2),
+                                                                  p1=(x, y + (stirrup.y - self.y)),
+                                                                  p2=(x, y + (stirrup.y - self.y) + stirrup.reinforcement_length),
+                                                                  rotation=90,
+                                                                  dimstyle=dim_style)
 
         # Drawing of bars.
-        if bars:
-            for bar in self.bars_as_inf:
-                delta_unfilar = 0 if not unifilar_bars else - bar.radius
-                elements["bars"].append(bar.draw_longitudinal(document=document,
-                                                              x=x + (bar.x - self.x) + delta_unfilar,
-                                                              y=y + (bar.y - self.y),
-                                                              unifilar=unifilar_bars,
-                                                              dimensions=False,
-                                                              denomination=False))  # Only left bars.
+        if self.as_sup or self.as_right or self.as_inf or self.as_left:
+            if bars:
+                for bar in self.bars_as_inf:
+                    delta_unfilar = 0 if not unifilar_bars else - bar.radius
+                    elements["bars"].append(bar.draw_longitudinal(document=document,
+                                                                  x=x + (bar.x - self.x) + delta_unfilar,
+                                                                  y=y + (bar.y - self.y),
+                                                                  unifilar=unifilar_bars,
+                                                                  dimensions=False,
+                                                                  denomination=False))  # Only left bars.
 
         # Setting groups of elements in dictionary.
         elements["all_elements"] = (elements["concrete"]["all_elements"] +
@@ -506,8 +507,8 @@ class Column:
 
     def draw_transverse(self,
                         document: Drawing,
-                        x: float,
-                        y: float,
+                        x: float = None,
+                        y: float = None,
                         y_section: float = None,
                         unifilar: bool = False,
                         dimensions: bool = True,
@@ -533,6 +534,11 @@ class Column:
         :return: A dict of entities representing the transverse view of the column.
         :rtype: dict
         """
+        if x is None:
+            x = self.x
+        if y is None:
+            y = self.y
+
         if y_section is None:
             y_section = self.height / 2
 
