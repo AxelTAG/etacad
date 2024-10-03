@@ -937,7 +937,7 @@ class Beam:
                                     mandrel_radius_top=mandrel_radius_sup,
                                     mandrel_radius_bottom=mandrel_radius_inf,
                                     anchor=stirrup[3],
-                                    position="{0}S{0}".format(self.nomenclature, n)))
+                                    position="{0}S{1}".format(self.nomenclature, n)))
             n += 1
 
         return entities

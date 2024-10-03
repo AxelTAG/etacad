@@ -338,6 +338,25 @@ class Column:
                                  specific_weight=self.concrete_specific_weight)
 
         # Stirrups attributes.
+        if self.stirrups_db is not None:
+            if type(self.stirrups_db) == float:
+                self.stirrups_db = [self.stirrups_db]
+
+            if self.stirrups_anchor is None:
+                self.stirrups_anchor = [0.1] * len(self.stirrups_db)
+
+            elif type(self.stirrups_anchor) == float:
+                self.stirrups_anchor = [self.stirrups_anchor] * len(self.stirrups_db)
+
+            if type(self.stirrups_sep) == float:
+                self.stirrups_sep = [self.stirrups_sep] * len(self.stirrups_db)
+
+            if self.stirrups_length is None:
+                self.stirrups_length = [self.height - (self.depth + self.cover) * 2]
+
+            if self.stirrups_x is None:
+                self.stirrups_x = [self.depth + self.cover]
+
         self.stirrups = self.__list_to_stirrups()
 
         # Position bar attributes.
@@ -862,17 +881,16 @@ class Column:
                 y_sep += separation
                 delta_y = self.cover - db / 2
                 if side == Orientation.RIGHT:
-                    delta_x = self.cover + db - max(
-                        [self.max_db_sup, self.max_db_inf, self.max_db_right]) / 2 - self.width
+                    delta_x = self.width - (self.cover + db - max( [self.max_db_sup, self.max_db_inf, self.max_db_right]) / 2)
                     delta_y_transverse = delta_y
                 if side == Orientation.LEFT:
-                    delta_x = - self.cover + max([self.max_db_sup, self.max_db_inf, self.max_db_left]) / 2
+                    delta_x = self.cover - max([self.max_db_sup, self.max_db_inf, self.max_db_left]) / 2
                     delta_y_transverse = delta_y
             else:
                 raise ValueError
 
             x_bar_long = x + x_sep + delta_x
-            x_bar_transverse = x_sep - delta_x
+            x_bar_transverse = x_sep + delta_x
             y_bar_long = y + self.cover
             y_bar_transverse = y_sep + delta_y_transverse
 
