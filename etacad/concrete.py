@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Imports.
 # Locals imports.
 from etacad.drawing_utils import line, polyline, translate, dim_linear

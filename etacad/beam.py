@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Imports.
 # Local imports.
 from etacad.drawing_utils import delimit_axe, dim_linear, rect, text

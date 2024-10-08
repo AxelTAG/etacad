@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Imports.
 # Local imports.
 from etacad.geometry.utils import get_lines_intersec

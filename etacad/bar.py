@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Imports.
 # Local imports.
 from etacad.drawing_utils import circle, curve, line, mirror, rads, rect, rotate, text, translate

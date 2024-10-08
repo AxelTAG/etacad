@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Local imports.
 from etacad.globals import Direction, Orientation
 from etacad.beam import Beam

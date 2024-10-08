@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # External imports.
 from attrs import define, field
 

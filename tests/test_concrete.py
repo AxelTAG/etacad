@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Local imports.
 from etacad.globals import DRotation
 from etacad.concrete import Concrete

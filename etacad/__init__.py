@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """A package aimed to simpilfy drawings of structurals elements based on ezdxf library."""
 
 from .bar import Bar

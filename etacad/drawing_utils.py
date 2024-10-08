@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Imports.
 # Local imports.
 from etacad.globals import Aligment, Direction
