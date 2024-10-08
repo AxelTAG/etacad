@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 # Imports.
 # Local imports.
 from etacad.globals import DRotation
-from etacad.geometry.utils import get_linear_center, get_line_longitud, get_line_eq, segment_center
+from .utils import get_linear_center, get_line_longitud, get_line_eq, segment_center
 
 # External imports.
 from attrs import define, field

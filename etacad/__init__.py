@@ -8,4 +8,3 @@ from .concrete import Concrete
 from .cadtable import CADTable
 from .beam import Beam
 from .column import Column
-
