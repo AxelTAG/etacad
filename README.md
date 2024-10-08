@@ -103,4 +103,4 @@ doc1.saveas("column.dxf")
 
 ## Support me:
 
-- If you want to pay me for a beer, coffee, or something else: [C|_|] (https://www.paypal.com/paypalme/KevinAxelTagliaferri)
+- If you want to pay me for a beer, coffee, or something else: [C|_|](https://www.paypal.com/paypalme/KevinAxelTagliaferri)
