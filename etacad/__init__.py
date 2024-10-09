@@ -2,6 +2,8 @@
 
 """A package aimed to simpilfy drawings of structurals elements based on ezdxf library."""
 
+__version__ = "0.0.7"
+
 from .bar import Bar
 from .stirrup import Stirrup
 from .concrete import Concrete
