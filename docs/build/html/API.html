@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API References &mdash; etacad 0.0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=bbaf98b3"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            etacad
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API References</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#etacad.beam.Beam"><code class="docutils literal notranslate"><span class="pre">Beam</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.beam.Beam.draw_longitudinal"><code class="docutils literal notranslate"><span class="pre">Beam.draw_longitudinal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.beam.Beam.draw_longitudinal_rebar_detailing"><code class="docutils literal notranslate"><span class="pre">Beam.draw_longitudinal_rebar_detailing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.beam.Beam.draw_transverse"><code class="docutils literal notranslate"><span class="pre">Beam.draw_transverse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.beam.Beam.draw_transverse_rebar_detailing"><code class="docutils literal notranslate"><span class="pre">Beam.draw_transverse_rebar_detailing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#etacad.stirrup.Stirrup"><code class="docutils literal notranslate"><span class="pre">Stirrup</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.stirrup.Stirrup.data"><code class="docutils literal notranslate"><span class="pre">Stirrup.data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.stirrup.Stirrup.draw_longitudinal"><code class="docutils literal notranslate"><span class="pre">Stirrup.draw_longitudinal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.stirrup.Stirrup.draw_transverse"><code class="docutils literal notranslate"><span class="pre">Stirrup.draw_transverse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.stirrup.Stirrup.extract_data"><code class="docutils literal notranslate"><span class="pre">Stirrup.extract_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#etacad.concrete.Concrete"><code class="docutils literal notranslate"><span class="pre">Concrete</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.concrete.Concrete.draw_longitudinal"><code class="docutils literal notranslate"><span class="pre">Concrete.draw_longitudinal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.concrete.Concrete.draw_transverse"><code class="docutils literal notranslate"><span class="pre">Concrete.draw_transverse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.concrete.Concrete.polygon"><code class="docutils literal notranslate"><span class="pre">Concrete.polygon</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Beam</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Beam.draw_longitudinal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Beam.draw_longitudinal_rebar_detailing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Beam.draw_transverse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Beam.draw_transverse_rebar_detailing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#etacad.column.Column"><code class="docutils literal notranslate"><span class="pre">Column</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.column.Column.draw_longitudinal"><code class="docutils literal notranslate"><span class="pre">Column.draw_longitudinal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.column.Column.draw_longitudinal_rebar_detailing"><code class="docutils literal notranslate"><span class="pre">Column.draw_longitudinal_rebar_detailing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.column.Column.draw_transverse"><code class="docutils literal notranslate"><span class="pre">Column.draw_transverse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#etacad.column.Column.draw_transverse_rebar_detailing"><code class="docutils literal notranslate"><span class="pre">Column.draw_transverse_rebar_detailing()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">etacad</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API References</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/axeltag/etacad/blob/main/docs/source/API.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-references">
+<h1>API References<a class="headerlink" href="#api-references" title="Link to this heading"></a></h1>
+<p>API References.</p>
+<dl class="py class" id="module-etacad.beam">
+<dt class="sig sig-object py" id="etacad.beam.Beam">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">etacad.beam.</span></span><span class="sig-name descname"><span class="pre">Beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Direction</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Direction.HORIZONTAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Orientation</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Orientation.RIGHT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_sup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_sup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_inf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_inf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concrete_specific_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_anchor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nomenclature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denomination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementTypes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ElementTypes.BEAM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#etacad.beam.Beam" title="Link to this definition"></a></dt>
+<dd><p>Beam element, computes geometrics and physics props and manages dxf drawing methods (longitudinal, transversal,
+reinforcement detailing, etc.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>float</em>) – Width of the beam.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – Height of the beam.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>direction</strong> (<em>str</em>) – Direction of the beam (HORIZONTAL or VERTICAL).</p></li>
+<li><p><strong>orientation</strong> (<em>str</em>) – Orientation of the beam (TOP, RIGHT, DOWN, LEFT).</p></li>
+<li><p><strong>as_sup</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the top side.</p></li>
+<li><p><strong>anchor_sup</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the top reinforcement or list of lengths.</p></li>
+<li><p><strong>as_right</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the right side.</p></li>
+<li><p><strong>anchor_right</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the right reinforcement or list of lengths.</p></li>
+<li><p><strong>as_inf</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the bottom side.</p></li>
+<li><p><strong>anchor_inf</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the bottom reinforcement or list of lengths.</p></li>
+<li><p><strong>as_left</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the left side.</p></li>
+<li><p><strong>anchor_left</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the left reinforcement or list of lengths.</p></li>
+<li><p><strong>cover</strong> (<em>float</em>) – Concrete cover for the reinforcement.</p></li>
+<li><p><strong>concrete_specific_weight</strong> – Specific weight of the concrete. Defaults to CONCRETE_WEIGHT.</p></li>
+<li><p><strong>stirrups_db</strong> (<em>float</em><em> | </em><em>list</em>) – Diameter of stirrups or list of diameters.</p></li>
+<li><p><strong>stirrups_sep</strong> (<em>float</em><em> | </em><em>list</em>) – Separation between stirrups or list of separations.</p></li>
+<li><p><strong>stirrups_length</strong> (<em>list</em>) – List of lengths for stirrups.</p></li>
+<li><p><strong>stirrups_anchor</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length of stirrups or list of anchor lengths.</p></li>
+<li><p><strong>stirrups_x</strong> (<em>list</em>) – List of x-coordinates for stirrups.</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – List of lists containing column width and height.</p></li>
+<li><p><strong>columns_pos</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of positions (X-coordinate of start) for columns.</p></li>
+<li><p><strong>columns_symbol</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of symbols representing columns.</p></li>
+<li><p><strong>nomenclature</strong> (<em>str</em>) – Nomenclature prefix used for labeling elements.</p></li>
+<li><p><strong>number_init</strong> (<em>int</em>) – Initial number for labeling elements.</p></li>
+<li><p><strong>element_type</strong> (<em>ElementTypes</em>) – Type of the structural element (e.g., BEAM).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>width</strong> – Width of the beam.</p></li>
+<li><p><strong>height</strong> – Height of the beam.</p></li>
+<li><p><strong>length</strong> – Length of the beam.</p></li>
+<li><p><strong>x</strong> – X-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>y</strong> – Y-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>direction</strong> – Direction of the element (HORIZONTAL or VERTICAL).</p></li>
+<li><p><strong>orientation</strong> – Orientation of the element (e.g., TOP, RIGHT, DOWN, LEFT).</p></li>
+<li><p><strong>as_sup</strong> – Dictionary containing reinforcement information for the top side.</p></li>
+<li><p><strong>max_db_sup</strong> – Maximum diameter of the top reinforcement bars.</p></li>
+<li><p><strong>anchor_sup</strong> – Anchor length for the top reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_sup</strong> – Initial numbering for the top reinforcement bars.</p></li>
+<li><p><strong>as_right</strong> – Dictionary containing reinforcement information for the right side.</p></li>
+<li><p><strong>max_db_right</strong> – Maximum diameter of the right reinforcement bars.</p></li>
+<li><p><strong>anchor_right</strong> – Anchor length for the right reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_right</strong> – Initial numbering for the right reinforcement bars.</p></li>
+<li><p><strong>as_inf</strong> – Dictionary containing reinforcement information for the bottom side.</p></li>
+<li><p><strong>max_db_inf</strong> – Maximum diameter of the bottom reinforcement bars.</p></li>
+<li><p><strong>anchor_inf</strong> – Anchor length for the bottom reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_inf</strong> – Initial numbering for the bottom reinforcement bars.</p></li>
+<li><p><strong>as_left</strong> – Dictionary containing reinforcement information for the left side.</p></li>
+<li><p><strong>max_db_left</strong> – Maximum diameter of the left reinforcement bars.</p></li>
+<li><p><strong>anchor_left</strong> – Anchor length for the left reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_left</strong> – Initial numbering for the left reinforcement bars.</p></li>
+<li><p><strong>cover</strong> – Concrete cover for the reinforcement.</p></li>
+<li><p><strong>concrete_specific_weight</strong> – Specific weight of the concrete.</p></li>
+<li><p><strong>concrete</strong> – Concrete instance class.</p></li>
+<li><p><strong>stirrups_db</strong> – Diameter of stirrups or list of diameters.</p></li>
+<li><p><strong>stirrups_sep</strong> – Separation between stirrups or list of separations.</p></li>
+<li><p><strong>stirrups_length</strong> – List of lengths for stirrups.</p></li>
+<li><p><strong>stirrups_anchor</strong> – Anchor length of stirrups or list of anchor lengths.</p></li>
+<li><p><strong>stirrups_x</strong> – List of x-coordinates for stirrups.</p></li>
+<li><p><strong>columns</strong> – List of lists containing column width and height.</p></li>
+<li><p><strong>columns_pos</strong> – List of positions (X-coordinate of start) for columns.</p></li>
+<li><p><strong>columns_symbol</strong> – List of symbols representing columns.</p></li>
+<li><p><strong>bars_as_sup</strong> – List of top reinforcement bars as entities.</p></li>
+<li><p><strong>bars_as_right</strong> – List of right reinforcement bars as entities.</p></li>
+<li><p><strong>bars_as_inf</strong> – List of bottom reinforcement bars as entities.</p></li>
+<li><p><strong>bars_as_left</strong> – List of left reinforcement bars as entities.</p></li>
+<li><p><strong>all_bars</strong> – List of all reinforcement bars as entities.</p></li>
+<li><p><strong>stirrups</strong> – List of stirrups as entities.</p></li>
+<li><p><strong>all_elements</strong> – List of all elements/entities in the structure.</p></li>
+<li><p><strong>nomenclature</strong> – Nomenclature prefix used for labeling elements.</p></li>
+<li><p><strong>number_init</strong> – Initial number for labeling elements.</p></li>
+<li><p><strong>element_type</strong> – Type of the structural element (e.g., BEAM).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.beam.Beam.draw_longitudinal">
+<span class="sig-name descname"><span class="pre">draw_longitudinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concrete_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_axe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_axe_symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'A'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'EZ_M_25_H25_CM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar_bars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar_stirrups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'concrete_settings':</span> <span class="pre">{'dim_style_boxing':</span> <span class="pre">'EZ_M_25_H25_CM',</span> <span class="pre">'dim_style_inner':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.6,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.1},</span> <span class="pre">'text_dim_height':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_horizontal_distance':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.beam.Beam.draw_longitudinal" title="Link to this definition"></a></dt>
+<dd><p>Draws the longitudinal section of the beam.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the beam will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the left bottom corner of beam concrete shape.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the left bottom corner of beam concrete shape.</p></li>
+<li><p><strong>concrete_shape</strong> (<em>bool</em>) – If True, the concrete shape of the beam is drawn.</p></li>
+<li><p><strong>bars</strong> (<em>bool</em>) – If True, the reinforcement bars are drawn.</p></li>
+<li><p><strong>columns</strong> (<em>bool</em>) – If True, the columns are drawn.</p></li>
+<li><p><strong>columns_axes</strong> (<em>bool</em>) – If True, the axes of the columns are drawn.</p></li>
+<li><p><strong>stirrups</strong> (<em>bool</em>) – If True, the stirrups are drawn.</p></li>
+<li><p><strong>middle_axe</strong> (<em>bool</em>) – If True, the middle axis of the beam is drawn.</p></li>
+<li><p><strong>middle_axe_symbol</strong> (<em>str</em>) – Symbol to represent the middle axis.</p></li>
+<li><p><strong>dim</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+<li><p><strong>dim_style</strong> (<em>str</em>) – The dimension style to be used.</p></li>
+<li><p><strong>unifilar_bars</strong> (<em>bool</em>) – If True, the reinforcement bars are drawn as unifilar.</p></li>
+<li><p><strong>unifilar_stirrups</strong> (<em>bool</em>) – If True, the stirrups are drawn as unifilar.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dictionary of drawing settings. Default is <cite>BEAT_SET_LONG</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of graphical entities representing the longitudinal section of the beam.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.beam.Beam.draw_longitudinal_rebar_detailing">
+<span class="sig-name descname"><span class="pre">draw_longitudinal_rebar_detailing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'text_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.beam.Beam.draw_longitudinal_rebar_detailing" title="Link to this definition"></a></dt>
+<dd><p>Draws the longitudinal rebar detailing for the beam.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the detailing will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the rebar is drawn as unifilar.</p></li>
+<li><p><strong>columns_axes</strong> (<em>bool</em>) – If True, the axes of the columns are drawn.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dict with beam longitudinal rebar drawing settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of graphical entities representing the longitudinal rebar detailing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.beam.Beam.draw_transverse">
+<span class="sig-name descname"><span class="pre">draw_transverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'concrete_settings':</span> <span class="pre">{'dim_style_boxing':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'dim_style_inner':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.1,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.1,</span> <span class="pre">'text_dim_inner_perpendicular_distance':</span> <span class="pre">0.05},</span> <span class="pre">'text_dim_distance':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.beam.Beam.draw_transverse" title="Link to this definition"></a></dt>
+<dd><p>Draws the transverse section of the beam at a given x-section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the beam will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>x_section</strong> (<em>float</em><em>, </em><em>optional</em>) – The x-coordinate of the section to be drawn.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the bars are drawn as unifilar.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dict with beam transverse drawing settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of graphical entities representing the transverse section of the beam.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.beam.Beam.draw_transverse_rebar_detailing">
+<span class="sig-name descname"><span class="pre">draw_transverse_rebar_detailing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.beam.Beam.draw_transverse_rebar_detailing" title="Link to this definition"></a></dt>
+<dd><p>Draws the transverse rebar detailing for the beam at a given x-section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the detailing will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>x_section</strong> (<em>float</em><em>, </em><em>optional</em>) – The x-coordinate of the section to be drawn.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the rebar is drawn as unifilar.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of graphical entities representing the transverse rebar detailing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py class" id="module-etacad.stirrup">
+<dt class="sig sig-object py" id="etacad.stirrup.Stirrup">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">etacad.stirrup.</span></span><span class="sig-name descname"><span class="pre">Stirrup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reinforcement_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mandrel_radius_top</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mandrel_radius_bottom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Direction</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Direction.HORIZONTAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Orientation</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Orientation.BOTTOM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementTypes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ElementTypes.STIRRUP</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denomination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#etacad.stirrup.Stirrup" title="Link to this definition"></a></dt>
+<dd><p>Stirrup element, computes geometrics and physics props and manages dxf drawing methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>float</em>) – External width of stirrup.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – External height of stirrup.</p></li>
+<li><p><strong>diameter</strong> (<em>float</em>) – Diameter of stirrup bar.</p></li>
+<li><p><strong>reinforcement_length</strong> (<em>float</em>) – Length of the stirrup reinforcement.</p></li>
+<li><p><strong>spacing</strong> (<em>float</em>) – Stirrup spacing.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate of the bottom left corner Stirrup bounding box point.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate of the bottom left corner Stirrup bounding box point.</p></li>
+<li><p><strong>mandrel_radius_top</strong> (<em>float</em>) – Mandrel radius of stirrup bar at the top.</p></li>
+<li><p><strong>mandrel_radius_bottom</strong> (<em>float</em>) – Mandrel radius of stirrup bar at the bottom.</p></li>
+<li><p><strong>anchor</strong> (<em>float</em>) – Anchor length of stirrup.</p></li>
+<li><p><strong>direction</strong> (<em>str</em>) – Direction of the stirrup (Horizontal or Vertical).</p></li>
+<li><p><strong>orientation</strong> (<em>str</em>) – Orientation of the stirrup (top, right, down, left).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>reinforcement_length</strong> – Length of the stirrup reinforcement.</p></li>
+<li><p><strong>spacing</strong> – Stirrup spacing.</p></li>
+<li><p><strong>mandrel_radius_top</strong> – Mandrel radius of stirrup bar at the top.</p></li>
+<li><p><strong>mandrel_radius_ext_top</strong> – Mandrel radius plus diameter of stirrup bar at the top.</p></li>
+<li><p><strong>mandrel_radius_bottom</strong> – Mandrel radius of stirrup bar at the bottom.</p></li>
+<li><p><strong>mandrel_radius_ext_bottom</strong> – Mandrel radius plus diameter of stirrup bar at the bottom.</p></li>
+<li><p><strong>anchor</strong> – Anchor length of stirrup.</p></li>
+<li><p><strong>quantity</strong> – Number of stirrups that forms de reinforcement.</p></li>
+<li><p><strong>diameter</strong> – Diameter of stirrup bar.</p></li>
+<li><p><strong>direction</strong> – Direction of the stirrup (Horizontal or Vertical).</p></li>
+<li><p><strong>orientation</strong> – Orientation of the Stirrup (top, right, down, left).</p></li>
+<li><p><strong>length</strong> – Length of the bar to fork the stirrup.</p></li>
+<li><p><strong>weight</strong> – Weight of the stirrup, considering 7850 kg / m3.</p></li>
+<li><p><strong>box_width</strong> – Width of the box that contains the stirrup.</p></li>
+<li><p><strong>box_height</strong> – Height of the box that contains the stirrup.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.stirrup.Stirrup.data">
+<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#etacad.stirrup.Stirrup.data" title="Link to this definition"></a></dt>
+<dd><p>Collects and returns the essential attributes of the stirrup element in a dictionary format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing key attributes of the bar such as denomination, length, diameter, weight and</p>
+</dd>
+</dl>
+<p>quantity.
+:rtype: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.stirrup.Stirrup.draw_longitudinal">
+<span class="sig-name descname"><span class="pre">draw_longitudinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.stirrup.Stirrup.draw_longitudinal" title="Link to this definition"></a></dt>
+<dd><p>Draw the longitudinal reinforcement of the stirrup in the dxf file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – Document in which it will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate of the bottom corner of the drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate of the bottom corner of the drawing.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – Single-line drawing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.stirrup.Stirrup.draw_transverse">
+<span class="sig-name descname"><span class="pre">draw_transverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'dim_style':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_anchor':</span> <span class="pre">0.1,</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.1,</span> <span class="pre">'text_distance_length_count':</span> <span class="pre">0.1,</span> <span class="pre">'text_length_count_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.stirrup.Stirrup.draw_transverse" title="Link to this definition"></a></dt>
+<dd><p>Draw the cross-section of the stirrup in the dxf file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – Document in which it will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate of the bottom corner of the drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate of the bottom corner of the drawing.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – Single-line drawing.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em>) – Dimensions drawing.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of settings for dimensioning. Defaults to <cite>STIRRUP_SET_TRANSVERSE</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.stirrup.Stirrup.extract_data">
+<span class="sig-name descname"><span class="pre">extract_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#etacad.stirrup.Stirrup.extract_data" title="Link to this definition"></a></dt>
+<dd><p>Extracts specific data attributes based on the provided list of labels.
+If no labels are provided, it defaults to extracting “denomination”, “length”, “diameter”, “weight” and
+quantity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>labels</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of attribute names to extract. Defaults to common attributes if not provided.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of values corresponding to the requested labels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py class" id="module-etacad.concrete">
+<dt class="sig sig-object py" id="etacad.concrete.Concrete">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">etacad.concrete.</span></span><span class="sig-name descname"><span class="pre">Concrete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specific_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementTypes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ElementTypes.CONCRETE</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#etacad.concrete.Concrete" title="Link to this definition"></a></dt>
+<dd><p>A class used to represent a concrete section with various geometric and physical attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – List of tuples representing the vertices of the concrete polygon.</p></li>
+<li><p><strong>height</strong> (<em>float</em><em>, </em><em>optional</em>) – Height of the concrete section. Defaults to None.</p></li>
+<li><p><strong>length</strong> (<em>float</em><em>, </em><em>optional</em>) – Length of the concrete section. Defaults to None.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate for the concrete section’s placement. Defaults to 0.0.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate for the concrete section’s placement. Defaults to 0.0.</p></li>
+<li><p><strong>specific_weight</strong> (<em>float</em><em>, </em><em>optional</em>) – Specific weight of the concrete. Defaults to CONCRETE_WEIGHT.</p></li>
+<li><p><strong>element_type</strong> (<em>ElementTypes</em><em>, </em><em>optional</em>) – Type of the structural element (e.g., CONCRETE).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>dim3D</strong> (<em>float</em>) – The third dimension (either height or length) of the concrete section.</p></li>
+<li><p><strong>volume</strong> (<em>float</em>) – Volume of the concrete section.</p></li>
+<li><p><strong>weight</strong> (<em>float</em>) – Weight of the concrete section.</p></li>
+<li><p><strong>box_width</strong> (<em>float</em>) – Width of the bounding box in the longitudinal direction.</p></li>
+<li><p><strong>box_height</strong> (<em>float</em>) – Height of the bounding box in the longitudinal direction.</p></li>
+<li><p><strong>box_width_transverse</strong> (<em>float</em>) – Width of the bounding box in the transverse direction.</p></li>
+<li><p><strong>box_height_transverse</strong> (<em>float</em>) – Height of the bounding box in the transverse direction.</p></li>
+<li><p><strong>element_type</strong> (<em>ElementTypes</em><em>, </em><em>optional</em>) – Type of the structural element (e.g., CONCRETE).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If neither height nor length is provided.</p>
+</dd>
+</dl>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>draw_longitudinal(document, x=None, y=None, dimensions=True, dimensions_inner=True, settings=CONCRETE_SET_LONG)</dt><dd><p>Draws the concrete section in the longitudinal direction with optional dimensioning.</p>
+</dd>
+<dt>draw_transverse(document, x=None, y=None, dimensions=True, dimensions_boxing=True, dimensions_inner=True,</dt><dd><dl class="simple">
+<dt>settings=CONCRETE_SET_TRANSVERSE)</dt><dd><p>Draws the concrete section in the transverse direction with optional dimensioning.</p>
+</dd>
+</dl>
+</dd>
+<dt>polygon</dt><dd><p>Property method to return a Polygon object created from the vertices of the concrete section.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.concrete.Concrete.draw_longitudinal">
+<span class="sig-name descname"><span class="pre">draw_longitudinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions_inner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'dim_style_boxing':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'dim_style_inner':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.25,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.25}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.concrete.Concrete.draw_longitudinal" title="Link to this definition"></a></dt>
+<dd><p>Draws the concrete section in the longitudinal direction with optional dimensioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The drawing document to which the concrete section will be added.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate for the placement of the concrete section. Defaults to None, in which case <cite>self.x</cite> is
+used.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate for the placement of the concrete section. Defaults to None, in which case <cite>self.y</cite> is
+used.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to indicate whether to draw dimensions. Defaults to True.</p></li>
+<li><p><strong>dimensions_inner</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to indicate whether to draw inner dimensions. Defaults to True.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of settings for dimensioning. Defaults to <cite>CONCRETE_SET_LONG</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with keys “concrete_elements”, “dimensions”, and “all_elements”, each containing the</p>
+</dd>
+</dl>
+<p>corresponding drawing elements.
+:rtype: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.concrete.Concrete.draw_transverse">
+<span class="sig-name descname"><span class="pre">draw_transverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions_boxing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions_inner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'dim_style_boxing':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'dim_style_inner':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.25,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.25,</span> <span class="pre">'text_dim_inner_perpendicular_distance':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.concrete.Concrete.draw_transverse" title="Link to this definition"></a></dt>
+<dd><p>Draws the concrete section in the transverse direction with optional dimensioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The drawing document to which the concrete section will be added.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate for the placement of the concrete section. Defaults to None, in which case <cite>self.x</cite> is
+used.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate for the placement of the concrete section. Defaults to None, in which case <cite>self.y</cite> is
+used.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to indicate whether to draw dimensions. Defaults to True.</p></li>
+<li><p><strong>dimensions_boxing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to indicate whether to draw boxing dimensions. Defaults to True.</p></li>
+<li><p><strong>dimensions_inner</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to indicate whether to draw inner dimensions. Defaults to False.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of settings for dimensioning. Defaults to <cite>CONCRETE_SET_TRANSVERSE</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with keys “concrete_elements” and “all_elements”, each containing the corresponding drawing
+elements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="etacad.concrete.Concrete.polygon">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">polygon</span></span><a class="headerlink" href="#etacad.concrete.Concrete.polygon" title="Link to this definition"></a></dt>
+<dd><p>Property to get a Polygon object created from the vertices of the concrete section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Polygon object representing the concrete section.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Polygon</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py class" id="module-0">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">etacad.beam.</span></span><span class="sig-name descname"><span class="pre">Beam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Direction</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Direction.HORIZONTAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Orientation</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Orientation.RIGHT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_sup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_sup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_inf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_inf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concrete_specific_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_anchor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nomenclature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denomination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementTypes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ElementTypes.BEAM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><p>Beam element, computes geometrics and physics props and manages dxf drawing methods (longitudinal, transversal,
+reinforcement detailing, etc.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>float</em>) – Width of the beam.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – Height of the beam.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>direction</strong> (<em>str</em>) – Direction of the beam (HORIZONTAL or VERTICAL).</p></li>
+<li><p><strong>orientation</strong> (<em>str</em>) – Orientation of the beam (TOP, RIGHT, DOWN, LEFT).</p></li>
+<li><p><strong>as_sup</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the top side.</p></li>
+<li><p><strong>anchor_sup</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the top reinforcement or list of lengths.</p></li>
+<li><p><strong>as_right</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the right side.</p></li>
+<li><p><strong>anchor_right</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the right reinforcement or list of lengths.</p></li>
+<li><p><strong>as_inf</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the bottom side.</p></li>
+<li><p><strong>anchor_inf</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the bottom reinforcement or list of lengths.</p></li>
+<li><p><strong>as_left</strong> (<em>dict</em>) – Dictionary containing reinforcement information for the left side.</p></li>
+<li><p><strong>anchor_left</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length for the left reinforcement or list of lengths.</p></li>
+<li><p><strong>cover</strong> (<em>float</em>) – Concrete cover for the reinforcement.</p></li>
+<li><p><strong>concrete_specific_weight</strong> – Specific weight of the concrete. Defaults to CONCRETE_WEIGHT.</p></li>
+<li><p><strong>stirrups_db</strong> (<em>float</em><em> | </em><em>list</em>) – Diameter of stirrups or list of diameters.</p></li>
+<li><p><strong>stirrups_sep</strong> (<em>float</em><em> | </em><em>list</em>) – Separation between stirrups or list of separations.</p></li>
+<li><p><strong>stirrups_length</strong> (<em>list</em>) – List of lengths for stirrups.</p></li>
+<li><p><strong>stirrups_anchor</strong> (<em>float</em><em> | </em><em>list</em>) – Anchor length of stirrups or list of anchor lengths.</p></li>
+<li><p><strong>stirrups_x</strong> (<em>list</em>) – List of x-coordinates for stirrups.</p></li>
+<li><p><strong>columns</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – List of lists containing column width and height.</p></li>
+<li><p><strong>columns_pos</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of positions (X-coordinate of start) for columns.</p></li>
+<li><p><strong>columns_symbol</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of symbols representing columns.</p></li>
+<li><p><strong>nomenclature</strong> (<em>str</em>) – Nomenclature prefix used for labeling elements.</p></li>
+<li><p><strong>number_init</strong> (<em>int</em>) – Initial number for labeling elements.</p></li>
+<li><p><strong>element_type</strong> (<em>ElementTypes</em>) – Type of the structural element (e.g., BEAM).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>width</strong> – Width of the beam.</p></li>
+<li><p><strong>height</strong> – Height of the beam.</p></li>
+<li><p><strong>length</strong> – Length of the beam.</p></li>
+<li><p><strong>x</strong> – X-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>y</strong> – Y-coordinate of the bottom left corner of the beam concrete shape.</p></li>
+<li><p><strong>direction</strong> – Direction of the element (HORIZONTAL or VERTICAL).</p></li>
+<li><p><strong>orientation</strong> – Orientation of the element (e.g., TOP, RIGHT, DOWN, LEFT).</p></li>
+<li><p><strong>as_sup</strong> – Dictionary containing reinforcement information for the top side.</p></li>
+<li><p><strong>max_db_sup</strong> – Maximum diameter of the top reinforcement bars.</p></li>
+<li><p><strong>anchor_sup</strong> – Anchor length for the top reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_sup</strong> – Initial numbering for the top reinforcement bars.</p></li>
+<li><p><strong>as_right</strong> – Dictionary containing reinforcement information for the right side.</p></li>
+<li><p><strong>max_db_right</strong> – Maximum diameter of the right reinforcement bars.</p></li>
+<li><p><strong>anchor_right</strong> – Anchor length for the right reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_right</strong> – Initial numbering for the right reinforcement bars.</p></li>
+<li><p><strong>as_inf</strong> – Dictionary containing reinforcement information for the bottom side.</p></li>
+<li><p><strong>max_db_inf</strong> – Maximum diameter of the bottom reinforcement bars.</p></li>
+<li><p><strong>anchor_inf</strong> – Anchor length for the bottom reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_inf</strong> – Initial numbering for the bottom reinforcement bars.</p></li>
+<li><p><strong>as_left</strong> – Dictionary containing reinforcement information for the left side.</p></li>
+<li><p><strong>max_db_left</strong> – Maximum diameter of the left reinforcement bars.</p></li>
+<li><p><strong>anchor_left</strong> – Anchor length for the left reinforcement or list of lengths.</p></li>
+<li><p><strong>number_init_left</strong> – Initial numbering for the left reinforcement bars.</p></li>
+<li><p><strong>cover</strong> – Concrete cover for the reinforcement.</p></li>
+<li><p><strong>concrete_specific_weight</strong> – Specific weight of the concrete.</p></li>
+<li><p><strong>concrete</strong> – Concrete instance class.</p></li>
+<li><p><strong>stirrups_db</strong> – Diameter of stirrups or list of diameters.</p></li>
+<li><p><strong>stirrups_sep</strong> – Separation between stirrups or list of separations.</p></li>
+<li><p><strong>stirrups_length</strong> – List of lengths for stirrups.</p></li>
+<li><p><strong>stirrups_anchor</strong> – Anchor length of stirrups or list of anchor lengths.</p></li>
+<li><p><strong>stirrups_x</strong> – List of x-coordinates for stirrups.</p></li>
+<li><p><strong>columns</strong> – List of lists containing column width and height.</p></li>
+<li><p><strong>columns_pos</strong> – List of positions (X-coordinate of start) for columns.</p></li>
+<li><p><strong>columns_symbol</strong> – List of symbols representing columns.</p></li>
+<li><p><strong>bars_as_sup</strong> – List of top reinforcement bars as entities.</p></li>
+<li><p><strong>bars_as_right</strong> – List of right reinforcement bars as entities.</p></li>
+<li><p><strong>bars_as_inf</strong> – List of bottom reinforcement bars as entities.</p></li>
+<li><p><strong>bars_as_left</strong> – List of left reinforcement bars as entities.</p></li>
+<li><p><strong>all_bars</strong> – List of all reinforcement bars as entities.</p></li>
+<li><p><strong>stirrups</strong> – List of stirrups as entities.</p></li>
+<li><p><strong>all_elements</strong> – List of all elements/entities in the structure.</p></li>
+<li><p><strong>nomenclature</strong> – Nomenclature prefix used for labeling elements.</p></li>
+<li><p><strong>number_init</strong> – Initial number for labeling elements.</p></li>
+<li><p><strong>element_type</strong> – Type of the structural element (e.g., BEAM).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">draw_longitudinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concrete_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_axe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_axe_symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'A'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'EZ_M_25_H25_CM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar_bars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar_stirrups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'concrete_settings':</span> <span class="pre">{'dim_style_boxing':</span> <span class="pre">'EZ_M_25_H25_CM',</span> <span class="pre">'dim_style_inner':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.6,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.1},</span> <span class="pre">'text_dim_height':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_horizontal_distance':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd><p>Draws the longitudinal section of the beam.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the beam will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the left bottom corner of beam concrete shape.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the left bottom corner of beam concrete shape.</p></li>
+<li><p><strong>concrete_shape</strong> (<em>bool</em>) – If True, the concrete shape of the beam is drawn.</p></li>
+<li><p><strong>bars</strong> (<em>bool</em>) – If True, the reinforcement bars are drawn.</p></li>
+<li><p><strong>columns</strong> (<em>bool</em>) – If True, the columns are drawn.</p></li>
+<li><p><strong>columns_axes</strong> (<em>bool</em>) – If True, the axes of the columns are drawn.</p></li>
+<li><p><strong>stirrups</strong> (<em>bool</em>) – If True, the stirrups are drawn.</p></li>
+<li><p><strong>middle_axe</strong> (<em>bool</em>) – If True, the middle axis of the beam is drawn.</p></li>
+<li><p><strong>middle_axe_symbol</strong> (<em>str</em>) – Symbol to represent the middle axis.</p></li>
+<li><p><strong>dim</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+<li><p><strong>dim_style</strong> (<em>str</em>) – The dimension style to be used.</p></li>
+<li><p><strong>unifilar_bars</strong> (<em>bool</em>) – If True, the reinforcement bars are drawn as unifilar.</p></li>
+<li><p><strong>unifilar_stirrups</strong> (<em>bool</em>) – If True, the stirrups are drawn as unifilar.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dictionary of drawing settings. Default is <cite>BEAT_SET_LONG</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of graphical entities representing the longitudinal section of the beam.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">draw_longitudinal_rebar_detailing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'text_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd><p>Draws the longitudinal rebar detailing for the beam.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the detailing will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the rebar is drawn as unifilar.</p></li>
+<li><p><strong>columns_axes</strong> (<em>bool</em>) – If True, the axes of the columns are drawn.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dict with beam longitudinal rebar drawing settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of graphical entities representing the longitudinal rebar detailing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">draw_transverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'concrete_settings':</span> <span class="pre">{'dim_style_boxing':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'dim_style_inner':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.1,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.1,</span> <span class="pre">'text_dim_inner_perpendicular_distance':</span> <span class="pre">0.05},</span> <span class="pre">'text_dim_distance':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd><p>Draws the transverse section of the beam at a given x-section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the beam will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>x_section</strong> (<em>float</em><em>, </em><em>optional</em>) – The x-coordinate of the section to be drawn.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the bars are drawn as unifilar.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dict with beam transverse drawing settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of graphical entities representing the transverse section of the beam.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">draw_transverse_rebar_detailing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd><p>Draws the transverse rebar detailing for the beam at a given x-section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the detailing will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>x_section</strong> (<em>float</em><em>, </em><em>optional</em>) – The x-coordinate of the section to be drawn.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the rebar is drawn as unifilar.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of graphical entities representing the transverse rebar detailing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py class" id="module-etacad.column">
+<dt class="sig sig-object py" id="etacad.column.Column">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">etacad.column.</span></span><span class="sig-name descname"><span class="pre">Column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ColumnTypes.RECTANGULAR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Direction</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Direction.VERTICAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Orientation</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Orientation.RIGHT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_sup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_inf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_sup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_right</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_inf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concrete_specific_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_anchor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beams_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nomenclature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denomination</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementTypes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ElementTypes.COLUMN</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#etacad.column.Column" title="Link to this definition"></a></dt>
+<dd><p>Column element, computes geometrics and physics props and manages dxf drawing methods (longitudinal, transversal,
+reinforcement detailing, etc.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>float</em>) – Width of the column (rectangular section) in units of length.</p></li>
+<li><p><strong>depth</strong> (<em>float</em>) – Depth of the column (rectangular section) in units of length.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – Height of the column in units of length.</p></li>
+<li><p><strong>diameter</strong> (<em>float</em><em>, </em><em>optional</em>) – Diameter of the column if circular (optional), defaults to None.</p></li>
+<li><p><strong>column_type</strong> (<em>int</em>) – Type of column section (rectangular or circular), defaults to RECTANGULAR.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate of the column’s position, defaults to 0.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate of the column’s position, defaults to 0.</p></li>
+<li><p><strong>direction</strong> (<em>Direction</em>) – Orientation of the column (VERTICAL or HORIZONTAL), defaults to VERTICAL.</p></li>
+<li><p><strong>orientation</strong> (<em>Orientation</em>) – Column’s orientation (RIGHT, LEFT, etc.), defaults to RIGHT.</p></li>
+<li><p><strong>as_sup</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary representing the longitudinal steel in the upper part of the column.</p></li>
+<li><p><strong>as_right</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary representing the longitudinal steel in the right side of the column.</p></li>
+<li><p><strong>as_inf</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary representing the longitudinal steel in the lower part of the column.</p></li>
+<li><p><strong>as_left</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary representing the longitudinal steel in the left side of the column.</p></li>
+<li><p><strong>anchor_sup</strong> (<em>list</em><em>, </em><em>optional</em>) – List of anchorage values for the upper part of the column.</p></li>
+<li><p><strong>anchor_right</strong> (<em>list</em><em>, </em><em>optional</em>) – List of anchorage values for the right side of the column.</p></li>
+<li><p><strong>anchor_inf</strong> (<em>list</em><em>, </em><em>optional</em>) – List of anchorage values for the lower part of the column.</p></li>
+<li><p><strong>anchor_left</strong> (<em>list</em><em>, </em><em>optional</em>) – List of anchorage values for the left side of the column.</p></li>
+<li><p><strong>cover</strong> (<em>float</em><em>, </em><em>optional</em>) – Concrete cover of the column in units of length.</p></li>
+<li><p><strong>concrete_specific_weight</strong> (<em>float</em>) – Specific weight of the concrete used in the column.</p></li>
+<li><p><strong>stirrups_db</strong> (<em>list</em><em>, </em><em>optional</em>) – List of diameters of the stirrups used in the column.</p></li>
+<li><p><strong>stirrups_anchor</strong> (<em>list</em><em>, </em><em>optional</em>) – List of anchorage values for the stirrups.</p></li>
+<li><p><strong>stirrups_sep</strong> (<em>list</em><em>, </em><em>optional</em>) – List of spacing values between stirrups.</p></li>
+<li><p><strong>stirrups_length</strong> (<em>list</em><em>, </em><em>optional</em>) – List of lengths of stirrups.</p></li>
+<li><p><strong>stirrups_x</strong> (<em>list</em><em>, </em><em>optional</em>) – List of x-coordinates for stirrups placement.</p></li>
+<li><p><strong>beams</strong> (<em>list</em><em>, </em><em>optional</em>) – List of crossing beams interacting with the column.</p></li>
+<li><p><strong>beams_pos</strong> (<em>list</em><em>, </em><em>optional</em>) – List of positions for the crossing beams.</p></li>
+<li><p><strong>beam_symbol</strong> (<em>list</em><em>, </em><em>optional</em>) – List of symbols used to represent crossing beams.</p></li>
+<li><p><strong>nomenclature</strong> (<em>str</em><em>, </em><em>optional</em>) – Column identification string or nomenclature.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>as_sup</strong> (<em>dict</em>) – Dictionary containing the top longitudinal reinforcement details.</p></li>
+<li><p><strong>as_right</strong> (<em>dict</em>) – Dictionary containing the right longitudinal reinforcement details.</p></li>
+<li><p><strong>as_inf</strong> (<em>dict</em>) – Dictionary containing the bottom longitudinal reinforcement details.</p></li>
+<li><p><strong>as_left</strong> (<em>dict</em>) – Dictionary containing the left longitudinal reinforcement details.</p></li>
+<li><p><strong>max_db_sup</strong> (<em>float</em>) – Maximum diameter of the top longitudinal bars.</p></li>
+<li><p><strong>max_db_right</strong> (<em>float</em>) – Maximum diameter of the right longitudinal bars.</p></li>
+<li><p><strong>max_db_inf</strong> (<em>float</em>) – Maximum diameter of the bottom longitudinal bars.</p></li>
+<li><p><strong>max_db_left</strong> (<em>float</em>) – Maximum diameter of the left longitudinal bars.</p></li>
+<li><p><strong>max_db_hz</strong> (<em>float</em>) – Maximum horizontal diameter among the longitudinal bars.</p></li>
+<li><p><strong>max_db_vt</strong> (<em>float</em>) – Maximum vertical diameter among the longitudinal bars.</p></li>
+<li><p><strong>anchor_sup</strong> (<em>list</em>) – List of top bar anchorage lengths.</p></li>
+<li><p><strong>anchor_right</strong> (<em>list</em>) – List of right bar anchorage lengths.</p></li>
+<li><p><strong>anchor_inf</strong> (<em>list</em>) – List of bottom bar anchorage lengths.</p></li>
+<li><p><strong>anchor_left</strong> (<em>list</em>) – List of left bar anchorage lengths.</p></li>
+<li><p><strong>bars_as_sup</strong> (<em>list</em>) – List of bars in the top longitudinal reinforcement.</p></li>
+<li><p><strong>bars_as_right</strong> (<em>list</em>) – List of bars in the right longitudinal reinforcement.</p></li>
+<li><p><strong>bars_as_inf</strong> (<em>list</em>) – List of bars in the bottom longitudinal reinforcement.</p></li>
+<li><p><strong>bars_as_left</strong> (<em>list</em>) – List of bars in the left longitudinal reinforcement.</p></li>
+<li><p><strong>number_init_sup</strong> (<em>int</em>) – Initial number for top longitudinal bars.</p></li>
+<li><p><strong>number_init_right</strong> (<em>int</em>) – Initial number for right longitudinal bars.</p></li>
+<li><p><strong>number_init_inf</strong> (<em>int</em>) – Initial number for bottom longitudinal bars.</p></li>
+<li><p><strong>number_init_left</strong> (<em>int</em>) – Initial number for left longitudinal bars.</p></li>
+<li><p><strong>cover</strong> (<em>float</em>) – Concrete cover thickness.</p></li>
+<li><p><strong>stirrups_db</strong> (<em>list</em>) – List of stirrup diameters.</p></li>
+<li><p><strong>stirrups_anchor</strong> (<em>list</em>) – List of stirrup anchorage lengths.</p></li>
+<li><p><strong>stirrups_sep</strong> (<em>list</em>) – List of stirrup separations.</p></li>
+<li><p><strong>stirrups_length</strong> (<em>list</em>) – List of stirrup lengths.</p></li>
+<li><p><strong>stirrups_x</strong> (<em>list</em>) – List of stirrup X-coordinates.</p></li>
+<li><p><strong>stirrups</strong> (<em>list</em>) – List of stirrup elements.</p></li>
+<li><p><strong>beams</strong> (<em>list</em>) – List of crossing beams.</p></li>
+<li><p><strong>beams_pos</strong> (<em>list</em>) – List of crossing beams’ positions.</p></li>
+<li><p><strong>beam_symbol</strong> (<em>list</em>) – List of crossing beams’ symbols.</p></li>
+<li><p><strong>all_bars</strong> (<em>list</em>) – List of all bars in the column.</p></li>
+<li><p><strong>all_elements</strong> (<em>list</em>) – List of all elements in the column.</p></li>
+<li><p><strong>box_width</strong> (<em>float</em>) – Width of the bounding box for the column.</p></li>
+<li><p><strong>box_height</strong> (<em>float</em>) – Height of the bounding box for the column.</p></li>
+<li><p><strong>nomenclature</strong> (<em>str</em>) – Nomenclature for the column reinforcement.</p></li>
+<li><p><strong>element_type</strong> (<em>int</em>) – Type of element, set to COLUMN by default.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.column.Column.draw_longitudinal">
+<span class="sig-name descname"><span class="pre">draw_longitudinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concrete_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beams_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stirrups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_axe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_axe_symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'A'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_style</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'EZ_M_25_H25_CM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar_bars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar_stirrups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.column.Column.draw_longitudinal" title="Link to this definition"></a></dt>
+<dd><p>Draws the longitudinal view of the column, including concrete shape, beams,
+stirrups, and bars. Also includes dimensioning and optional middle axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The drawing document to which the elements will be added.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate for the drawing position. Defaults to column’s x position.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate for the drawing position. Defaults to column’s y position.</p></li>
+<li><p><strong>concrete_shape</strong> (<em>bool</em>) – Whether to draw the concrete shape. Defaults to True.</p></li>
+<li><p><strong>bars</strong> (<em>bool</em>) – Whether to draw the longitudinal bars. Defaults to True.</p></li>
+<li><p><strong>beams</strong> (<em>bool</em>) – Whether to draw crossing beams. Defaults to True.</p></li>
+<li><p><strong>beams_axes</strong> (<em>bool</em>) – Whether to draw the axes for beams. Defaults to True.</p></li>
+<li><p><strong>stirrups</strong> (<em>bool</em>) – Whether to draw the stirrups. Defaults to True.</p></li>
+<li><p><strong>middle_axe</strong> (<em>bool</em>) – Whether to draw the middle axis. Defaults to True.</p></li>
+<li><p><strong>middle_axe_symbol</strong> (<em>str</em>) – Symbol to use for the middle axis. Defaults to “A”.</p></li>
+<li><p><strong>dim</strong> (<em>bool</em>) – Whether to add dimensions to the drawing. Defaults to True.</p></li>
+<li><p><strong>dim_style</strong> (<em>str</em>) – Style of the dimensions. Defaults to “EZ_M_25_H25_CM”.</p></li>
+<li><p><strong>unifilar_bars</strong> (<em>bool</em>) – Whether to draw bars in unifilar view. Defaults to False.</p></li>
+<li><p><strong>unifilar_stirrups</strong> (<em>bool</em>) – Whether to draw stirrups in unifilar view. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of entities drawn on the document.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.column.Column.draw_longitudinal_rebar_detailing">
+<span class="sig-name descname"><span class="pre">draw_longitudinal_rebar_detailing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'bar_settings':</span> <span class="pre">{'text_denomination_distance':</span> <span class="pre">0.05,</span> <span class="pre">'text_denomination_height':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_height':</span> <span class="pre">0.05},</span> <span class="pre">'spacing':</span> <span class="pre">0.3,</span> <span class="pre">'text_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.column.Column.draw_longitudinal_rebar_detailing" title="Link to this definition"></a></dt>
+<dd><p>Draws the longitudinal rebar detailing for the column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the detailing will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the rebar is drawn as unifilar.</p></li>
+<li><p><strong>beam_axes</strong> (<em>bool</em>) – If True, the axes of the beam are drawn.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dict with column longitudinal rebar drawing settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of graphical entities representing the longitudinal rebar detailing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.column.Column.draw_transverse">
+<span class="sig-name descname"><span class="pre">draw_transverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'concrete_settings':</span> <span class="pre">{'dim_style_boxing':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'dim_style_inner':</span> <span class="pre">'EZ_M_10_H25_CM',</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.05},</span> <span class="pre">'text_dim_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#etacad.column.Column.draw_transverse" title="Link to this definition"></a></dt>
+<dd><p>Draws the transverse view of the column at a given y-section.
+generate a drawing from the transverse perspective.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the column will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y_section</strong> (<em>float</em><em>, </em><em>optional</em>) – The y-coordinate of the section to be drawn.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the bars are drawn as unifilar.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dict with column transverse drawing settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of entities representing the transverse view of the column.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="etacad.column.Column.draw_transverse_rebar_detailing">
+<span class="sig-name descname"><span class="pre">draw_transverse_rebar_detailing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Drawing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifilar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'bar_settings':</span> <span class="pre">{'text_denomination_distance':</span> <span class="pre">0.05,</span> <span class="pre">'text_denomination_height':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_distance_horizontal':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_distance_vertical':</span> <span class="pre">0.05,</span> <span class="pre">'text_dim_height':</span> <span class="pre">0.05},</span> <span class="pre">'spacing':</span> <span class="pre">0.3,</span> <span class="pre">'text_height':</span> <span class="pre">0.05}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#etacad.column.Column.draw_transverse_rebar_detailing" title="Link to this definition"></a></dt>
+<dd><p>Draws the transverse rebar detailing for the column at a given y-section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<em>Drawing</em>) – The DXF document where the detailing will be drawn.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>optional</em>) – X-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y</strong> (<em>float</em><em>, </em><em>optional</em>) – Y-coordinate of the starting point for drawing.</p></li>
+<li><p><strong>y_section</strong> (<em>float</em><em>, </em><em>optional</em>) – The y-coordinate of the section to be drawn.</p></li>
+<li><p><strong>unifilar</strong> (<em>bool</em>) – If True, the rebar is drawn as unifilar.</p></li>
+<li><p><strong>dimensions</strong> (<em>bool</em>) – If True, dimensions are drawn.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Dict with column longitudinal rebar drawing settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dict of graphical entities representing the transverse rebar detailing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Axel Tagliaferri.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

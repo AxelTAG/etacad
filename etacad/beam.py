@@ -365,8 +365,9 @@ class Beam:
         :type unifilar_bars: bool
         :param unifilar_stirrups: If True, the stirrups are drawn as unifilar.
         :type unifilar_stirrups: bool
-        :param settings: Dictionary of drawing settings. Default is `BEAT_SET_LONG`.
+        :param settings: Dictionary of drawing settings. Default is `BEAM_SET_LONG`.
         :type settings: dict
+
         :return: A list of graphical entities representing the longitudinal section of the beam.
         :rtype: list
         """
@@ -513,6 +514,7 @@ class Beam:
         :type dimensions: bool
         :param settings: Dict with beam transverse drawing settings.
         :type settings: dict
+
         :return: A dict of graphical entities representing the transverse section of the beam.
         :rtype: dict
         """
@@ -597,6 +599,7 @@ class Beam:
         :type columns_axes: bool
         :param settings: Dict with beam longitudinal rebar drawing settings.
         :type settings: dict
+
         :return: A list of graphical entities representing the longitudinal rebar detailing.
         :rtype: list
         """
@@ -728,7 +731,6 @@ class Beam:
 
         return elements
 
-    # Function that draws transverse section.
     def draw_transverse_rebar_detailing(self, document: Drawing,
                                         x: float = None,
                                         y: float = None,
@@ -750,6 +752,7 @@ class Beam:
         :type unifilar: bool
         :param dimensions: If True, dimensions are drawn.
         :type dimensions: bool
+
         :return: A dict of graphical entities representing the transverse rebar detailing.
         :rtype: dict
         """
@@ -879,7 +882,6 @@ class Beam:
 
         return entities
 
-    # Function that returns elements in a given x_beam position.
     def __elements_section(self,
                            elements: list = None,
                            x: float = None) -> list:
@@ -907,7 +909,6 @@ class Beam:
 
         return entities
 
-    # Function that creates stirrups from list.
     def __list_to_stirrups(self) -> list:
         """
         Generates and returns a list of Stirrup objects based on data given at initialization.

@@ -122,6 +122,7 @@ class Stirrup:
         :type y: float
         :param unifilar: Single-line drawing.
         :type unifilar: bool
+
         :return: None.
         :rtype: None
         """
@@ -173,6 +174,7 @@ class Stirrup:
         :type dimensions: bool
         :param settings: Dictionary of settings for dimensioning. Defaults to `STIRRUP_SET_TRANSVERSE`.
         :type settings: dict, optional
+
         :return: None.
         :rtype: None
         """
@@ -366,6 +368,7 @@ class Stirrup:
         :type y: float
         :param longitudinal: Type of drawing to which the dxf elements belong (longitudinal or transverse).
         :type longitudinal: bool
+
         :return: Group of elements dxf to oriented.
         :rtype: list
         """
@@ -391,7 +394,7 @@ class Stirrup:
                 else:
                     translate(group, vector=(self.box_width + x * 2, 0))
 
-    def data(self):
+    def data(self) -> dict:
         """
         Collects and returns the essential attributes of the stirrup element in a dictionary format.
 
@@ -407,7 +410,7 @@ class Stirrup:
 
         return data
 
-    def extract_data(self, labels: list[str] = None):
+    def extract_data(self, labels: list[str] = None) -> list:
         """
         Extracts specific data attributes based on the provided list of labels.
         If no labels are provided, it defaults to extracting "denomination", "length", "diameter", "weight" and
@@ -415,6 +418,7 @@ class Stirrup:
 
         :param labels: List of attribute names to extract. Defaults to common attributes if not provided.
         :type labels: list[str], optional
+
         :return: A list of values corresponding to the requested labels.
         :rtype: list
         """

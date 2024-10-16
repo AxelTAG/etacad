@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usage &mdash; etacad 0.0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=bbaf98b3"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API References" href="API.html" />
+    <link rel="prev" title="Getting started" href="gettingstarted.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            etacad
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-new-document">Creating a new document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-beam-instance">Creating a Beam instance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#beam-bars">Beam bars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#beam-stirrups">Beam stirrups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#beam-columns-intersections">Beam columns intersections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#longitudinal-drawing-of-the-beam">Longitudinal drawing of the beam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transversal-drawing-of-the-beam">Transversal drawing of the beam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#longitudinal-rebar-detailing-drawing">Longitudinal rebar detailing drawing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transversal-rebar-detailing-drawing">Transversal rebar detailing drawing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#table-rebar-detailing">Table rebar detailing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-column-instance">Creating a Column instance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#column-bars">Column bars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#column-stirrups">Column stirrups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#column-beams-intersections">Column beams intersections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#longitudinal-drawing-of-the-column">Longitudinal drawing of the column</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transversal-drawing-of-the-column">Transversal drawing of the column</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Longitudinal rebar detailing drawing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Transversal rebar detailing drawing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Table rebar detailing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="API.html">API References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">etacad</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Usage</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/axeltag/etacad/blob/main/docs/source/usage.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
+<p>For the following examples, we will use variable ‘doc’as an instance of ezdxf.new().</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ezdxf</span>
+</pre></div>
+</div>
+<section id="creating-a-new-document">
+<h2>Creating a new document<a class="headerlink" href="#creating-a-new-document" title="Link to this heading"></a></h2>
+<p>Pass the setup parameter as True to use the dimensions and text styles from the ezdxf module. By default, etacad
+uses them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">doc</span> <span class="o">=</span> <span class="n">ezdxf</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;R2010&quot;</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-a-beam-instance">
+<h2>Creating a Beam instance<a class="headerlink" href="#creating-a-beam-instance" title="Link to this heading"></a></h2>
+<p>Create a simple concrete beam with <a class="reference internal" href="API.html#id0" title="etacad.beam.Beam"><code class="xref py py-class docutils literal notranslate"><span class="pre">Beam</span></code></a> class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing Beam class.</span>
+<span class="kn">from</span> <span class="nn">etacad</span> <span class="kn">import</span> <span class="n">Beam</span>
+
+<span class="c1"># Creating a basic Beam instance.</span>
+<span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">stirrup_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
+            <span class="n">stirrup_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>x</cite> and <cite>y</cite> parameters correspond to the default point where the drawings will be plotted unless specified when
+executing the drawing methods.</p>
+<section id="beam-bars">
+<span id="beam-bars-label"></span><h3>Beam bars<a class="headerlink" href="#beam-bars" title="Link to this heading"></a></h3>
+<p>You can add more steel bars by specifying their diameter as the key and the quantity as the dictionary values. These
+will be symmetrically arranged along the width or effective height of the section. You can add bars vertically using
+the parameters <cite>as_right</cite> and <cite>as_left</cite>. The cover is considered at the bar’s centerline.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
+                <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.01</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                <span class="n">stirrup_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
+                <span class="n">stirrup_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
+                <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>  <span class="c1"># The cover is considered at the bar&#39;s centerline.</span>
+</pre></div>
+</div>
+<p>You can also add an anchorage length for the bars using <cite>anchor_sup</cite>, <cite>anchor_right</cite>, <cite>anchor_inf</cite>, and <cite>anchor_left</cite>,
+passing a single value for all the bars on the side or a list specifying a value for each bar.</p>
+</section>
+<section id="beam-stirrups">
+<span id="beam-stirrups-label"></span><h3>Beam stirrups<a class="headerlink" href="#beam-stirrups" title="Link to this heading"></a></h3>
+<p>The stirrups are handled differently than the bars. You can specify a single diameter and spacing (as in the previous
+example), which will distribute the stirrups along the beam, or you can provide a list of diameters, requiring
+additional parameters such as the X coordinate where each stirrup begins and the reinforcement length. Additionally,
+you can provide a list of the anchorage lengths for each stirrup or a float for all stirrups.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.01</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">stirrup_db</span><span class="o">=</span><span class="p">[</span><span class="mf">.008</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.008</span><span class="p">],</span>
+            <span class="n">stirrup_sep</span><span class="o">=</span><span class="p">[</span><span class="mf">.15</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.15</span><span class="p">],</span>
+            <span class="n">stirrup_length</span><span class="o">=</span><span class="p">[</span><span class="mf">.6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.6</span><span class="p">],</span>
+            <span class="n">stirrup_anchor</span><span class="o">=</span><span class="mf">.125</span><span class="p">,</span>
+            <span class="n">stirrup_x</span><span class="o">=</span><span class="p">[</span><span class="mf">.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">],</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="beam-columns-intersections">
+<h3>Beam columns intersections<a class="headerlink" href="#beam-columns-intersections" title="Link to this heading"></a></h3>
+<p>Intersections of the columns can be taken into account; we need to introduce three additional parameters:
+<cite>columns</cite>, <cite>columns_pos</cite>, and <cite>columns_symbol</cite>, the latter being optional.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">stirrup_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
+            <span class="n">stirrup_sep</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[(</span><span class="mf">.2</span><span class="p">,</span> <span class="mf">.35</span><span class="p">),</span> <span class="p">(</span><span class="mf">.25</span><span class="p">,</span> <span class="mf">.35</span><span class="p">)],</span>
+            <span class="n">columns_pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">3.65</span><span class="p">],</span>
+            <span class="n">columns_symbol</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">],</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="longitudinal-drawing-of-the-beam">
+<h3>Longitudinal drawing of the beam<a class="headerlink" href="#longitudinal-drawing-of-the-beam" title="Link to this heading"></a></h3>
+<p>The Beam class offers methods for drawing longitudinal and cross sections, which are customizable through the method
+parameters and the <cite>settings</cite> parameter.
+Each method returns a dictionary that may or may not contain other nested dictionaries (depending on the method and
+class). The keys that do not have dictionaries contain a list of DXF entities.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span><span class="o">.</span><span class="n">draw_longitudinal</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                       <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                       <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#id1" title="etacad.beam.Beam.draw_longitudinal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Beam.draw_longitudinal()</span></code></a> function for further details.</p>
+</section>
+<section id="transversal-drawing-of-the-beam">
+<h3>Transversal drawing of the beam<a class="headerlink" href="#transversal-drawing-of-the-beam" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span><span class="o">.</span><span class="n">draw_transverse</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                     <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                     <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                     <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#id3" title="etacad.beam.Beam.draw_transverse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Beam.draw_transverse()</span></code></a> function for further details.</p>
+</section>
+<section id="longitudinal-rebar-detailing-drawing">
+<h3>Longitudinal rebar detailing drawing<a class="headerlink" href="#longitudinal-rebar-detailing-drawing" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span><span class="o">.</span><span class="n">draw_longitudinal_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                       <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                       <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                       <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#id2" title="etacad.beam.Beam.draw_longitudinal_rebar_detailing"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Beam.draw_longitudinal_rebar_detailing()</span></code></a> function for further details.</p>
+</section>
+<section id="transversal-rebar-detailing-drawing">
+<h3>Transversal rebar detailing drawing<a class="headerlink" href="#transversal-rebar-detailing-drawing" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span><span class="o">.</span><span class="n">draw_transverse_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                       <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                       <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                       <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#id4" title="etacad.beam.Beam.draw_transverse_rebar_detailing"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Beam.draw_transverse_rebar_detailing()</span></code></a> function for further details.</p>
+</section>
+<section id="table-rebar-detailing">
+<h3>Table rebar detailing<a class="headerlink" href="#table-rebar-detailing" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span><span class="o">.</span><span class="n">draw_transverse_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                     <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                     <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                     <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#id4" title="etacad.beam.Beam.draw_transverse_rebar_detailing"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Beam.draw_transverse_rebar_detailing()</span></code></a> function for further details.</p>
+</section>
+</section>
+<section id="creating-a-column-instance">
+<h2>Creating a Column instance<a class="headerlink" href="#creating-a-column-instance" title="Link to this heading"></a></h2>
+<p>Create a simple concrete column with <a class="reference internal" href="API.html#etacad.column.Column" title="etacad.column.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing Column class.</span>
+<span class="kn">from</span> <span class="nn">etacad</span> <span class="kn">import</span> <span class="n">Column</span>
+
+<span class="c1"># Creating a basic Column instance.</span>
+<span class="n">column</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
+                <span class="n">depth</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">stirrup_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
+                <span class="n">stirrup_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
+                <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>x</cite> and <cite>y</cite> parameters correspond to the default point where the drawings will be plotted unless specified when
+executing the drawing methods.</p>
+<section id="column-bars">
+<h3>Column bars<a class="headerlink" href="#column-bars" title="Link to this heading"></a></h3>
+<p>It works the same as the <a class="reference internal" href="#beam-bars-label"><span class="std std-ref">Beam bars</span></a> section. The consideration here is that symmetrical columns are
+generally used, and all the bar parameters (as_sup, as_right, as_inf, as_left) should be utilized. It must be noted that
+the bars at the edges apply to two faces of the section, as considered in this example.</p>
+</section>
+<section id="column-stirrups">
+<h3>Column stirrups<a class="headerlink" href="#column-stirrups" title="Link to this heading"></a></h3>
+<p>It works the same as the <a class="reference internal" href="#beam-stirrups-label"><span class="std std-ref">Beam stirrups</span></a> section.</p>
+</section>
+<section id="column-beams-intersections">
+<h3>Column beams intersections<a class="headerlink" href="#column-beams-intersections" title="Link to this heading"></a></h3>
+<p>Intersections of the beams can be taken into account; we need to introduce three additional parameters:
+<cite>beams</cite>, <cite>beams_pos</cite>, and <cite>beams_symbol</cite>, the latter being optional.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
+                <span class="n">depth</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">stirrup_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
+                <span class="n">stirrup_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
+                <span class="n">beams</span><span class="o">=</span><span class="p">[(</span><span class="mf">.25</span><span class="p">,</span> <span class="mf">.25</span><span class="p">),</span> <span class="p">(</span><span class="mf">.25</span><span class="p">,</span> <span class="mf">.25</span><span class="p">)],</span>
+                <span class="n">beams_pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.75</span><span class="p">],</span>
+                <span class="n">columns_symbol</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B1&quot;</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">],</span>
+                <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="longitudinal-drawing-of-the-column">
+<h3>Longitudinal drawing of the column<a class="headerlink" href="#longitudinal-drawing-of-the-column" title="Link to this heading"></a></h3>
+<p>The Column class offers methods for drawing longitudinal and cross sections, which are customizable through the method
+parameters and the <cite>settings</cite> parameter.
+Each method returns a dictionary that may or may not contain other nested dictionaries (depending on the method and
+class). The keys that do not have dictionaries contain a list of DXF entities.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span><span class="o">.</span><span class="n">draw_longitudinal</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                         <span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                         <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#etacad.column.Column.draw_longitudinal" title="etacad.column.Column.draw_longitudinal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Column.draw_longitudinal()</span></code></a> function for further details.</p>
+</section>
+<section id="transversal-drawing-of-the-column">
+<h3>Transversal drawing of the column<a class="headerlink" href="#transversal-drawing-of-the-column" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span><span class="o">.</span><span class="n">draw_transverse</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                       <span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                       <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                       <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#etacad.column.Column.draw_transverse" title="etacad.column.Column.draw_transverse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Column.draw_transverse()</span></code></a> function for further details.</p>
+</section>
+<section id="id1">
+<h3>Longitudinal rebar detailing drawing<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span><span class="o">.</span><span class="n">draw_longitudinal_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                         <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                         <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                         <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#etacad.column.Column.draw_longitudinal_rebar_detailing" title="etacad.column.Column.draw_longitudinal_rebar_detailing"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Column.draw_longitudinal_rebar_detailing()</span></code></a> function for further details.</p>
+</section>
+<section id="id2">
+<h3>Transversal rebar detailing drawing<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span><span class="o">.</span><span class="n">draw_transverse_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                       <span class="n">x</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                                       <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                       <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#etacad.column.Column.draw_transverse_rebar_detailing" title="etacad.column.Column.draw_transverse_rebar_detailing"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Column.draw_transverse_rebar_detailing()</span></code></a> function for further details.</p>
+</section>
+<section id="id3">
+<h3>Table rebar detailing<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span><span class="o">.</span><span class="n">draw_transverse_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                       <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                       <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                       <span class="n">unfilar_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <a class="reference internal" href="API.html#etacad.column.Column.draw_transverse_rebar_detailing" title="etacad.column.Column.draw_transverse_rebar_detailing"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Column.draw_transverse_rebar_detailing()</span></code></a> function for further details.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gettingstarted.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="API.html" class="btn btn-neutral float-right" title="API References" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Axel Tagliaferri.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
