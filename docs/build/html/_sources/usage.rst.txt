@@ -324,4 +324,4 @@ Table rebar detailing
                                            y=1,
                                            unfilar_bars=True)
 
-See more about the parameters of the :meth:`Column.draw_transverse_rebar_detailing` function for further details.
+See more about the parameters of the :meth:`Columngit aa.draw_transverse_rebar_detailing` function for further details.
