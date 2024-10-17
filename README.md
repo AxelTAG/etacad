@@ -97,7 +97,7 @@ doc1.saveas("column.dxf")
 
 ## Links
 
-- Documentation at: comming soon.
+- Documentation at: [readthedocs](https://etacad.readthedocs.io/en/latest/)
 - Source code and issue tracking at: [GitHub](https://github.com/AxelTAG/etacad)
 - Distribution at: [Pypi](https://pypi.org/project/etacad/)
 
