@@ -2,4 +2,5 @@
 --index-url https://pypi.python.org/simple/
 
 # Needed packages/versions.
+attrs
 ezdxf
