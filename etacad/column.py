@@ -75,8 +75,8 @@ class Column:
     :type beams: list, optional
     :param beams_pos: List of positions for the crossing beams.
     :type beams_pos: list, optional
-    :param beam_symbol: List of symbols used to represent crossing beams.
-    :type beam_symbol: list, optional
+    :param beams_symbol: List of symbols used to represent crossing beams.
+    :type beams_symbol: list, optional
     :param nomenclature: Column identification string or nomenclature.
     :type nomenclature: str, optional
 
@@ -149,7 +149,7 @@ class Column:
     :vartype beams: list
     :ivar beams_pos: List of crossing beams' positions.
     :vartype beams_pos: list
-    :ivar beam_symbol: List of crossing beams' symbols.
+    :ivar beams_symbol: List of crossing beams' symbols.
     :vartype beam_symbol: list
 
     :ivar all_bars: List of all bars in the column.
@@ -223,7 +223,7 @@ class Column:
     # Crossing beams attributes.
     beams: list = field(default=None)
     beams_pos: list = field(default=None)
-    beam_symbol: list = field(default=None)
+    beams_symbol: list = field(default=None)
 
     # Entities groups.
     all_bars: list = field(init=False)
@@ -471,7 +471,7 @@ class Column:
                                                                      height=delimit_axe_width,
                                                                      radius=0.1,
                                                                      text_height=0.1,
-                                                                     symbol=self.beam_symbol[i],
+                                                                     symbol=self.beams_symbol[i],
                                                                      direction=Direction.HORIZONTAL,
                                                                      attr=GfxAttribs(linetype="CENTER"))
 
