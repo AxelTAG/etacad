@@ -157,7 +157,7 @@ Longitudinal rebar detailing drawing
     beam.draw_longitudinal_rebar_detailing(document=doc,
                                            x=2,
                                            y=1,
-                                           unifilar_bars=True)
+                                           unifilar=True)
 
 See more about the parameters of the :meth:`Beam.draw_longitudinal_rebar_detailing` function for further details.
 
@@ -170,7 +170,7 @@ Transversal rebar detailing drawing
     beam.draw_transverse_rebar_detailing(document=doc,
                                            x=2,
                                            y=1,
-                                           unifilar_bars=True)
+                                           unifilar=True)
 
 See more about the parameters of the :meth:`Beam.draw_transverse_rebar_detailing` function for further details.
 
@@ -295,7 +295,7 @@ Longitudinal rebar detailing drawing
     column.draw_longitudinal_rebar_detailing(document=doc,
                                              x=2,
                                              y=1,
-                                             unifilar_bars=True)
+                                             unifilar=True)
 
 See more about the parameters of the :meth:`Column.draw_longitudinal_rebar_detailing` function for further details.
 
@@ -308,7 +308,7 @@ Transversal rebar detailing drawing
     column.draw_transverse_rebar_detailing(document=doc,
                                            x=6,
                                            y=1,
-                                           unifilar_bars=True)
+                                           unifilar=True)
 
 See more about the parameters of the :meth:`Column.draw_transverse_rebar_detailing` function for further details.
 

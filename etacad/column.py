@@ -582,7 +582,7 @@ class Column:
         elements["concrete"] = self.concrete.draw_transverse(document=document,
                                                              x=x,
                                                              y=y,
-                                                             dimensions=True,
+                                                             dimensions=dimensions,
                                                              dimensions_boxing=True,
                                                              dimensions_inner=False,
                                                              settings=settings["concrete_settings"])
