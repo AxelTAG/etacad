@@ -144,7 +144,7 @@ Transversal drawing of the beam
     beam.draw_transverse(document=doc,
                          x=2,
                          y=1,
-                         unifilar_bars=False)
+                         unifilar=False)
 
 See more about the parameters of the :meth:`Beam.draw_transverse` function for further details.
 
@@ -282,7 +282,7 @@ Transversal drawing of the column
     column.draw_transverse(document=doc,
                            x=5,
                            y=1,
-                           unifilar_bars=False)
+                           unifilar=False)
 
 See more about the parameters of the :meth:`Column.draw_transverse` function for further details.
 
