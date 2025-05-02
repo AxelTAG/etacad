@@ -180,12 +180,11 @@ Table rebar detailing
 
 .. code:: python
 
-    beam.draw_transverse_rebar_detailing(document=doc,
-                                         x=2,
-                                         y=1,
-                                         unifilar_bars=True)
+    beam.draw_table_rebar_detailing(document=doc,
+                                    x=2,
+                                    y=1)
 
-See more about the parameters of the :meth:`Beam.draw_transverse_rebar_detailing` function for further details.
+See more about the parameters of the :meth:`Beam.draw_table_rebar_detailing` function for further details.
 
 
 Creating a Column instance
@@ -253,7 +252,7 @@ Intersections of the beams can be taken into account; we need to introduce three
                     stirrups_sep=.15,
                     beams=[(.25, .25), (.25, .25)],
                     beams_pos=[0, 5.75],
-                    columns_symbol=["B1", "B2"],
+                    beams_symbol=["B1", "B2"],
                     cover=.025)
 
 
@@ -319,9 +318,8 @@ Table rebar detailing
 
 .. code:: python
 
-    column.draw_transverse_rebar_detailing(document=doc,
-                                           x=2,
-                                           y=1,
-                                           unifilar_bars=True)
+    column.draw_table_rebar_detailing(document=doc,
+                                      x=2,
+                                      y=1)
 
-See more about the parameters of the :meth:`Column.draw_transverse_rebar_detailing` function for further details.
+See more about the parameters of the :meth:`Column.draw_table_rebar_detailing` function for further details.

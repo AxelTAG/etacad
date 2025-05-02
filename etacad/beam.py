@@ -494,7 +494,7 @@ class Beam:
                         x: float = None,
                         y: float = None,
                         x_section: float = None,
-                        unifilar: bool = False,
+                        unifilar_bars: bool = False,
                         dimensions: bool = True,
                         settings: dict = BEAM_SET_TRANSVERSE) -> dict:
         """
@@ -508,8 +508,8 @@ class Beam:
         :type y: float
         :param x_section: The x-coordinate of the section to be drawn.
         :type x_section: float, optional
-        :param unifilar: If True, the bars are drawn as unifilar.
-        :type unifilar: bool
+        :param unifilar_bars: If True, the bars are drawn as unifilar.
+        :type unifilar_bars: bool
         :param dimensions: If True, dimensions are drawn.
         :type dimensions: bool
         :param settings: Dict with beam transverse drawing settings.
@@ -562,7 +562,7 @@ class Beam:
             stirrup_dict_list.append(stirrup.draw_transverse(document=document,
                                                              x=x + delta_x,
                                                              y=y + delta_y,
-                                                             unifilar=unifilar))
+                                                             unifilar=unifilar_bars))
 
         # Setting groups of elements in dictionary.
         elements["concrete"] = concrete_dict
