@@ -111,7 +111,7 @@ Intersections of the columns can be taken into account; we need to introduce thr
                 as_sup={.008: 2},
                 as_inf={.012: 2, .008: 1},
                 stirrups_db=.008,
-                stirrups_sep,
+                stirrups_sep=.15,
                 columns=[(.2, .35), (.25, .35)],
                 columns_pos=[0, 3.65],
                 columns_symbol=["C1", "C2"],
@@ -131,7 +131,7 @@ class). The keys that do not have dictionaries contain a list of DXF entities.
     beam.draw_longitudinal(document=doc,
                            x=2,
                            y=1,
-                           unfilar_bars=False)
+                           unifilar_bars=False)
 
 See more about the parameters of the :meth:`Beam.draw_longitudinal` function for further details.
 
@@ -144,7 +144,7 @@ Transversal drawing of the beam
     beam.draw_transverse(document=doc,
                          x=2,
                          y=1,
-                         unfilar_bars=False)
+                         unifilar_bars=False)
 
 See more about the parameters of the :meth:`Beam.draw_transverse` function for further details.
 
@@ -157,7 +157,7 @@ Longitudinal rebar detailing drawing
     beam.draw_longitudinal_rebar_detailing(document=doc,
                                            x=2,
                                            y=1,
-                                           unfilar_bars=True)
+                                           unifilar_bars=True)
 
 See more about the parameters of the :meth:`Beam.draw_longitudinal_rebar_detailing` function for further details.
 
@@ -170,7 +170,7 @@ Transversal rebar detailing drawing
     beam.draw_transverse_rebar_detailing(document=doc,
                                            x=2,
                                            y=1,
-                                           unfilar_bars=True)
+                                           unifilar_bars=True)
 
 See more about the parameters of the :meth:`Beam.draw_transverse_rebar_detailing` function for further details.
 
@@ -183,7 +183,7 @@ Table rebar detailing
     beam.draw_transverse_rebar_detailing(document=doc,
                                          x=2,
                                          y=1,
-                                         unfilar_bars=True)
+                                         unifilar_bars=True)
 
 See more about the parameters of the :meth:`Beam.draw_transverse_rebar_detailing` function for further details.
 
@@ -270,7 +270,7 @@ class). The keys that do not have dictionaries contain a list of DXF entities.
     column.draw_longitudinal(document=doc,
                              x=3,
                              y=1,
-                             unfilar_bars=False)
+                             unifilar_bars=False)
 
 See more about the parameters of the :meth:`Column.draw_longitudinal` function for further details.
 
@@ -283,7 +283,7 @@ Transversal drawing of the column
     column.draw_transverse(document=doc,
                            x=5,
                            y=1,
-                           unfilar_bars=False)
+                           unifilar_bars=False)
 
 See more about the parameters of the :meth:`Column.draw_transverse` function for further details.
 
@@ -296,7 +296,7 @@ Longitudinal rebar detailing drawing
     column.draw_longitudinal_rebar_detailing(document=doc,
                                              x=2,
                                              y=1,
-                                             unfilar_bars=True)
+                                             unifilar_bars=True)
 
 See more about the parameters of the :meth:`Column.draw_longitudinal_rebar_detailing` function for further details.
 
@@ -309,7 +309,7 @@ Transversal rebar detailing drawing
     column.draw_transverse_rebar_detailing(document=doc,
                                            x=6,
                                            y=1,
-                                           unfilar_bars=True)
+                                           unifilar_bars=True)
 
 See more about the parameters of the :meth:`Column.draw_transverse_rebar_detailing` function for further details.
 
@@ -322,6 +322,6 @@ Table rebar detailing
     column.draw_transverse_rebar_detailing(document=doc,
                                            x=2,
                                            y=1,
-                                           unfilar_bars=True)
+                                           unifilar_bars=True)
 
 See more about the parameters of the :meth:`Column.draw_transverse_rebar_detailing` function for further details.
