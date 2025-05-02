@@ -38,8 +38,8 @@ Create a simple concrete beam with :class:`Beam` class.
                 y=2,
                 as_sup={.008: 2},
                 as_inf={.012: 2, .0.008: 1},
-                stirrup_db=.008,
-                stirrup_sep=.15,
+                stirrups_db=.008,
+                stirrups_sep=.15,
                 cover=.025)
 
 The `x` and `y` parameters correspond to the default point where the drawings will be plotted unless specified when
@@ -64,8 +64,8 @@ the parameters `as_right` and `as_left`. The cover is considered at the bar's ce
                     as_right={.008: 2},
                     as_inf={.012: 2, .0.008: 1},
                     as_left={.008: 2},
-                    stirrup_db=.008,
-                    stirrup_sep=.15,
+                    stirrups_db=.008,
+                    stirrups_sep=.15,
                     cover=.025)  # The cover is considered at the bar's centerline.
 
 You can also add an anchorage length for the bars using `anchor_sup`, `anchor_right`, `anchor_inf`, and `anchor_left`,
@@ -89,11 +89,11 @@ you can provide a list of the anchorage lengths for each stirrup or a float for 
                 length=4,
                 as_sup={.01: 2, .008: 1},
                 as_inf={.012: 2, .0.008: 1},
-                stirrup_db=[.008, .01, .008],
-                stirrup_sep=[.15, .1, .15],
-                stirrup_length=[.6, 2, .6],
-                stirrup_anchor=.125,
-                stirrup_x=[.2, 1, 3.2],
+                stirrups_db=[.008, .01, .008],
+                stirrups_sep=[.15, .1, .15],
+                stirrups_length=[.6, 2, .6],
+                stirrups_anchor=.125,
+                stirrups_x=[.2, 1, 3.2],
                 cover=0.025)
 
 
@@ -110,8 +110,8 @@ Intersections of the columns can be taken into account; we need to introduce thr
                 length=4,
                 as_sup={.008: 2},
                 as_inf={.012: 2, .0.008: 1},
-                stirrup_db=.008,
-                stirrup_sep,
+                stirrups_db=.008,
+                stirrups_sep,
                 columns=[(.2, .35), (.25, .35)],
                 columns_pos=[0, 3.65],
                 columns_symbol=["C1", "C2"],
@@ -210,8 +210,8 @@ Create a simple concrete column with :class:`Column` class.
                     as_right={.012: 1},
                     as_inf={.012: 2},
                     as_left={.012: 1},
-                    stirrup_db=.008,
-                    stirrup_sep=.15,
+                    stirrups_db=.008,
+                    stirrups_sep=.15,
                     cover=.025)
 
 The `x` and `y` parameters correspond to the default point where the drawings will be plotted unless specified when
@@ -249,8 +249,8 @@ Intersections of the beams can be taken into account; we need to introduce three
                     as_right={.012: 1},
                     as_inf={.012: 2},
                     as_left={.012: 1},
-                    stirrup_db=.008,
-                    stirrup_sep=.15,
+                    stirrups_db=.008,
+                    stirrups_sep=.15,
                     beams=[(.25, .25), (.25, .25)],
                     beams_pos=[0, 5.75],
                     columns_symbol=["B1", "B2"],
@@ -324,4 +324,4 @@ Table rebar detailing
                                            y=1,
                                            unfilar_bars=True)
 
-See more about the parameters of the :meth:`Columngit aa.draw_transverse_rebar_detailing` function for further details.
+See more about the parameters of the :meth:`Column.draw_transverse_rebar_detailing` function for further details.
