@@ -2,7 +2,7 @@
 
 """A package aimed to simpilfy drawings of structurals elements based on ezdxf library."""
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
 
 from .bar import Bar
 from .stirrup import Stirrup
