@@ -406,7 +406,8 @@ class Stirrup:
                 "length": self.length,
                 "diameter": self.diameter,
                 "weight": self.weight,
-                "quantity": self.quantity}
+                "quantity": self.quantity,
+                "spacing": self.spacing}
 
         return data
 
@@ -414,7 +415,7 @@ class Stirrup:
         """
         Extracts specific data attributes based on the provided list of labels.
         If no labels are provided, it defaults to extracting "denomination", "length", "diameter", "weight" and
-        quantity.
+        "quantity".
 
         :param labels: List of attribute names to extract. Defaults to common attributes if not provided.
         :type labels: list[str], optional

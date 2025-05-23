@@ -56,14 +56,14 @@ def test_spaced_bar_horizontal_attributes(spaced_bar_horizontal):
 
     # Boxing attributes.
     assert spaced_bar_horizontal._box_width == 6
-    assert spaced_bar_horizontal._box_height == 3.84
+    assert spaced_bar_horizontal._box_height == 3.8499999999999996
 
     # Physics attributes.
     assert spaced_bar_horizontal.weight == 122.07443653686539
 
 
 def test_draw_longitudinal_spaced_bars_horizontal(spaced_bar_horizontal):
-    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    doc = ezdxf.new(setup=True)
 
     ex_01 = spaced_bar_horizontal.draw_longitudinal(document=doc, x=2, y=1, unifilar=False, dimensions=True)
     assert len(ex_01["all_elements"]) == 136
@@ -71,7 +71,35 @@ def test_draw_longitudinal_spaced_bars_horizontal(spaced_bar_horizontal):
     ex_02 = spaced_bar_horizontal.draw_longitudinal(document=doc, x=9, y=1, unifilar=True, dimensions=True)
     assert len(ex_02["all_elements"]) == 37
 
+    ex_03 = spaced_bar_horizontal.draw_longitudinal(document=doc, x=2, y=-5, unifilar=False, dimensions=True, one_bar=True)
+    assert len(ex_03["all_elements"]) == 8
+
+    ex_04 = spaced_bar_horizontal.draw_longitudinal(document=doc, x=9, y=-5, unifilar=True, dimensions=True, one_bar=True)
+    assert len(ex_04["all_elements"]) == 5
+
     doc.saveas(filename="./tests/spaced_bars_horizontal_draw_longitudinal.dxf")
+
+
+def test_draw_transverse_spaced_bars_horizontal(spaced_bar_horizontal):
+    doc = ezdxf.new(setup=True)
+
+    ex_01 = spaced_bar_horizontal.draw_transverse(document=doc, x=2.1, y=1, dimensions=True)
+    assert len(ex_01["all_elements"]) == 34
+
+    doc.saveas(filename="./tests/spaced_bars_horizontal_draw_transverse.dxf")
+
+
+def test_extract_data_spaced_bars_horizontal(spaced_bar_horizontal):
+    data = spaced_bar_horizontal.extract_data(labels=["diameter"])
+    assert len(data) == 1
+    assert data == [0.01]
+
+    data = spaced_bar_horizontal.extract_data(labels=["diameter", "length", "quantity"])
+    assert len(data) == 3
+    assert data == [0.01, 6, 33]
+
+    data = spaced_bar_horizontal.extract_data()
+    assert data == ["R1", 6, 0.01, 122.07443653686539, 33, 0.12]
 
 
 @pytest.fixture()
@@ -118,32 +146,47 @@ def test_spaced_bar_vertical_attributes(spaced_bar_vertical):
 
     # Boxing attributes.
     assert spaced_bar_vertical._box_width == 3
-    assert spaced_bar_vertical._box_height == 6
+    assert spaced_bar_vertical._box_height == 6.016
 
     # Physics attributes.
     assert spaced_bar_vertical.weight == 288.83551529692267
 
 
 def test_draw_longitudinal_spaced_bars_vertical(spaced_bar_vertical):
-    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    doc = ezdxf.new(setup=True)
 
     ex_01 = spaced_bar_vertical.draw_longitudinal(document=doc, x=2, y=1, unifilar=False, dimensions=True)
     assert len(ex_01["all_elements"]) == 248
-    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.start == Vec3(2.016, 1, 0)  # Top side start.
-    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.end == Vec3(2, 1, 0)  # Top side end.
-    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.start == Vec3(2.016, 3.9999999999999996, 0)  # Bottom side start.
-    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.end == Vec3(2, 3.9999999999999996, 0)  # Bottom side end.
+    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.start == Vec3(2.032, 1, 0)  # Top side start.
+    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.end == Vec3(2.016, 1.0, 0.0)  # Top side end.
+    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.start == Vec3(2.032, 3.9999999999999996, 0.0)  # Bottom side start.
+    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.end == Vec3(2.016, 3.9999999999999996, 0.0)  # Bottom side end.
 
     ex_02 = spaced_bar_vertical.draw_longitudinal(document=doc, x=9, y=1, unifilar=True, dimensions=True)
     assert len(ex_02["all_elements"]) == 65
-    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.start == Vec3(9, 1, 0)  # Steel start.
-    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.end == Vec3(9, 4, 0)  # Steel end.
+    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.start == Vec3(9.015999999999998, 1.0, 0.0)  # Steel start.
+    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.end == Vec3(9.015999999999998, 4.0, 0.0)  # Steel end.
+
+    ex_03 = spaced_bar_vertical.draw_longitudinal(document=doc, x=2, y=-5, unifilar=False, dimensions=True, one_bar=True)
+    assert len(ex_03["all_elements"]) == 8
+
+    ex_04 = spaced_bar_vertical.draw_longitudinal(document=doc, x=9, y=-5, unifilar=True, dimensions=True, one_bar=True)
+    assert len(ex_04["all_elements"]) == 5
 
     doc.saveas(filename="./tests/spaced_bars_vertical_draw_longitudinal.dxf")
 
 
+def test_draw_transverse_spaced_bars_vertical(spaced_bar_vertical):
+    doc = ezdxf.new(setup=True)
+
+    ex_01 = spaced_bar_vertical.draw_transverse(document=doc, x=2.1, y=1, dimensions=True)
+    assert len(ex_01["all_elements"]) == 62
+
+    doc.saveas(filename="./tests/spaced_bars_vertical_draw_transverse.dxf")
+
+
 @pytest.fixture()
-def spaced_bar_anchor():
+def spaced_bar_anchor_horizontal():
     return SpacedBars(
         reinforcement_length=3,
         length=4,
@@ -162,43 +205,43 @@ def spaced_bar_anchor():
         denomination="A1")
 
 
-def test_spaced_bar_anchor_attributes(spaced_bar_anchor):
+def test_spaced_bar_anchor_horizontal_attributes(spaced_bar_anchor_horizontal):
     # Spaced bars attributes.
-    assert spaced_bar_anchor.reinforcement_length == 3
-    assert spaced_bar_anchor.length == 4
-    assert spaced_bar_anchor.diameter == 0.012
-    assert spaced_bar_anchor.spacing == 0.2
-    assert spaced_bar_anchor.x == -10
-    assert spaced_bar_anchor.y == -10
-    assert spaced_bar_anchor.radius == 0.006
-    assert spaced_bar_anchor.direction == Direction.HORIZONTAL
-    assert spaced_bar_anchor.orientation == Orientation.BOTTOM
-    assert spaced_bar_anchor.transverse_center == (0.006, 1.5)
-    assert spaced_bar_anchor.quantity == 16
+    assert spaced_bar_anchor_horizontal.reinforcement_length == 3
+    assert spaced_bar_anchor_horizontal.length == 4
+    assert spaced_bar_anchor_horizontal.diameter == 0.012
+    assert spaced_bar_anchor_horizontal.spacing == 0.2
+    assert spaced_bar_anchor_horizontal.x == -10
+    assert spaced_bar_anchor_horizontal.y == -10
+    assert spaced_bar_anchor_horizontal.radius == 0.006
+    assert spaced_bar_anchor_horizontal.direction == Direction.HORIZONTAL
+    assert spaced_bar_anchor_horizontal.orientation == Orientation.BOTTOM
+    assert spaced_bar_anchor_horizontal.transverse_center == (0.006, 1.5)
+    assert spaced_bar_anchor_horizontal.quantity == 16
 
     # Bar attributes.
-    assert len(spaced_bar_anchor.bars) == 16
+    assert len(spaced_bar_anchor_horizontal.bars) == 16
 
     # Bar bending attributes.
-    assert spaced_bar_anchor.bend_longitud == 2
-    assert spaced_bar_anchor.bend_angle == 45
-    assert spaced_bar_anchor.bend_height == 0.08
+    assert spaced_bar_anchor_horizontal.bend_longitud == 2
+    assert spaced_bar_anchor_horizontal.bend_angle == 45
+    assert spaced_bar_anchor_horizontal.bend_height == 0.08
 
     # Boxing attributes.
-    assert spaced_bar_anchor._box_width == 4
-    assert spaced_bar_anchor._box_height == 3
+    assert spaced_bar_anchor_horizontal._box_width == 4
+    assert spaced_bar_anchor_horizontal._box_height == 3.112
 
     # Physics attributes.
-    assert spaced_bar_anchor.weight == 56.82010136988643
+    assert spaced_bar_anchor_horizontal.weight == 56.82010136988643
 
 
-def test_draw_longitudinal_spaced_bar_anchor(spaced_bar_anchor):
-    doc = ezdxf.new(dxfversion="R2010", setup=True)
+def test_draw_longitudinal_spaced_bar_anchor_horizontal(spaced_bar_anchor_horizontal):
+    doc = ezdxf.new(setup=True)
 
-    ex_01 = spaced_bar_anchor.draw_longitudinal(document=doc, x=-10, y=-10, unifilar=False, dimensions=True)
+    ex_01 = spaced_bar_anchor_horizontal.draw_longitudinal(document=doc, x=-10, y=-10, unifilar=False, dimensions=True)
     assert len(ex_01["all_elements"]) == 454
 
-    ex_02 = spaced_bar_anchor.draw_longitudinal(document=doc, x=-5, y=-10, unifilar=True, dimensions=True)
+    ex_02 = spaced_bar_anchor_horizontal.draw_longitudinal(document=doc, x=-5, y=-10, unifilar=True, dimensions=True)
     assert len(ex_02["all_elements"]) == 118
 
-    doc.saveas(filename="./tests/spaced_bar_anchor_draw_longitudinal.dxf")
+    doc.saveas(filename="./tests/spaced_bar_anchor_horizontal_draw_longitudinal.dxf")

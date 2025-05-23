@@ -4,14 +4,14 @@
 # Local imports.
 from etacad.bar import Bar
 from etacad.drawing_utils import *
-from etacad.globals import Axes, Direction, ElementTypes, Orientation, STEEL_WEIGHT, SPACEDBARS_SET_LONG
+from etacad.globals import (Direction, ElementTypes, Orientation, STEEL_WEIGHT, SPACEDBARS_SET_LONG,
+                            SAPCEDBARS_SET_TRANSVERSE)
 
 # External imports.
 from attrs import define, field
 from ezdxf.document import Drawing
-from ezdxf.entities import Dimension, Line, Text
 from itertools import chain
-from math import cos, sin, tan, pi
+from math import cos, sin, pi
 
 
 @define
@@ -46,7 +46,7 @@ class SpacedBars:
     _box_width: float = field(init=False)
     _box_height: float = field(init=False)
 
-    # Physics attributes.
+    # Amounts attributes.
     weight: float = field(init=False)
 
     # Others.
@@ -112,21 +112,24 @@ class SpacedBars:
                           y: float = None,
                           unifilar: bool = False,
                           dimensions: bool = True,
-                          dimension_position: int = None,
+                          bar_dimension: bool = True,
+                          bar_dimension_position: int = None,
                           denomination: bool = True,
                           denomination_position: int = None,
                           one_bar: bool = False,
-                          one_bar_position: int = 3,
+                          one_bar_position: int = None,
                           settings: dict = SPACEDBARS_SET_LONG) -> dict:
         if x is None:
             x = self.x
         if y is None:
             y = self.y
 
-        if dimension_position is None:
-            dimension_position = self.quantity // one_bar_position
+        if one_bar_position is None:
+            one_bar_position = self.quantity // 3
+        if bar_dimension_position is None:
+            bar_dimension_position = one_bar_position
         if denomination_position is None:
-            denomination_position = self.quantity // one_bar_position
+            denomination_position = one_bar_position
 
         elements = {}
         bar_dict = []
@@ -139,7 +142,7 @@ class SpacedBars:
                                                       x=x + bar.x,
                                                       y=y + bar.y,
                                                       unifilar=unifilar,
-                                                      dimensions=dimensions and i == dimension_position,
+                                                      dimensions=bar_dimension and i == bar_dimension_position,
                                                       denomination=denomination and i == denomination_position,
                                                       settings=settings))
 
@@ -174,6 +177,49 @@ class SpacedBars:
                                     elements["denomination_elements"])
 
         self.__direc_orient(group=elements["all_elements"], x=x, y=y, unifilar=unifilar)
+
+        return elements
+
+    def draw_transverse(self,
+                        document: Drawing,
+                        x: float = None,
+                        y: float = None,
+                        dimensions: bool = False,
+                        settings: dict = SAPCEDBARS_SET_TRANSVERSE) -> dict:
+        if x is None:
+            x = self.x
+
+        if y is None:
+            y = self.y
+
+        elements = {}
+        bar_dict = []
+        dimensions_elements = []
+
+        # Drawing of circles.
+        for i, bar in enumerate(self.bars):
+            bar_dict.append(bar.draw_transverse(document=document,
+                                                x=x,
+                                                y=y + self.spacing * i,
+                                                settings=settings))
+
+        # Drawing dimensions.
+        if dimensions:
+            dimensions_elements += (dim_linear(document=document,
+                                               p_base=(x - settings["text_dim_distance_vertical"],
+                                                       y + self._box_height / 2),
+                                               p1=(x, y),
+                                               p2=(x, y + self._box_height),
+                                               rotation=90))
+
+        # Setting groups of elements in dictionary.
+        elements["bar_elements"] = bar_dict
+        elements["dimension_elements"] = dimensions_elements
+        elements["all_elements"] = (list(chain(*[bar["all_elements"] for bar in elements["bar_elements"]])) +
+                                    elements["dimension_elements"])
+
+        # Orienting elements.
+        self.__direc_orient(group=elements["all_elements"])
 
         return elements
 
@@ -222,3 +268,45 @@ class SpacedBars:
         for dimension in group_filter["DIMENSION"]:
             dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
             dimension.render()
+
+    def data(self) -> dict:
+        """
+        Collects and returns the essential attributes of the spaced bars element in a dictionary format.
+
+        :return: Dictionary containing key attributes of the spaced bars such as denomination, length, diameter,
+         quantity, spacing and weight.
+        :rtype: dict
+        """
+        data = {"denomination": self.denomination,
+                "length": self.length,
+                "diameter": self.diameter,
+                "weight": self.weight,
+                "quantity": self.quantity,
+                "spacing": self.spacing}
+
+        return data
+
+    def extract_data(self, labels: list[str] = None):
+        """
+        Extracts specific data attributes based on the provided list of labels.
+        If no labels are provided, it defaults to extracting "denomination", "length", "diameter", "quantity", "spacing"
+        and "weight".
+
+        :param labels: List of attribute names to extract. Defaults to common attributes if not provided.
+        :type labels: list[str], optional
+        :return: A list of values corresponding to the requested labels.
+        :rtype: list
+        """
+        if labels is None:
+            labels = ["denomination", "length", "diameter", "weight", "quantity", "spacing"]
+
+        data = self.data()
+
+        data_required = []
+        for key in labels:
+            if key in data:
+                data_required.append(data[key])
+            else:
+                data_required.append("-")
+
+        return data_required

@@ -185,13 +185,19 @@ SLAB_SET_TRANSVERSE_REBBAR = {"bar_settings": {"text_dim_distance_horizontal": 0
                               "text_height": 0.05,
                               "spacing": 0.3}
 
-#
+# Spaced bars.
 SPACEDBARS_SET_LONG = {"text_dim_distance_horizontal": 0.05,
                        "text_dim_distance_vertical": 0.05,
                        "text_dim_height": 0.05,
                        "text_denomination_distance": 0.00,
                        "text_denomination_height": 0.05,
                        "dim_style": "EZ_M_10_H25_CM"}
+
+SAPCEDBARS_SET_TRANSVERSE = {"text_dim_distance_horizontal": 0.05,
+                             "text_dim_distance_vertical": 0.05,
+                             "text_dim_height": 0.05,
+                             "text_denomination_distance": 0.1,
+                             "text_denomination_height": 0.05}
 
 # Stirrups.
 STIRRUP_SET_TRANSVERSE = {"text_dim_distance_horizontal": 0.05,
