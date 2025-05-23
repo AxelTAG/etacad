@@ -20,6 +20,11 @@ class Aligment(Enum):
     MTEXT_BOTTOM_RIGHT = 9
 
 
+class Axes(Enum):
+    X = "x"
+    Y = "y"
+
+
 class ColumnTypes(Enum):
     RECTANGULAR = 0
     CIRCULAR = 1
@@ -38,9 +43,11 @@ class DRotation(Enum):
 class ElementTypes(Enum):
     BAR = 0
     STIRRUP = 1
-    BEAM = 2
-    COLUMN = 3
-    CONCRETE = 4
+    SPACED_BARS = 2
+    BEAM = 3
+    COLUMN = 4
+    CONCRETE = 5
+    SLAB = 6
     CADTABLE = 21
 
 
@@ -49,6 +56,10 @@ class Orientation(Enum):
     RIGHT = 1
     BOTTOM = 2
     LEFT = 3
+
+
+class SlabTypes(Enum):
+    RECTANGULAR = 0
 
 
 # Specific weights.
@@ -65,7 +76,7 @@ SIN45 = sin(45 * pi / 180)
 BAR_SET_LONG = {"text_dim_distance_horizontal": 0.05,
                 "text_dim_distance_vertical": 0.05,
                 "text_dim_height": 0.05,
-                "text_denomination_distance": 0.1,
+                "text_denomination_distance": 0.00,
                 "text_denomination_height": 0.05}
 
 BAR_SET_TRANSVERSE = {"text_dim_distance_horizontal": 0.05,
@@ -143,6 +154,44 @@ CONCRETE_SET_TRANSVERSE = {"text_dim_distance_horizontal": 0.25,
                            "text_dim_inner_perpendicular_distance": 0.05,
                            "dim_style_boxing": "EZ_M_10_H25_CM",
                            "dim_style_inner": "EZ_M_10_H25_CM"}
+
+# Slab.
+SLAB_SET_TOP_VIEW = {"concrete_settings": {"text_dim_distance_horizontal": 0.15,
+                                           "text_dim_distance_vertical": 0.25,
+                                           "dim_style_boxing": "EZ_M_25_H25_CM",
+                                           "dim_style_inner": "EZ_M_10_H25_CM"},
+                     "text_dim_horizontal_distance": 0.05,
+                     "text_dim_height": 0.05}
+
+SLAB_SET_TRANSVERSE = {"concrete_settings": {"text_dim_distance_horizontal": 0.05,
+                                             "text_dim_distance_vertical": 0.05,
+                                             "dim_style_boxing": "EZ_M_10_H25_CM",
+                                             "dim_style_inner": "EZ_M_10_H25_CM"},
+                       "text_dim_height": 0.05}
+
+SLAB_SET_LONG_REBBAR = {"bar_settings": {"text_dim_distance_horizontal": 0.05,
+                                         "text_dim_distance_vertical": 0.05,
+                                         "text_dim_height": 0.05,
+                                         "text_denomination_distance": 0.05,
+                                         "text_denomination_height": 0.05},
+                        "text_height": 0.05,
+                        "spacing": 0.3}
+
+SLAB_SET_TRANSVERSE_REBBAR = {"bar_settings": {"text_dim_distance_horizontal": 0.05,
+                                               "text_dim_distance_vertical": 0.05,
+                                               "text_dim_height": 0.05,
+                                               "text_denomination_distance": 0.05,
+                                               "text_denomination_height": 0.05},
+                              "text_height": 0.05,
+                              "spacing": 0.3}
+
+#
+SPACEDBARS_SET_LONG = {"text_dim_distance_horizontal": 0.05,
+                       "text_dim_distance_vertical": 0.05,
+                       "text_dim_height": 0.05,
+                       "text_denomination_distance": 0.00,
+                       "text_denomination_height": 0.05,
+                       "dim_style": "EZ_M_10_H25_CM"}
 
 # Stirrups.
 STIRRUP_SET_TRANSVERSE = {"text_dim_distance_horizontal": 0.05,

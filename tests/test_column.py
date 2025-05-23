@@ -72,7 +72,7 @@ def column():
                   stirrups_x=[.1, .85, 2.3, 3.1, 3.85, 5.3],
                   beams=[[.2, .4], [.2, .3], [.2, .3]],
                   beams_pos=[.2, 3, 5.7],
-                  beam_symbol=["B1", "B2", "C1"])
+                  beams_symbol=["B1", "B2", "B3"])
 
 
 def test_attributes_rectangular_column(column):

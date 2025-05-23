@@ -100,7 +100,7 @@ class Bar:
     element_type: ElementTypes = field(default=ElementTypes.BAR)
     denomination: str = field(default=None)
     position: str = field(default=None)
-    quantity: float = field(default=None)
+    quantity: int = field(default=None)
 
     def __attrs_post_init__(self):
         # Bending attributes.
@@ -157,7 +157,7 @@ class Bar:
         """
         if x is None:
             x = self.x
-        if x is None:
+        if y is None:
             y = self.y
 
         if not unifilar:

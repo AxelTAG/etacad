@@ -1,0 +1,204 @@
+# -*- coding: utf-8 -*-
+
+# Local imports.
+from etacad.globals import Direction, Orientation
+from etacad.spaced_bars import SpacedBars
+
+# External imports.
+import ezdxf
+import pytest
+
+from ezdxf.math import Vec3
+from math import pi
+
+
+@pytest.fixture()
+def spaced_bar_horizontal():
+    return SpacedBars(
+        reinforcement_length=4,
+        length=6,
+        diameter=0.01,
+        spacing=0.12,
+        x=10,
+        y=10,
+        direction=Direction.HORIZONTAL,
+        orientation=Orientation.BOTTOM,
+        left_anchor=0,
+        right_anchor=0,
+        mandrel_radius=0,
+        bend_longitud=0,
+        bend_angle=0,
+        bend_height=0,
+        denomination="R1")
+
+
+def test_spaced_bar_horizontal_attributes(spaced_bar_horizontal):
+    # Spaced bars attributes.
+    assert spaced_bar_horizontal.reinforcement_length == 4
+    assert spaced_bar_horizontal.length == 6
+    assert spaced_bar_horizontal.diameter == 0.01
+    assert spaced_bar_horizontal.spacing == 0.12
+    assert spaced_bar_horizontal.x == 10
+    assert spaced_bar_horizontal.y == 10
+    assert spaced_bar_horizontal.radius == 0.005
+    assert spaced_bar_horizontal.direction == Direction.HORIZONTAL
+    assert spaced_bar_horizontal.orientation == Orientation.BOTTOM
+    assert spaced_bar_horizontal.transverse_center == (0.005, 1.92)
+    assert spaced_bar_horizontal.quantity == 33
+
+    # Bar attributes.
+    assert len(spaced_bar_horizontal.bars) == 33
+
+    # Bar bending attributes.
+    assert spaced_bar_horizontal.bend_longitud == 0
+    assert spaced_bar_horizontal.bend_angle == 0
+    assert spaced_bar_horizontal.bend_height == 0
+
+    # Boxing attributes.
+    assert spaced_bar_horizontal._box_width == 6
+    assert spaced_bar_horizontal._box_height == 3.84
+
+    # Physics attributes.
+    assert spaced_bar_horizontal.weight == 122.07443653686539
+
+
+def test_draw_longitudinal_spaced_bars_horizontal(spaced_bar_horizontal):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+
+    ex_01 = spaced_bar_horizontal.draw_longitudinal(document=doc, x=2, y=1, unifilar=False, dimensions=True)
+    assert len(ex_01["all_elements"]) == 136
+
+    ex_02 = spaced_bar_horizontal.draw_longitudinal(document=doc, x=9, y=1, unifilar=True, dimensions=True)
+    assert len(ex_02["all_elements"]) == 37
+
+    doc.saveas(filename="./tests/spaced_bars_horizontal_draw_longitudinal.dxf")
+
+
+@pytest.fixture()
+def spaced_bar_vertical():
+    return SpacedBars(
+        reinforcement_length=6,
+        length=3,
+        diameter=0.016,
+        spacing=0.1,
+        x=-10,
+        y=10,
+        direction=Direction.VERTICAL,
+        orientation=Orientation.BOTTOM,
+        left_anchor=0,
+        right_anchor=0,
+        mandrel_radius=0,
+        bend_longitud=0,
+        bend_angle=0,
+        bend_height=0,
+        denomination="R2")
+
+
+def test_spaced_bar_vertical_attributes(spaced_bar_vertical):
+    # Spaced bars attributes.
+    assert spaced_bar_vertical.reinforcement_length == 6
+    assert spaced_bar_vertical.length == 3
+    assert spaced_bar_vertical.diameter == 0.016
+    assert spaced_bar_vertical.spacing == 0.1
+    assert spaced_bar_vertical.x == -10
+    assert spaced_bar_vertical.y == 10
+    assert spaced_bar_vertical.radius == 0.008
+    assert spaced_bar_vertical.direction == Direction.VERTICAL
+    assert spaced_bar_vertical.orientation == Orientation.BOTTOM
+    assert spaced_bar_vertical.transverse_center == (3, 0.008)
+    assert spaced_bar_vertical.quantity == 61
+
+    # Bar attributes.
+    assert len(spaced_bar_vertical.bars) == 61
+
+    # Bar bending attributes.
+    assert spaced_bar_vertical.bend_longitud == 0
+    assert spaced_bar_vertical.bend_angle == 0
+    assert spaced_bar_vertical.bend_height == 0
+
+    # Boxing attributes.
+    assert spaced_bar_vertical._box_width == 3
+    assert spaced_bar_vertical._box_height == 6
+
+    # Physics attributes.
+    assert spaced_bar_vertical.weight == 288.83551529692267
+
+
+def test_draw_longitudinal_spaced_bars_vertical(spaced_bar_vertical):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+
+    ex_01 = spaced_bar_vertical.draw_longitudinal(document=doc, x=2, y=1, unifilar=False, dimensions=True)
+    assert len(ex_01["all_elements"]) == 248
+    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.start == Vec3(2.016, 1, 0)  # Top side start.
+    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.end == Vec3(2, 1, 0)  # Top side end.
+    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.start == Vec3(2.016, 3.9999999999999996, 0)  # Bottom side start.
+    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.end == Vec3(2, 3.9999999999999996, 0)  # Bottom side end.
+
+    ex_02 = spaced_bar_vertical.draw_longitudinal(document=doc, x=9, y=1, unifilar=True, dimensions=True)
+    assert len(ex_02["all_elements"]) == 65
+    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.start == Vec3(9, 1, 0)  # Steel start.
+    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.end == Vec3(9, 4, 0)  # Steel end.
+
+    doc.saveas(filename="./tests/spaced_bars_vertical_draw_longitudinal.dxf")
+
+
+@pytest.fixture()
+def spaced_bar_anchor():
+    return SpacedBars(
+        reinforcement_length=3,
+        length=4,
+        diameter=0.012,
+        spacing=0.2,
+        x=-10,
+        y=-10,
+        direction=Direction.HORIZONTAL,
+        orientation=Orientation.BOTTOM,
+        left_anchor=0.1,
+        right_anchor=0.1,
+        mandrel_radius=0,
+        bend_longitud=2,
+        bend_angle=45,
+        bend_height=0.08,
+        denomination="A1")
+
+
+def test_spaced_bar_anchor_attributes(spaced_bar_anchor):
+    # Spaced bars attributes.
+    assert spaced_bar_anchor.reinforcement_length == 3
+    assert spaced_bar_anchor.length == 4
+    assert spaced_bar_anchor.diameter == 0.012
+    assert spaced_bar_anchor.spacing == 0.2
+    assert spaced_bar_anchor.x == -10
+    assert spaced_bar_anchor.y == -10
+    assert spaced_bar_anchor.radius == 0.006
+    assert spaced_bar_anchor.direction == Direction.HORIZONTAL
+    assert spaced_bar_anchor.orientation == Orientation.BOTTOM
+    assert spaced_bar_anchor.transverse_center == (0.006, 1.5)
+    assert spaced_bar_anchor.quantity == 16
+
+    # Bar attributes.
+    assert len(spaced_bar_anchor.bars) == 16
+
+    # Bar bending attributes.
+    assert spaced_bar_anchor.bend_longitud == 2
+    assert spaced_bar_anchor.bend_angle == 45
+    assert spaced_bar_anchor.bend_height == 0.08
+
+    # Boxing attributes.
+    assert spaced_bar_anchor._box_width == 4
+    assert spaced_bar_anchor._box_height == 3
+
+    # Physics attributes.
+    assert spaced_bar_anchor.weight == 56.82010136988643
+
+
+def test_draw_longitudinal_spaced_bar_anchor(spaced_bar_anchor):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+
+    ex_01 = spaced_bar_anchor.draw_longitudinal(document=doc, x=-10, y=-10, unifilar=False, dimensions=True)
+    assert len(ex_01["all_elements"]) == 454
+
+    ex_02 = spaced_bar_anchor.draw_longitudinal(document=doc, x=-5, y=-10, unifilar=True, dimensions=True)
+    assert len(ex_02["all_elements"]) == 118
+
+    doc.saveas(filename="./tests/spaced_bar_anchor_draw_longitudinal.dxf")

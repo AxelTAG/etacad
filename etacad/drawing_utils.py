@@ -164,7 +164,6 @@ def delimit_axe(document: Drawing,
     return group
 
 
-# Draws a linear dimension.
 def dim_linear(document: Drawing,
                p_base: tuple,
                p1: tuple,
@@ -194,10 +193,33 @@ def dim_linear(document: Drawing,
     """
     msp = document.modelspace()
 
-    dims = [msp.add_linear_dim(base=p_base, p1=p1, p2=p2, dimstyle=dimstyle, angle=rotation, dxfattribs=attr)]
-    dims[-1].render()
+    dim_so = msp.add_linear_dim(base=p_base, p1=p1, p2=p2, dimstyle=dimstyle, angle=rotation, dxfattribs=attr)
+    dim_so.render()
+    dim = [dim_so.dimension]  # DXF entitie.
 
-    return dims
+    return dim
+
+
+def filter_entities(entities: list) -> dict:
+    """
+    Groups a list of DXF entities by their type.
+
+    Iterates over the given list of entities and organizes them into a dictionary
+    where each key is the entity type (as returned by `entitie.dxftype()`) and the value
+    is a list of entities of that type.
+
+    :param entities: List of DXF entities to be grouped.
+    :type entities: list
+    :return: Dictionary mapping entity types (str) to lists of corresponding entities.
+    :rtype: dict
+    """
+    groups = {}
+    for entitie in entities:
+        type_entitie = entitie.dxftype()
+        if type_entitie not in groups:
+            groups[type_entitie] = []
+        groups[type_entitie].append(entitie)
+    return groups
 
 
 # Function that draws a line.
