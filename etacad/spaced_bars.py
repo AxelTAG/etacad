@@ -56,18 +56,12 @@ class SpacedBars:
 
     def __attrs_post_init__(self):
         # Others.
-        self.quantity = int(self.reinforcement_length / self.spacing)
+        self.quantity = int(self.reinforcement_length / self.spacing) + 1
         if (self.reinforcement_length * 100) % (self.spacing * 100) == 0:
             self.quantity += 1
 
         # Geometric attributes.
         self.radius = self.diameter / 2
-
-        if self.direction == Direction.HORIZONTAL:
-            self.transverse_center = (self.radius, (self.quantity - 1) * self.spacing / 2)
-
-        if self.direction == Direction.VERTICAL:
-            self.transverse_center = ((self.quantity - 1) * self.spacing / 2, self.radius)
 
         # Bar element attribute.
         self.bars = []
@@ -112,6 +106,7 @@ class SpacedBars:
                           y: float = None,
                           unifilar: bool = False,
                           dimensions: bool = True,
+                          reinforcement_dimensions: bool = True,
                           bar_dimension: bool = True,
                           bar_dimension_position: int = None,
                           denomination: bool = True,
@@ -146,7 +141,7 @@ class SpacedBars:
                                                       denomination=denomination and i == denomination_position,
                                                       settings=settings))
 
-        if dimensions:
+        if dimensions and reinforcement_dimensions:
             dim_x = x + self.bars[0].x
             dim_y = y + self.bars[0].y
             dim_y_top = y + self.bars[-1].y
@@ -191,6 +186,10 @@ class SpacedBars:
 
         if y is None:
             y = self.y
+
+        if self.transverse_center:
+            x += self.transverse_center[0]
+            y += self.transverse_center[1]
 
         elements = {}
         bar_dict = []
@@ -265,9 +264,10 @@ class SpacedBars:
             translate(group, vector=(self.diameter, 0))
 
         # Orienting the texts elements (direction and orientation).
-        for dimension in group_filter["DIMENSION"]:
-            dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
-            dimension.render()
+        if "DIMENSION" in group_filter:
+            for dimension in group_filter["DIMENSION"]:
+                dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
+                dimension.render()
 
     def data(self) -> dict:
         """
