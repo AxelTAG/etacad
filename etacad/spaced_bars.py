@@ -137,9 +137,18 @@ class SpacedBars:
                                                       x=x + bar.x,
                                                       y=y + bar.y,
                                                       unifilar=unifilar,
-                                                      dimensions=bar_dimension and i == bar_dimension_position,
+                                                      dimensions=False,
                                                       denomination=denomination and i == denomination_position,
                                                       settings=settings))
+                if dimensions and bar_dimension and i == bar_dimension_position:
+                    dimension_elements += text(document=document,
+                                               text="Ø{0} s/{1} ".format(
+                                                   bar.diameter, self.spacing),
+                                               height=settings["text_dim_height"],
+                                               point=(x + bar.box_width / 2,
+                                                      y + bar.y + bar.box_height + settings["text_dim_distance_horizontal"]),
+                                               rotation=0,
+                                               attr={"halign": 4, "valign": 0})
 
         if dimensions and reinforcement_dimensions:
             dim_x = x + self.bars[0].x
