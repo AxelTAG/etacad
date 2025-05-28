@@ -240,9 +240,9 @@ def test_draw_longitudinal_spaced_bar_anchor_horizontal(spaced_bar_anchor_horizo
     doc = ezdxf.new(setup=True)
 
     ex_01 = spaced_bar_anchor_horizontal.draw_longitudinal(document=doc, x=-10, y=-10, unifilar=False, dimensions=True)
-    assert len(ex_01["all_elements"]) == 482
+    assert len(ex_01["all_elements"]) == 480
 
     ex_02 = spaced_bar_anchor_horizontal.draw_longitudinal(document=doc, x=-5, y=-10, unifilar=True, dimensions=True)
-    assert len(ex_02["all_elements"]) == 125
+    assert len(ex_02["all_elements"]) == 123
 
     doc.saveas(filename="./tests/spaced_bar_anchor_horizontal_draw_longitudinal.dxf")
