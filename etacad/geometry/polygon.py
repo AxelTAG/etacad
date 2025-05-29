@@ -34,6 +34,7 @@ class Polygon:
     centroid: tuple[float, float] = field(init=False, default=(0.0, 0.0))
 
     def __attrs_post_init__(self):
+        self.vertices = self.normalize_vertices(vertices=self.vertices)
         self.perimeter = get_line_longitud(self.vertices)
         self.area = self.get_area()
         self.centroid = get_linear_center(points=self.vertices)
@@ -213,3 +214,23 @@ class Polygon:
             segment_centers.append(segment_center([x1, y1, x2, y2]))
 
         return segment_centers
+
+    def normalize_vertices(self, vertices: list[tuple]) -> list[tuple]:
+        """
+        Normalize a polygon (vertices) by translating it to the first quadrant,
+        so that its closest points touch the X and Y axes.
+
+        :param vertices: A list of (x, y) tuples representing the polygon's vertices.
+        :type vertices: list[tuple[float, float]]
+        :return: A new list of (x, y) tuples with the polygon translated to the first quadrant.
+        :rtype: list[tuple[float, float]]
+        """
+        if not vertices:
+            return []
+
+        min_x = min(p[0] for p in vertices)
+        min_y = min(p[1] for p in vertices)
+
+        normalized_points = [(x - min_x, y - min_y) for x, y in vertices]
+
+        return normalized_points
