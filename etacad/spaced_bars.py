@@ -141,12 +141,15 @@ class SpacedBars:
                                                       denomination=denomination and i == denomination_position,
                                                       settings=settings))
                 if dimensions and bar_dimension and i == bar_dimension_position:
+                    y_differencial = 0
+                    if bar.orientation == Orientation.TOP:
+                        y_differencial = max(bar.right_anchor, bar.left_anchor, bar.bend_height)
                     dimension_elements += text(document=document,
                                                text="Ø{0} s/{1} ".format(
                                                    bar.diameter, self.spacing),
                                                height=settings["text_dim_height"],
                                                point=(x + bar.box_width / 2,
-                                                      y + bar.y + bar.box_height + settings["text_dim_distance_horizontal"]),
+                                                      y + bar.y + bar.diameter + settings["text_dim_distance_horizontal"] - y_differencial),
                                                rotation=0,
                                                attr={"halign": 4, "valign": 0})
 
