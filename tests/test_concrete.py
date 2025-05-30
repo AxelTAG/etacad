@@ -88,9 +88,9 @@ def test_concrete_length_polygon_draw_longitudinal(concrete_polygon):
     entities = concrete_polygon.draw_longitudinal(document=doc, dimensions=True, dimensions_inner=True)
     doc.saveas(filename="./tests/concrete_length_polygon_draw_longitudinal.dxf")
 
-    assert len(entities["concrete_elements"]) == 10
-    assert len(entities["dimensions"]) == 9
-    assert len(entities["all_elements"]) == 19
+    assert len(entities["concrete_elements"]) == 6
+    assert len(entities["dimensions"]) == 5
+    assert len(entities["all_elements"]) == 11
 
 
 def test_concrete_length_polygon_draw_transverse(concrete_polygon):
