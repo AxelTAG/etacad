@@ -57,8 +57,6 @@ class SpacedBars:
     def __attrs_post_init__(self):
         # Others.
         self.quantity = int(self.reinforcement_length / self.spacing) + 1
-        if (self.reinforcement_length * 100) % (self.spacing * 100) == 0:
-            self.quantity += 1
 
         # Geometric attributes.
         self.radius = self.diameter / 2
