@@ -4,7 +4,7 @@
 # Locals imports.
 from etacad.drawing_utils import line, polyline, translate, dim_linear
 from etacad.globals import (CONCRETE_WEIGHT, DRotation, CONCRETE_SET_LONG, CONCRETE_SET_TRANSVERSE,
-                            CONCRETE_SET_RIGHT_VIEW, ElementTypes)
+                            CONCRETE_SET_RIGHT_VIEW, CONCRETE_SET_FRONT_VIEW, ElementTypes)
 from etacad.geometry.polygon import Polygon
 from etacad.geometry.utils import displace_perpendicular, get_angle
 
@@ -467,25 +467,25 @@ class Concrete:
 
         return elements
 
+    def draw_front_view(self,
+                        document: Drawing,
+                        x: float = None,
+                        y: float = None,
+                        dimensions: bool = True,
+                        dimensions_inner: bool = True,
+                        settings: dict = CONCRETE_SET_RIGHT_VIEW) -> dict:
+        if self.length:
+            return self.draw_transverse(document=document,
+                                        x=x,
+                                        y=y,
+                                        dimensions=dimensions,
+                                        dimensions_inner=dimensions_inner,
+                                        settings=CONCRETE_SET_FRONT_VIEW)
 
-if __name__ == "__main__":
-    import ezdxf
-
-    doc = ezdxf.new(setup=True)
-    vertices = [(0, 0), (0, 6), (4, 6), (4, 4), (4, 2), (4, 0)]
-    model_h = Concrete(vertices=vertices,
-                       height=0.15)
-
-    model_h.draw_longitudinal(document=doc, x=0, y=0)
-    model_h.draw_transverse(document=doc, x=5, y=0)
-    model_h.draw_right_view(document=doc, x=10, y=0)
-
-    model_l = Concrete(vertices=vertices,
-                       length=0.15,
-                       y=-10)
-
-    model_l.draw_longitudinal(document=doc, x=0)
-    model_l.draw_transverse(document=doc, x=5)
-    model_l.draw_right_view(document=doc, x=10)
-
-    doc.saveas("c:/users/beta/desktop/test_concrete.dxf")
+        if self.height:
+            return self.draw_longitudinal(document=document,
+                                          x=x,
+                                          y=y,
+                                          dimensions=dimensions,
+                                          dimensions_inner=dimensions_inner,
+                                          settings=settings)
