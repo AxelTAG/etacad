@@ -230,7 +230,7 @@ class SpacedBars:
                                     elements["dimension_elements"])
 
         # Orienting elements.
-        self.__direc_orient(group=elements["all_elements"])
+        self.__direc_orient(group=elements["all_elements"], x=x, y=y)
 
         return elements
 
@@ -273,13 +273,11 @@ class SpacedBars:
             if unifilar:
                 translate(group, vector=(-self.diameter, 0))
 
-            translate(group, vector=(self.diameter, 0))
-
-        # Orienting the texts elements (direction and orientation).
-        if "DIMENSION" in group_filter:
-            for dimension in group_filter["DIMENSION"]:
-                dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
-                dimension.render()
+            # Orienting the texts elements (direction and orientation).
+            if "DIMENSION" in group_filter:
+                for dimension in group_filter["DIMENSION"]:
+                    dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
+                    dimension.render()
 
     def data(self) -> dict:
         """

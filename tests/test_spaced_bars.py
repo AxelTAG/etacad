@@ -158,15 +158,15 @@ def test_draw_longitudinal_spaced_bars_vertical(spaced_bar_vertical):
 
     ex_01 = spaced_bar_vertical.draw_longitudinal(document=doc, x=2, y=1, unifilar=False, dimensions=True)
     assert len(ex_01["all_elements"]) == 252
-    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.start == Vec3(2.031999999999999, 1, 0)  # Top side start.
-    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.end == Vec3(2.015999999999999, 1.0, 0.0)  # Top side end.
-    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.start == Vec3(2.031999999999999, 3.9999999999999996, 0.0)  # Bottom side start.
-    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.end == Vec3(2.015999999999999, 3.9999999999999996, 0.0)  # Bottom side end.
+    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.start == Vec3(2.015999999999999, 1, 0)  # Top side start.
+    assert ex_01["bar_elements"][-1]["steel_elements"][-1].dxf.end == Vec3(1.9999999999999991, 1.0, 0.0)  # Top side end.
+    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.start == Vec3(2.015999999999999, 3.9999999999999996, 0.0)  # Bottom side start.
+    assert ex_01["bar_elements"][-1]["steel_elements"][2].dxf.end == Vec3(1.9999999999999991, 3.9999999999999996, 0.0)  # Bottom side end.
 
     ex_02 = spaced_bar_vertical.draw_longitudinal(document=doc, x=9, y=1, unifilar=True, dimensions=True)
     assert len(ex_02["all_elements"]) == 66
-    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.start == Vec3(9.016, 1.0, 0.0)  # Steel start.
-    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.end == Vec3(9.016, 4.0, 0.0)  # Steel end.
+    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.start == Vec3(9, 1.0, 0.0)  # Steel start.
+    assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.end == Vec3(9, 4.0, 0.0)  # Steel end.
 
     ex_03 = spaced_bar_vertical.draw_longitudinal(document=doc, x=2, y=-5, unifilar=False, dimensions=True, one_bar=True)
     assert len(ex_03["all_elements"]) == 8
