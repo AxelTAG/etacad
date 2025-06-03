@@ -160,12 +160,13 @@ class Bar:
         if y is None:
             y = self.y
 
-        if not unifilar:
-            diameter = self.diameter
-            mandrel_radius_ext = self.mandrel_radius_ext
-            sides_left_anchor = [0, 1, 1, 1]
-            sides_right_anchor = [0, 1, 1, 1]
-        else:
+        # Setting variables for simplifying code.
+        diameter = self.diameter
+        mandrel_radius_ext = self.mandrel_radius_ext
+        sides_left_anchor = [0, 1, 1, 1]
+        sides_right_anchor = [0, 1, 1, 1]
+
+        if unifilar:
             diameter = 0
             mandrel_radius_ext = 0
             sides_left_anchor = [0, 0, 0, 1]
@@ -360,7 +361,9 @@ class Bar:
             # From left to right.
             # First rect bar (body).
             sides_first_rect_bar = sides_first_rect_bar if not unifilar else [1, 0, 0, 0]
-            mandrel_radius_ext = 0 if not self.left_anchor and not self.right_anchor else mandrel_radius_ext
+            mandrel_radius_ext = 0
+            if self.left_anchor and not unifilar:
+                mandrel_radius_ext = self.mandrel_radius_ext
             steel_elements += rect(doc=document,
                                    width=length_first_rect_bar,
                                    height=diameter,
@@ -476,7 +479,7 @@ class Bar:
         return elements
 
     # Function that orients drawing.
-    def __direc_orient(self, group: list, x: float = None, y: float = None, unifilar: bool = False):
+    def __direc_orient(self, group: list, x: float = None, y: float = None, unifilar: bool = False) -> None:
         """
         Adjusts the orientation of the drawing based on the direction and orientation of the bar.
 
@@ -516,7 +519,7 @@ class Bar:
             else:
                 translate(group, vector=(0, self.box_height + y * 2))
                 if unifilar:
-                    translate(group, vector=(0, self.radius))
+                    translate(group, vector=(0, -self.mandrel_radius_ext))
 
         elif self.orientation == Orientation.RIGHT:
             if self.direction == Direction.VERTICAL:
@@ -587,3 +590,30 @@ class Bar:
                 data_required.append("-")
 
         return data_required
+
+
+if __name__ == "__main__":
+    import ezdxf
+
+    doc = ezdxf.new(setup=True)
+
+    bar_top = Bar(reinforcement_length=4,
+                  diameter=0.01,
+                  direction=Direction.HORIZONTAL,
+                  orientation=Orientation.TOP,
+                  right_anchor=0.15,
+                  mandrel_radius=0.01)
+    bar_top.draw_longitudinal(document=doc, y=1)
+    bar_top.draw_longitudinal(document=doc, y=-1, unifilar=True)
+
+    bar_bottom = Bar(reinforcement_length=4,
+                     diameter=0.01,
+                     x=5,
+                     direction=Direction.HORIZONTAL,
+                     orientation=Orientation.BOTTOM,
+                     right_anchor=0.15,
+                     mandrel_radius=0.01)
+    bar_bottom.draw_longitudinal(document=doc, y=1)
+    bar_bottom.draw_longitudinal(document=doc, y=-1, unifilar=True)
+
+    doc.saveas("c:/users/beta/desktop/bar_example.dxf")

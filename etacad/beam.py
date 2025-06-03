@@ -451,22 +451,36 @@ class Beam:
         # Drawing of bars.
         if self.as_sup or self.as_right or self.as_inf or self.as_left:
             if bars:
-                bar_dict_list.append(self.bars_as_sup[0].draw_longitudinal(document=document,
-                                                                           x=x + (self.bars_as_sup[0].x - self.x),
-                                                                           y=y + (self.bars_as_sup[0].y - self.y),
-                                                                           unifilar=unifilar_bars,
-                                                                           dimensions=False,
-                                                                           denomination=False))  # Only mayor bar.
-                bar_dict_list.append(self.bars_as_inf[0].draw_longitudinal(document=document,
-                                                                           x=x + (self.bars_as_inf[0].x - self.x),
-                                                                           y=y + (self.bars_as_inf[0].y - self.y),
-                                                                           unifilar=unifilar_bars,
-                                                                           dimensions=False,
-                                                                           denomination=False))  # Only inferior mayor bar.
+                if self.bars_as_sup:
+                    x_coord = x + (self.bars_as_sup[0].x - self.x)
+                    y_coord = y + (self.bars_as_sup[0].y - self.y)
+                    if unifilar_bars:
+                        y_coord += self.bars_as_sup[0].mandrel_radius_ext - self.bars_as_sup[0].diameter / 2
+                    bar_dict_list.append(self.bars_as_sup[0].draw_longitudinal(document=document,
+                                                                               x=x_coord,
+                                                                               y=y_coord,
+                                                                               unifilar=unifilar_bars,
+                                                                               dimensions=False,
+                                                                               denomination=False))  # Only mayor bar.
+                if self.bars_as_inf:
+                    x_coord = x + (self.bars_as_inf[0].x - self.x)
+                    y_coord = y + (self.bars_as_inf[0].y - self.y)
+                    if unifilar_bars:
+                        y_coord += self.bars_as_inf[0].diameter / 2
+                    bar_dict_list.append(self.bars_as_inf[0].draw_longitudinal(document=document,
+                                                                               x=x_coord,
+                                                                               y=y_coord,
+                                                                               unifilar=unifilar_bars,
+                                                                               dimensions=False,
+                                                                               denomination=False))  # Only mayor bar.
                 for bar in self.bars_as_left:
+                    x_coord = x + (bar.x - self.x)
+                    y_coord = y + (bar.y - self.y)
+                    if unifilar_bars:
+                        y_coord += bar.diameter / 2
                     bar_dict_list.append(bar.draw_longitudinal(document=document,
-                                                               x=x + (bar.x - self.x),
-                                                               y=y + (bar.y - self.y),
+                                                               x=x_coord,
+                                                               y=y_coord,
                                                                unifilar=unifilar_bars,
                                                                dimensions=False,
                                                                denomination=False))  # Only left bars.
@@ -873,7 +887,7 @@ class Beam:
                                 y=y_bar_long,
                                 left_anchor=anchor[i],
                                 right_anchor=anchor[i],
-                                mandrel_radius=db,
+                                mandrel_radius=db if anchor[i] else 0,
                                 orientation=orientation,
                                 transverse_center=(x_bar_transverse, y_bar_transverse),
                                 denomination=list_denom[i],

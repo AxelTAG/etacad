@@ -220,7 +220,7 @@ def test_draw_longitudinal_bar_straight_vertical(bar_straight_vertical):
 
 
 @pytest.fixture
-def bar_straight_horizontal_lab():
+def bar_horizontal_lab_bottom():
     return Bar(reinforcement_length=4,
                diameter=0.01,
                x=0,
@@ -233,43 +233,221 @@ def bar_straight_horizontal_lab():
                bend_longitud=0,
                bend_angle=0,
                bend_height=0,
-               denomination="bar_straight_vertical_lab")
+               denomination="bar_horizontal_lab_bottom")
 
 
-def test_attributes_straight_horizontal_lab(bar_straight_horizontal_lab):
+def test_attributes_horizontal_lab_bottom(bar_horizontal_lab_bottom):
     # Bending attributes.
-    assert bar_straight_horizontal_lab.bend_longitud == 0
-    assert bar_straight_horizontal_lab.bend_angle == 0
-    assert bar_straight_horizontal_lab.bend_height == 0
-    assert bar_straight_horizontal_lab.bending_proyection == 0
+    assert bar_horizontal_lab_bottom.bend_longitud == 0
+    assert bar_horizontal_lab_bottom.bend_angle == 0
+    assert bar_horizontal_lab_bottom.bend_height == 0
+    assert bar_horizontal_lab_bottom.bending_proyection == 0
 
     # Mandrel attributes.
-    assert bar_straight_horizontal_lab.left_anchor == 0.15
-    assert bar_straight_horizontal_lab.right_anchor == 0
-    assert bar_straight_horizontal_lab.mandrel_radius == 0.01
-    assert bar_straight_horizontal_lab.mandrel_radius_ext == 0.02
+    assert bar_horizontal_lab_bottom.left_anchor == 0.15
+    assert bar_horizontal_lab_bottom.right_anchor == 0
+    assert bar_horizontal_lab_bottom.mandrel_radius == 0.01
+    assert bar_horizontal_lab_bottom.mandrel_radius_ext == 0.02
 
     # Geometric attributes.
-    assert bar_straight_horizontal_lab.diameter == 0.01
-    assert bar_straight_horizontal_lab.radius == 0.005
-    assert bar_straight_horizontal_lab.direction == Direction.HORIZONTAL
-    assert bar_straight_horizontal_lab.orientation == Orientation.BOTTOM
-    assert bar_straight_horizontal_lab.transverse_center is None
-    assert bar_straight_horizontal_lab.reinforcement_length == 4
-    assert bar_straight_horizontal_lab.length == 4.15
-    assert bar_straight_horizontal_lab.weight == ((0.01 ** 2) * pi / 4) * 4.15 * STEEL_WEIGHT
+    assert bar_horizontal_lab_bottom.diameter == 0.01
+    assert bar_horizontal_lab_bottom.radius == 0.005
+    assert bar_horizontal_lab_bottom.direction == Direction.HORIZONTAL
+    assert bar_horizontal_lab_bottom.orientation == Orientation.BOTTOM
+    assert bar_horizontal_lab_bottom.transverse_center is None
+    assert bar_horizontal_lab_bottom.reinforcement_length == 4
+    assert bar_horizontal_lab_bottom.length == 4.15
+    assert bar_horizontal_lab_bottom.weight == ((0.01 ** 2) * pi / 4) * 4.15 * STEEL_WEIGHT
 
     # Boxing attributes.
-    assert bar_straight_horizontal_lab.box_width == 4
-    assert bar_straight_horizontal_lab.box_height == 0.16999999999999998
+    assert bar_horizontal_lab_bottom.box_width == 4
+    assert bar_horizontal_lab_bottom.box_height == 0.16999999999999998
 
     # Others.
-    assert bar_straight_horizontal_lab.denomination == "bar_straight_vertical_lab"
+    assert bar_horizontal_lab_bottom.denomination == "bar_horizontal_lab_bottom"
+
+
+def test_draw_longitudinal_horizontal_lab_bottom(bar_horizontal_lab_bottom):
+    doc = ezdxf.new(setup=True)
+
+    ex_01 = bar_horizontal_lab_bottom.draw_longitudinal(document=doc,
+                                                        x=5,
+                                                        y=5,
+                                                        unifilar=False,
+                                                        denomination=False)
+    assert ex_01["steel_elements"][5].dxf.start == Vec3(5.02, 5.17, 0)  # Body bottom side start.
+    assert ex_01["steel_elements"][5].dxf.end == Vec3(9, 5.17, 0)  # Body bottom side end.
+    assert ex_01["steel_elements"][6].dxf.start == Vec3(5.02, 5.16, 0)  # Body top side start.
+    assert ex_01["steel_elements"][6].dxf.end == Vec3(9, 5.16, 0)  # Body top side start.
+
+    ex_02 = bar_horizontal_lab_bottom.draw_longitudinal(document=doc,
+                                                        x=10,
+                                                        y=5,
+                                                        unifilar=True,
+                                                        denomination=False)
+    assert ex_02["steel_elements"][0].dxf.start == Vec3(10, 5, 0)  # Anchor left start.
+    assert ex_02["steel_elements"][0].dxf.end == Vec3(10, 5.15, 0)  # Anchor left start.
+
+    doc.saveas("./tests/bar_horizontal_lab_bottom_draw_longitudinal.dxf")
 
 
 @pytest.fixture
-def bar_straight_hotizontal_rab():
-    pass
+def bar_horizontal_rab_bottom():
+    return Bar(reinforcement_length=4,
+               diameter=0.01,
+               x=0,
+               y=0,
+               left_anchor=0,
+               right_anchor=0.15,
+               mandrel_radius=0.01,
+               direction=Direction.HORIZONTAL,
+               orientation=Orientation.BOTTOM,
+               bend_longitud=0,
+               bend_angle=0,
+               bend_height=0,
+               denomination="bar_horizontal_rab_bottom")
+
+
+def test_draw_longitudinal_horizontal_rab_bottom(bar_horizontal_rab_bottom):
+    doc = ezdxf.new(setup=True)
+
+    # Example 01.
+    ex_01 = bar_horizontal_rab_bottom.draw_longitudinal(document=doc,
+                                                        x=5,
+                                                        y=5,
+                                                        unifilar=False,
+                                                        denomination=False)
+    assert ex_01["steel_elements"][5].dxf.start == Vec3(5, 5.17, 0)  # Body top side start.
+    assert ex_01["steel_elements"][5].dxf.end == Vec3(8.98, 5.17, 0)  # Body top side end.
+    assert ex_01["steel_elements"][6].dxf.start == Vec3(5, 5.16, 0)  # Body bottom side start.
+    assert ex_01["steel_elements"][6].dxf.end == Vec3(8.98, 5.16, 0)  # Body bottom side start.
+
+    # Example 01.
+    ex_02 = bar_horizontal_rab_bottom.draw_longitudinal(document=doc,
+                                                        x=10,
+                                                        y=5,
+                                                        unifilar=True,
+                                                        denomination=False)
+    assert ex_02["steel_elements"][0].dxf.start == Vec3(14, 5, 0)  # Anchor right start.
+    assert ex_02["steel_elements"][0].dxf.end == Vec3(14, 5.15, 0)  # Anchor right start.
+
+    doc.saveas("./tests/bar_horizontal_rab_bottom_draw_longitudinal.dxf")
+
+
+@pytest.fixture
+def bar_horizontal_lab_top():
+    return Bar(reinforcement_length=4,
+               diameter=0.01,
+               x=0,
+               y=0,
+               left_anchor=0.15,
+               right_anchor=0,
+               mandrel_radius=0.01,
+               direction=Direction.HORIZONTAL,
+               orientation=Orientation.TOP,
+               bend_longitud=0,
+               bend_angle=0,
+               bend_height=0,
+               denomination="bar_horizontal_lab_top")
+
+
+def test_attributes_horizontal_lab_top(bar_horizontal_lab_top):
+    # Bending attributes.
+    assert bar_horizontal_lab_top.bend_longitud == 0
+    assert bar_horizontal_lab_top.bend_angle == 0
+    assert bar_horizontal_lab_top.bend_height == 0
+    assert bar_horizontal_lab_top.bending_proyection == 0
+
+    # Mandrel attributes.
+    assert bar_horizontal_lab_top.left_anchor == 0.15
+    assert bar_horizontal_lab_top.right_anchor == 0
+    assert bar_horizontal_lab_top.mandrel_radius == 0.01
+    assert bar_horizontal_lab_top.mandrel_radius_ext == 0.02
+
+    # Geometric attributes.
+    assert bar_horizontal_lab_top.diameter == 0.01
+    assert bar_horizontal_lab_top.radius == 0.005
+    assert bar_horizontal_lab_top.direction == Direction.HORIZONTAL
+    assert bar_horizontal_lab_top.orientation == Orientation.TOP
+    assert bar_horizontal_lab_top.transverse_center is None
+    assert bar_horizontal_lab_top.reinforcement_length == 4
+    assert bar_horizontal_lab_top.length == 4.15
+    assert bar_horizontal_lab_top.weight == ((0.01 ** 2) * pi / 4) * 4.15 * STEEL_WEIGHT
+
+    # Boxing attributes.
+    assert bar_horizontal_lab_top.box_width == 4
+    assert bar_horizontal_lab_top.box_height == 0.16999999999999998
+
+    # Others.
+    assert bar_horizontal_lab_top.denomination == "bar_horizontal_lab_top"
+
+
+def test_draw_longitudinal_horizontal_lab_top(bar_horizontal_lab_top):
+    doc = ezdxf.new(setup=True)
+
+    ex_01 = bar_horizontal_lab_top.draw_longitudinal(document=doc,
+                                                     x=5,
+                                                     y=5,
+                                                     unifilar=False,
+                                                     denomination=False)
+    assert ex_01["steel_elements"][5].dxf.start == Vec3(5.02, 5, 0)  # Body bottom start.
+    assert ex_01["steel_elements"][5].dxf.end == Vec3(9, 5, 0)  # Body bottom end.
+    assert ex_01["steel_elements"][6].dxf.start == Vec3(5.02, 5.01, 0)  # Body top start.
+    assert ex_01["steel_elements"][6].dxf.end == Vec3(9, 5.01, 0)  # Body top start.
+
+    ex_02 = bar_horizontal_lab_top.draw_longitudinal(document=doc,
+                                                     x=10,
+                                                     y=5,
+                                                     unifilar=True,
+                                                     denomination=False)
+    assert ex_02["steel_elements"][0].dxf.start == Vec3(10, 5.15, 0)    # Anchor left start.
+    assert ex_02["steel_elements"][0].dxf.end == Vec3(10, 5, 0)    # Anchor left start.
+
+    doc.saveas("./tests/bar_horizontal_lab_top_draw_longitudinal.dxf")
+
+
+@pytest.fixture
+def bar_horizontal_rab_top():
+    return Bar(reinforcement_length=4,
+               diameter=0.01,
+               x=0,
+               y=0,
+               left_anchor=0,
+               right_anchor=0.15,
+               mandrel_radius=0.01,
+               direction=Direction.HORIZONTAL,
+               orientation=Orientation.TOP,
+               bend_longitud=0,
+               bend_angle=0,
+               bend_height=0,
+               denomination="bar_hotizontal_rab_top")
+
+
+def test_draw_longitudinal_horizontal_rab_top(bar_horizontal_rab_top):
+    doc = ezdxf.new(setup=True)
+
+    # Example 01.
+    ex_01 = bar_horizontal_rab_top.draw_longitudinal(document=doc,
+                                                     x=5,
+                                                     y=5,
+                                                     unifilar=False,
+                                                     denomination=False)
+    doc.saveas("./tests/bar_horizontal_rab_top_draw_longitudinal.dxf")
+    assert ex_01["steel_elements"][5].dxf.start == Vec3(5, 5, 0)  # Body bottom start.
+    assert ex_01["steel_elements"][5].dxf.end == Vec3(8.98, 5, 0)  # Body bottom end.
+    assert ex_01["steel_elements"][6].dxf.start == Vec3(5, 5.01, 0)  # Body top start.
+    assert ex_01["steel_elements"][6].dxf.end == Vec3(8.98, 5.01, 0)  # Body top start.
+
+    # Example 01.
+    ex_02 = bar_horizontal_rab_top.draw_longitudinal(document=doc,
+                                                     x=10,
+                                                     y=5,
+                                                     unifilar=True,
+                                                     denomination=False)
+    assert ex_02["steel_elements"][0].dxf.start == Vec3(14, 5.15, 0)  # Anchor right start.
+    assert ex_02["steel_elements"][0].dxf.end == Vec3(14, 5, 0)  # Anchor right end.
+
+    doc.saveas("./tests/bar_horizontal_rab_top_draw_longitudinal.dxf")
 
 
 @pytest.fixture

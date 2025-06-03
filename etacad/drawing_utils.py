@@ -33,6 +33,16 @@ matrix_y_mirror = Matrix44([-1, 0, 0, 0],
                            [0, 0, 1, 0],
                            [0, 0, 0, 1])
 
+matrix_x_paralel_line_mirror = Matrix44([1, 0, 0, 0],
+                                        [0, -1, 0, 2],  # Constant 2 must multiply by Y coordinate.
+                                        [0, 0, 1, 0],
+                                        [0, 0, 0, 1])
+
+matrix_y_paralel_line_mirror = Matrix44([-1, 0, 0, 2],  # Constant 2 must multiply by X coordinate.
+                                        [0, 1, 0, 0],
+                                        [0, 0, 1, 0],
+                                        [0, 0, 0, 1])
+
 
 # Function that draws a circunference.
 def circle(doc: Drawing,
@@ -244,7 +254,7 @@ def line(doc: Drawing, p1: tuple, p2: tuple, attr=None) -> list:
 
 
 # Function that mirrors a given group of objects.
-def mirror(objects: list, mirror_type: str, in_situ: bool = False) -> int:
+def mirror(objects: list, mirror_type: str, c: float = None) -> int:
     """
     Mirrors a group of objects along the specified axis.
 
@@ -252,20 +262,33 @@ def mirror(objects: list, mirror_type: str, in_situ: bool = False) -> int:
     :type objects: list
     :param mirror_type: The axis to mirror along, e.g., "x", "y".
     :type mirror_type: str
-    :param in_situ: Whether to apply the mirror transformation in-place.
-    :type in_situ: bool, optional
+    :param c: Constant of line to mirror along.
+    :type c: int, optional
     :return: An integer status code indicating success (1).
     :rtype: int
     """
-    # Axis "x" mirror.
-    if "x" in mirror_type:
-        inplace(objects, matrix_x_mirror)
+    if c is None:
+        # Axis "x" mirror.
+        if "x" in mirror_type:
+            inplace(objects, matrix_x_mirror)
+            return 1
 
-    # Axis "y" mirror.
-    if "y" in mirror_type:
-        inplace(objects, matrix_y_mirror)
+        # Axis "y" mirror.
+        if "y" in mirror_type:
+            inplace(objects, matrix_y_mirror)
+            return 1
 
-    return 1
+    # Paralel line to Axis "x" mirror.
+    if mirror_type == "x":
+        matrix = Matrix44([1, 0, 0, 0], [0, -1, 0, 2 * c], [0, 0, 1, 0], [0, 0, 0, 1])
+        inplace(objects, matrix)
+        return 1
+
+    # Paralel line to Axis "y" mirror.
+    if mirror_type == "y":
+        matrix = Matrix44([-1, 0, 0, 2 * c], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1])
+        inplace(objects, matrix)
+        return 1
 
 
 def mtext(document: Drawing, textstr: str, height: float, x: float, y: float, width: float = 0, rotation: float = 0,

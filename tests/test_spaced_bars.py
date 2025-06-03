@@ -33,7 +33,7 @@ def spaced_bar_horizontal():
         denomination="R1")
 
 
-def test_spaced_bar_horizontal_attributes(spaced_bar_horizontal):
+def test_attributes_spaced_bar_horizontal(spaced_bar_horizontal):
     # Spaced bars attributes.
     assert spaced_bar_horizontal.reinforcement_length == 4
     assert spaced_bar_horizontal.length == 6
@@ -123,7 +123,7 @@ def spaced_bar_vertical():
         denomination="R2")
 
 
-def test_spaced_bar_vertical_attributes(spaced_bar_vertical):
+def test_attributes_spaced_bar_vertical(spaced_bar_vertical):
     # Spaced bars attributes.
     assert spaced_bar_vertical.reinforcement_length == 6
     assert spaced_bar_vertical.length == 3
@@ -206,7 +206,7 @@ def spaced_bar_anchor_horizontal():
         denomination="A1")
 
 
-def test_spaced_bar_anchor_horizontal_attributes(spaced_bar_anchor_horizontal):
+def test_attributes_spaced_bar_anchor_horizontal(spaced_bar_anchor_horizontal):
     # Spaced bars attributes.
     assert spaced_bar_anchor_horizontal.reinforcement_length == 3
     assert spaced_bar_anchor_horizontal.length == 4
