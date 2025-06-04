@@ -5,9 +5,9 @@
 __version__ = "0.0.12"
 
 from .bar import Bar
-from .stirrup import Stirrup
-from .spaced_bars import SpacedBars
-from .concrete import Concrete
-from .cadtable import CADTable
 from .beam import Beam
+from .cadtable import CADTable
 from .column import Column
+from .concrete import Concrete
+from .spaced_bars import SpacedBars
+from .stirrup import Stirrup
