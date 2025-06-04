@@ -4,6 +4,7 @@
 from etacad.bar import Bar
 from etacad.cadtable import CADTable
 from etacad.concrete import Concrete
+from etacad.converters import to_list
 from etacad.drawing_utils import delimit_axe, dim_linear, rect, text
 from etacad.globals import (COLUMN_SET_TRANSVERSE, COLUMN_SET_LONG_REBAR, ColumnTypes, Direction, ElementTypes,
                             Orientation, CONCRETE_WEIGHT, COLUMN_SET_LONG, COLUMN_SET_TRANSVERSE_REBAR)
@@ -191,10 +192,10 @@ class Column:
     max_db_hz: float = field(init=False)
     max_db_vt: float = field(init=False)
 
-    anchor_sup: list = field(default=0)
-    anchor_right: list = field(default=0)
-    anchor_inf: list = field(default=0)
-    anchor_left: list = field(default=0)
+    anchor_sup: list | float = field(default=0, converter=to_list)
+    anchor_right: list | float = field(default=0, converter=to_list)
+    anchor_inf: list | float = field(default=0, converter=to_list)
+    anchor_left: list | float = field(default=0, converter=to_list)
 
     bars_as_sup: list = field(init=False)
     bars_as_right: list = field(init=False)
@@ -213,17 +214,17 @@ class Column:
     concrete_specific_weight: float = CONCRETE_WEIGHT
 
     # Stirrup attributes.
-    stirrups_db: list = field(default=None)
-    stirrups_anchor: list = field(default=None)
-    stirrups_sep: list = field(default=None)
-    stirrups_length: list = field(default=None)
-    stirrups_x: list = field(default=None)
+    stirrups_db: list | float = field(default=None, converter=to_list)
+    stirrups_anchor: list | float = field(default=None, converter=to_list)
+    stirrups_sep: list | float = field(default=None, converter=to_list)
+    stirrups_length: list | float = field(default=None, converter=to_list)
+    stirrups_x: list | float = field(default=None, converter=to_list)
     stirrups: list = field(init=False)
 
     # Crossing beams attributes.
-    beams: list = field(default=None)
-    beams_pos: list = field(default=None)
-    beams_symbol: list = field(default=None)
+    beams: list = field(default=None, converter=to_list)
+    beams_pos: list = field(default=None, converter=to_list)
+    beams_symbol: list = field(default=None, converter=to_list)
 
     # Entities groups.
     all_bars: list = field(init=False)
@@ -247,49 +248,15 @@ class Column:
         if self.number_init is None:
             self.number_init = 0
 
-        # Top bars.
-        if self.as_sup:
-            self.max_db_sup = max(self.as_sup.keys())
-            self.number_init_sup = self.number_init if self.number_init else 0
-            self.number_init = self.number_init + len(self.as_sup) if self.number_init else len(self.as_sup)
-
-            self.anchor_sup = self.anchor_sup if type(self.anchor_sup) == list else [self.anchor_sup] * sum(
-                self.as_sup.values())
-        else:
-            self.as_sup, self.max_db_sup, self.number_init_sup = {}, 0, 0
-
-        # Right bars.
-        if self.as_right:
-            self.max_db_right = max(self.as_right.keys())
-            self.number_init_right = self.number_init if self.number_init is not None else 0
-            self.number_init = self.number_init + len(self.as_right) if self.number_init else len(self.as_right)
-
-            self.anchor_right = self.anchor_right if type(self.anchor_right) == list else [self.anchor_right] * sum(
-                self.as_right.values())
-        else:
-            self.as_right, self.max_db_right, self.number_init_right = {}, 0, 0
-
-        # Inferior bars.
-        if self.as_inf:
-            self.max_db_inf = max(self.as_inf.keys())
-            self.number_init_inf = self.number_init if self.number_init is not None else 0
-            self.number_init = self.number_init + len(self.as_inf) if self.number_init else len(self.as_inf)
-
-            self.anchor_inf = self.anchor_inf if type(self.anchor_inf) == list else [self.anchor_inf] * sum(
-                self.as_inf.values())
-        else:
-            self.as_inf, self.max_db_inf, self.number_init_inf = {}, 0, 0
-
-        # Left bars.
-        if self.as_left:
-            self.max_db_left = max(self.as_left.keys())
-            self.number_init_left = self.number_init if self.number_init is not None else 0
-            self.number_init = self.number_init + len(self.as_left) if self.number_init else len(self.as_left)
-
-            self.anchor_left = self.anchor_left if type(self.anchor_left) == list else [self.anchor_left] * sum(
-                self.as_left.values())
-        else:
-            self.as_left, self.max_db_left, self.number_init_left = {}, 0, 0
+        # Steel/Bars attributes.
+        self.as_sup, self.max_db_sup, self.number_init_sup, self.anchor_sup = self.__assign_bar_vars(as_db=self.as_sup,
+                                                                                                     as_anchor=self.anchor_sup)
+        self.as_right, self.max_db_right, self.number_init_right, self.anchor_right = self.__assign_bar_vars(as_db=self.as_right,
+                                                                                                             as_anchor=self.anchor_right)
+        self.as_inf, self.max_db_inf, self.number_init_inf, self.anchor_inf = self.__assign_bar_vars(as_db=self.as_inf,
+                                                                                                     as_anchor=self.anchor_inf)
+        self.as_left, self.max_db_left, self.number_init_left, self.anchor_left = self.__assign_bar_vars(as_db=self.as_left,
+                                                                                                         as_anchor=self.anchor_left)
 
         self.max_db_hz = max(self.max_db_sup, self.max_db_inf)
         self.max_db_vt = max(self.max_db_right, self.max_db_left)
@@ -497,9 +464,11 @@ class Column:
                 for stirrup in self.stirrups:
                     elements["dimensions_elements"] += dim_linear(document=document,
                                                                   p_base=(x - self.width * 3,
-                                                                          y + (stirrup.y - self.y) + stirrup.reinforcement_length / 2),
+                                                                          y + (
+                                                                                      stirrup.y - self.y) + stirrup.reinforcement_length / 2),
                                                                   p1=(x, y + (stirrup.y - self.y)),
-                                                                  p2=(x, y + (stirrup.y - self.y) + stirrup.reinforcement_length),
+                                                                  p2=(x, y + (
+                                                                              stirrup.y - self.y) + stirrup.reinforcement_length),
                                                                   rotation=90,
                                                                   dimstyle=dim_style)
 
@@ -816,6 +785,28 @@ class Column:
 
         return elements
 
+    def __assign_bar_vars(self,
+                          as_db: dict,
+                          as_anchor: list):
+        if not as_db:
+            return {}, 0, 0, []
+
+        quantity = sum(as_db.values())
+        max_db = max(as_db)
+        number_init_as = self.number_init or 0
+        self.number_init = number_init_as + len(as_db)
+
+        def normalize_list(lst):
+            if lst is None:
+                return [0] * quantity
+            if not len(lst) == quantity:
+                return lst[:1] * quantity
+            return lst
+
+        as_anchor = normalize_list(lst=as_anchor)
+
+        return as_db, max_db, number_init_as, as_anchor
+
     def __dict_to_bars(self, bars: dict,
                        width: float,
                        x: float,
@@ -883,7 +874,8 @@ class Column:
                 y_sep += separation
                 delta_y = self.cover - db / 2
                 if side == Orientation.RIGHT:
-                    delta_x = self.width - (self.cover + db - max( [self.max_db_sup, self.max_db_inf, self.max_db_right]) / 2)
+                    delta_x = self.width - (
+                                self.cover + db - max([self.max_db_sup, self.max_db_inf, self.max_db_right]) / 2)
                     delta_y_transverse = delta_y
                 if side == Orientation.LEFT:
                     delta_x = self.cover - max([self.max_db_sup, self.max_db_inf, self.max_db_left]) / 2
@@ -1004,7 +996,8 @@ class Column:
                 position = element.position
                 diameter = element.diameter
                 spacing = "{0}".format(element.spacing) if element.element_type == ElementTypes.STIRRUP else "-"
-                quantity = element.quantity if element.element_type == ElementTypes.STIRRUP else self.positions[element.position]["quantity"]
+                quantity = element.quantity if element.element_type == ElementTypes.STIRRUP else \
+                self.positions[element.position]["quantity"]
                 length = "{0:.2f}".format(float(element.length))
                 total_length = "{0:.2f}".format(element.quantity * element.length)
 
