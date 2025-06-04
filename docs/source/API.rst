@@ -1,4 +1,4 @@
-exitAPI References
+API References
 ==============
 
 API References.
