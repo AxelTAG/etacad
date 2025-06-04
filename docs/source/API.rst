@@ -3,12 +3,17 @@ API References
 
 API References.
 
-.. automodule:: etacad.beam
+.. automodule:: etacad.bar
    :members:
 
 ---------------
 
 .. automodule:: etacad.stirrup
+   :members:
+
+---------------
+
+.. automodule:: etacad.spaced_bars
    :members:
 
 ---------------
