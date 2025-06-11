@@ -534,7 +534,7 @@ class Column:
 
         # Checking if y given is in column height.
         if not 0 <= y_section <= self.height:
-            return []
+            return {}
 
         elements = {"concrete": None,
                     "bars": [],
@@ -739,7 +739,7 @@ class Column:
                                         y_section: float = None,
                                         unifilar: bool = False,
                                         dimensions: bool = True,
-                                        settings: dict = COLUMN_SET_TRANSVERSE_REBAR) -> list:
+                                        settings: dict = COLUMN_SET_TRANSVERSE_REBAR) -> dict:
         """
         Draws the transverse rebar detailing for the column at a given y-section.
 
@@ -765,14 +765,13 @@ class Column:
 
         # Checking if x given is in beam length.
         if not 0 <= y_section <= self.height:
-            return []
+            return {}
 
         elements = {"stirrups": []}
 
         stirrups = self.__elements_section(elements=self.stirrups,
                                            y=y_section)
 
-        group = []
         for stirrup in stirrups:
             elements["stirrups"].append(stirrup.draw_transverse(document=document,
                                                                 x=x,
@@ -956,8 +955,8 @@ class Column:
 
             # Creating of stirrup.
 
-            entities.append(Stirrup(width=stirrup_width + stirrup[0] * 2,
-                                    height=stirrup_height + stirrup[0] * 2,
+            entities.append(Stirrup(width=stirrup_height + stirrup[0] * 2,
+                                    height=stirrup_width + stirrup[0] * 2,
                                     diameter=stirrup[0],
                                     reinforcement_length=stirrup[1],
                                     spacing=stirrup[2],
