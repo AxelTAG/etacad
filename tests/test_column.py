@@ -266,6 +266,21 @@ def test_draw_longitudinal_rectangular_dw_column(rectangular_dw_column):
     assert len(entities["all_elements"]) == 90
 
 
+def test_draw_transverse_rectangular_dw_column(rectangular_dw_column):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities_st_1 = rectangular_dw_column.draw_transverse(document=doc, x=0.5, y=1, y_section=0.65)
+    entities_st_2 = rectangular_dw_column.draw_transverse(document=doc, x=-0.5, y=1, y_section=1.5)
+    entities_st_3 = rectangular_dw_column.draw_transverse(document=doc, x=-0.5, y=-1, y_section=3.65)
+    entities_st_4 = rectangular_dw_column.draw_transverse(document=doc, x=0.5, y=-1, y_section=4.5)
+    doc.saveas(filename="./tests/column_rectangular_dw_column_transverse.dxf")
+
+    # General.
+    assert len(entities_st_1["all_elements"]) == 37
+    assert len(entities_st_2["all_elements"]) == 37
+    assert len(entities_st_3["all_elements"]) == 37
+    assert len(entities_st_4["all_elements"]) == 37
+
+
 @pytest.fixture
 def rectangular_wd_column():
     return Column(width=0.3,
@@ -283,7 +298,7 @@ def rectangular_wd_column():
                   stirrups_sep=[.1, 0.18, 0.1, 0.1, 0.18, 0.1],
                   stirrups_length=[.6, 1.3, 0.6, 0.6, 1.3, 0.6],
                   stirrups_x=[.1, 0.85, 2.3, 3.1, 3.85, 5.3],
-                  beams=[[.2, 0.4], [.2, 0.3], [.2, 0.3]],
+                  beams=[[.3, 0.4], [.3, 0.3], [.3, 0.3]],
                   beams_pos=[.2, 3, 5.7],
                   beams_symbol=["B1", "B2", "B3"])
 
@@ -335,3 +350,18 @@ def test_draw_longitudinal_rectangular_wd_column(rectangular_wd_column):
     # General.
     assert len(entities["concrete"]["all_elements"]) == 6
     assert len(entities["all_elements"]) == 90
+
+
+def test_draw_transverse_rectangular_wd_column(rectangular_wd_column):
+    doc = ezdxf.new(dxfversion="R2010", setup=True)
+    entities_st_1 = rectangular_wd_column.draw_transverse(document=doc, x=0.5, y=1, y_section=0.65)
+    entities_st_2 = rectangular_wd_column.draw_transverse(document=doc, x=-0.5, y=1, y_section=1.5)
+    entities_st_3 = rectangular_wd_column.draw_transverse(document=doc, x=-0.5, y=-1, y_section=3.65)
+    entities_st_4 = rectangular_wd_column.draw_transverse(document=doc, x=0.5, y=-1, y_section=4.5)
+    doc.saveas(filename="./tests/column_rectangular_wd_column_transverse.dxf")
+
+    # General.
+    assert len(entities_st_1["all_elements"]) == 37
+    assert len(entities_st_2["all_elements"]) == 37
+    assert len(entities_st_3["all_elements"]) == 37
+    assert len(entities_st_4["all_elements"]) == 37
