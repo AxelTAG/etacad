@@ -2,7 +2,7 @@
 
 """A package aimed to simpilfy drawings of structurals elements based on ezdxf library."""
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
 
 from .bar import Bar
 from .beam import Beam

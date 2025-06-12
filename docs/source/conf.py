@@ -9,7 +9,7 @@
 project = 'etacad'
 copyright = '2024, Kevin Axel Tagliaferri'
 author = 'Kevin Axel Tagliaferri'
-release = '0.0.11'
+release = '0.0.13'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
