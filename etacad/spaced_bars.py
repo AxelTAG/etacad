@@ -162,7 +162,8 @@ class SpacedBars:
                                                    bar.diameter, self.spacing),
                                                height=settings["text_dim_height"],
                                                point=(x + bar.box_width / 2,
-                                                      y + bar.y + bar.diameter + settings["text_dim_distance_horizontal"] - y_differencial),
+                                                      y + bar.y + bar.diameter + settings[
+                                                          "text_dim_distance_horizontal"] - y_differencial),
                                                rotation=0,
                                                attr={"halign": 4, "valign": 0})
 
@@ -205,6 +206,8 @@ class SpacedBars:
                         x: float = None,
                         y: float = None,
                         dimensions: bool = False,
+                        descriptions: bool = True,
+                        description_start: int = None,
                         bar_displacements: dict = None,
                         rotate_angle: float = None,
                         settings: dict = SAPCEDBARS_SET_TRANSVERSE) -> dict:
@@ -213,6 +216,14 @@ class SpacedBars:
 
         if y is None:
             y = self.y
+
+        if description_start is None:
+            description_start = 0
+            if self.quantity >= 6:
+                description_start = self.quantity / 3
+
+        if description_start > self.quantity - 3:
+            description_start = self.quantity - 3
 
         if bar_displacements is None:
             bar_displacements = {}
@@ -226,6 +237,7 @@ class SpacedBars:
 
         elements = {}
         bar_dict = []
+        descriptions_elements = []
         dimensions_elements = []
 
         # Drawing of circles.
@@ -240,17 +252,39 @@ class SpacedBars:
 
         # Drawing dimensions.
         if dimensions:
-            dimensions_elements += (dim_linear(document=document,
-                                               p_base=(x - settings["text_dim_distance_vertical"],
-                                                       y + self._box_height / 2),
-                                               p1=(x, y),
-                                               p2=(x, y + self._box_height),
-                                               rotation=90))
+            dimensions_elements += dim_linear(document=document,
+                                              p_base=(x - settings["text_dim_distance_vertical"],
+                                                      y + self._box_height / 2),
+                                              p1=(x, y),
+                                              p2=(x, y + self._box_height),
+                                              rotation=90)
+
+        if descriptions:
+            description_text = f"Ø{self.diameter}/ {self.spacing}m."
+
+            p2 = None
+            for i, bar in enumerate(self.bars):
+                if description_start <= i < description_start + 3:
+                    p1 = (x + bar.x + bar.radius, y + bar.y + bar.radius)
+                    if p2 is None:
+                        p2 = (x + bar.x + settings["text_description_distance_horizontal"],
+                              y + bar.y + settings["text_description_distance_vertical"])
+                    descriptions_elements += line(doc=document,
+                                                  p1=p1,
+                                                  p2=p2)
+
+            descriptions_elements += text(document=document,
+                                          text=description_text,
+                                          height=settings["text_description_height"],
+                                          point=p2,
+                                          rotation=90)
 
         # Setting groups of elements in dictionary.
         elements["bar_elements"] = bar_dict
+        elements["description_elements"] = descriptions_elements
         elements["dimension_elements"] = dimensions_elements
         elements["all_elements"] = (list(chain(*[bar["all_elements"] for bar in elements["bar_elements"]])) +
+                                    elements["description_elements"] +
                                     elements["dimension_elements"])
 
         # Orienting elements.
@@ -304,6 +338,10 @@ class SpacedBars:
                     dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
                     dimension.render()
 
+            if "TEXT" in group_filter:
+                for text_element in group_filter["TEXT"]:
+                    text_element.dxf.rotation = text_element.dxf.rotation if text_element.dxf.rotation != 180 else 0
+
         # Orienting the bar (rotation angle).
         if rotate_angle:
             pivot_point = (x, y)
@@ -318,6 +356,10 @@ class SpacedBars:
                 for dimension in group_filter["DIMENSION"]:
                     dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
                     dimension.render()
+
+            if "TEXT" in group_filter:
+                for text_element in group_filter["TEXT"]:
+                    text_element.dxf.rotation = text_element.dxf.rotation if text_element.dxf.rotation != 180 else 0
 
     def data(self) -> dict:
         """

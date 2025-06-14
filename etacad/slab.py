@@ -280,6 +280,9 @@ class Slab:
                         concrete_shape: bool = True,
                         bars: bool = True,
                         dimensions: bool = True,
+                        descriptions: bool = True,
+                        description_start_sup: int = 6,
+                        description_start_inf: int = 9,
                         denomination: bool = False,
                         unifilar: bool = True,
                         settings: dict = SLAB_SET_TRANSVERSE) -> dict:
@@ -331,7 +334,7 @@ class Slab:
                 rotate_angle = 0
 
             # Transverse bar sections.
-            for sp_bar in sp_bars_tr_sup:
+            for i, sp_bar in enumerate(sp_bars_tr_sup):
                 x_coord, y_coord = x, y
                 if unifilar:
                     y_coord += db_max_lg_sup / 2
@@ -346,18 +349,19 @@ class Slab:
                                                                x=x_coord,
                                                                y=y_coord,
                                                                dimensions=False,
+                                                               descriptions=descriptions,
+                                                               description_start=description_start_sup + i * 6,
                                                                bar_displacements=bar_displacements,
                                                                rotate_angle=rotate_angle,
                                                                settings=settings["spaced_bars_settings"]))
 
-            for sp_bar in sp_bars_tr_inf:
+            for i, sp_bar in enumerate(sp_bars_tr_inf):
                 x_coord, y_coord = x, y
                 if unifilar:
                     y_coord -= db_max_lg_inf / 2
 
                 bar_displacements = {}
                 if not unifilar and anchor_lg_inf:
-                    print(anchor_lg_inf)
                     bar_displacements[sp_bar.quantity - 1] = (0, -db_max_lg_inf)
                     if sp_bar.is_exact_reinforcement:
                         bar_displacements[0] = (0, db_max_lg_inf)
@@ -366,6 +370,8 @@ class Slab:
                                                                x=x_coord,
                                                                y=y_coord,
                                                                dimensions=False,
+                                                               descriptions=descriptions,
+                                                               description_start=description_start_inf + i * 6,
                                                                bar_displacements=bar_displacements,
                                                                rotate_angle=rotate_angle,
                                                                settings=settings["spaced_bars_settings"]))
@@ -638,11 +644,11 @@ if __name__ == "__main__":
     )
 
     slab.draw_longitudinal(document=doc, x=10, y=10, unifilar_bars=True, one_bar=True)
-    slab.draw_transverse(document=doc, x=10, y=9.5, unifilar=True, axe_section="y")
-    slab.draw_transverse(document=doc, x=10, y=9, unifilar=True, axe_section="x")
+    slab.draw_transverse(document=doc, x=10, y=9, unifilar=True, axe_section="y")
+    slab.draw_transverse(document=doc, x=10, y=8, unifilar=True, axe_section="x")
 
     slab.draw_longitudinal(document=doc, x=20, y=10, one_bar=False, unifilar_bars=False)
-    slab.draw_transverse(document=doc, x=20, y=9.5, unifilar=False, axe_section="y")
-    slab.draw_transverse(document=doc, x=20, y=9, unifilar=False, axe_section="x")
+    slab.draw_transverse(document=doc, x=20, y=9, unifilar=False, axe_section="y")
+    slab.draw_transverse(document=doc, x=20, y=8, unifilar=False, axe_section="x")
 
     doc.saveas(filename="c:/users/beta/desktop/test_slab.dxf")

@@ -84,7 +84,7 @@ def test_draw_transverse_spaced_bars_horizontal(spaced_bar_horizontal):
     doc = ezdxf.new(setup=True)
 
     ex_01 = spaced_bar_horizontal.draw_transverse(document=doc, dimensions=True, x=0, y=0)
-    assert len(ex_01["all_elements"]) == 35
+    assert len(ex_01["all_elements"]) == 39
 
     doc.saveas(filename="./tests/spaced_bars_horizontal_draw_transverse.dxf")
 
@@ -189,7 +189,7 @@ def test_draw_transverse_spaced_bars_vertical(spaced_bar_vertical):
     doc = ezdxf.new(setup=True)
 
     ex_01 = spaced_bar_vertical.draw_transverse(document=doc, x=2.1, y=1, dimensions=True)
-    assert len(ex_01["all_elements"]) == 62
+    assert len(ex_01["all_elements"]) == 66
 
     doc.saveas(filename="./tests/spaced_bars_vertical_draw_transverse.dxf")
 
