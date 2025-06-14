@@ -9,7 +9,6 @@ import ezdxf
 import pytest
 
 from ezdxf.math import Vec3
-from math import pi
 
 
 @pytest.fixture()
@@ -103,6 +102,15 @@ def test_extract_data_spaced_bars_horizontal(spaced_bar_horizontal):
     assert data == ["R1", 6, 0.01, 125.77366188646737, 34, 0.12]
 
 
+def test_draw_transverse_rotate_spaced_bars_horizontal(spaced_bar_horizontal):
+    doc = ezdxf.new(setup=True)
+
+    ex_01 = spaced_bar_horizontal.draw_transverse(document=doc, x=10, y=10, dimensions=True, rotate_angle=0)
+    ex_02 = spaced_bar_horizontal.draw_transverse(document=doc, x=10, y=10, dimensions=True, rotate_angle=45)
+
+    doc.saveas(filename="./tests/spaced_bars_horizontal_draw_transverse_rotate.dxf")
+
+
 @pytest.fixture()
 def spaced_bar_vertical():
     return SpacedBars(
@@ -184,6 +192,15 @@ def test_draw_transverse_spaced_bars_vertical(spaced_bar_vertical):
     assert len(ex_01["all_elements"]) == 62
 
     doc.saveas(filename="./tests/spaced_bars_vertical_draw_transverse.dxf")
+
+
+def test_draw_transverse_rotate_spaced_bars_vertical(spaced_bar_vertical):
+    doc = ezdxf.new(setup=True)
+
+    ex_01 = spaced_bar_vertical.draw_transverse(document=doc, x=10, y=10, dimensions=True, rotate_angle=0)
+    ex_02 = spaced_bar_vertical.draw_transverse(document=doc, x=10, y=10, dimensions=True, rotate_angle=45)
+
+    doc.saveas(filename="./tests/spaced_bars_vertical_draw_transverse_rotate.dxf")
 
 
 @pytest.fixture()

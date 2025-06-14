@@ -339,7 +339,7 @@ class Slab:
                 bar_displacements = {}
                 if not unifilar and anchor_lg_sup:
                     bar_displacements[sp_bar.quantity - 1] = (0, -db_max_lg_sup)
-                    if sp_bar.exact_reinforcement:
+                    if sp_bar.is_exact_reinforcement:
                         bar_displacements[0] = (0, db_max_lg_sup)
 
                 spaced_bars_dict.append(sp_bar.draw_transverse(document=document,
@@ -359,7 +359,7 @@ class Slab:
                 if not unifilar and anchor_lg_inf:
                     print(anchor_lg_inf)
                     bar_displacements[sp_bar.quantity - 1] = (0, -db_max_lg_inf)
-                    if sp_bar.exact_reinforcement:
+                    if sp_bar.is_exact_reinforcement:
                         bar_displacements[0] = (0, db_max_lg_inf)
 
                 spaced_bars_dict.append(sp_bar.draw_transverse(document=document,

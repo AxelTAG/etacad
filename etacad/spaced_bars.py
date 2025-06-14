@@ -36,6 +36,7 @@ class SpacedBars:
     left_anchor: float = field(default=0)
     right_anchor: float = field(default=0)
     mandrel_radius: float = field(default=0)
+    mandrel_radius_ext: float = field(init=False)
 
     # Bar bending attributes.
     bend_longitud: float = field(default=0)
@@ -45,6 +46,7 @@ class SpacedBars:
     # Boxing attributes.
     _box_width: float = field(init=False)
     _box_height: float = field(init=False)
+    max_height_attribute: float = field(init=False)
 
     # Amounts attributes.
     weight: float = field(init=False)
@@ -60,6 +62,14 @@ class SpacedBars:
 
         # Geometric attributes.
         self.radius = self.diameter / 2
+
+        # Bar anchor attributes.
+        if not self.right_anchor or not self.left_anchor:
+            self.mandrel_radius = 0
+
+        self.mandrel_radius_ext = 0
+        if self.mandrel_radius:
+            self.mandrel_radius_ext += self.mandrel_radius
 
         # Bar element attribute.
         self.bars = []
@@ -82,6 +92,7 @@ class SpacedBars:
         # Boxing attributes.
         self._box_width = self.bars[0].box_width
         self._box_height = (self.quantity - 1) * self.spacing + self.bars[0].box_height
+        self.max_height_attribute = max(self.right_anchor, self.left_anchor, self.bend_height)
 
         # Physics attributes.
         self.weight = (self.diameter ** 2 * pi / 4) * self.length * STEEL_WEIGHT * self.quantity
@@ -97,6 +108,10 @@ class SpacedBars:
         if self.direction == Direction.VERTICAL:
             return self._box_height
         return self._box_width
+
+    @property
+    def is_exact_reinforcement(self) -> bool:
+        return float(self.reinforcement_length / self.spacing).is_integer()
 
     def draw_longitudinal(self,
                           document: Drawing,
@@ -190,12 +205,20 @@ class SpacedBars:
                         x: float = None,
                         y: float = None,
                         dimensions: bool = False,
+                        bar_displacements: dict = None,
+                        rotate_angle: float = None,
                         settings: dict = SAPCEDBARS_SET_TRANSVERSE) -> dict:
         if x is None:
             x = self.x
 
         if y is None:
             y = self.y
+
+        if bar_displacements is None:
+            bar_displacements = {}
+
+        if rotate_angle is None:
+            rotate_angle = 0
 
         if self.transverse_center:
             x += self.transverse_center[0]
@@ -207,9 +230,12 @@ class SpacedBars:
 
         # Drawing of circles.
         for i, bar in enumerate(self.bars):
+            x_displacement, y_displacement = (0, 0)
+            if i in bar_displacements:
+                x_displacement, y_displacement = bar_displacements[i]
             bar_dict.append(bar.draw_transverse(document=document,
-                                                x=x,
-                                                y=y + self.spacing * i,
+                                                x=x + x_displacement,
+                                                y=y + self.spacing * i + y_displacement,
                                                 settings=settings))
 
         # Drawing dimensions.
@@ -228,7 +254,7 @@ class SpacedBars:
                                     elements["dimension_elements"])
 
         # Orienting elements.
-        self.__direc_orient(group=elements["all_elements"], x=x, y=y)
+        self.__direc_orient(group=elements["all_elements"], x=x, y=y, rotate_angle=rads(rotate_angle))
 
         return elements
 
@@ -236,6 +262,7 @@ class SpacedBars:
                        group: list,
                        x: float = None,
                        y: float = None,
+                       rotate_angle: float = 0,
                        unifilar: bool = False):
         """
         Adjusts the orientation of the drawing based on the direction and orientation of the bar.
@@ -270,6 +297,21 @@ class SpacedBars:
 
             if unifilar:
                 translate(group, vector=(-self.diameter, 0))
+
+            # Orienting the texts elements (direction and orientation).
+            if "DIMENSION" in group_filter:
+                for dimension in group_filter["DIMENSION"]:
+                    dimension.dxf.text_rotation = dimension.dxf.angle if dimension.dxf.angle != 180 else 0
+                    dimension.render()
+
+        # Orienting the bar (rotation angle).
+        if rotate_angle:
+            pivot_point = (x, y)
+            vector_translate = (x - (pivot_point[0] * cos(rotate_angle) - pivot_point[1] * sin(rotate_angle)),
+                                y - (pivot_point[0] * sin(rotate_angle) + pivot_point[1] * cos(rotate_angle)))
+
+            rotate(group, rotate_angle)
+            translate(group, vector=vector_translate)
 
             # Orienting the texts elements (direction and orientation).
             if "DIMENSION" in group_filter:
