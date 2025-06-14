@@ -822,6 +822,7 @@ class Beam:
         :type nomenclature: str, optional
         :param number_init: Initial number for bar numbering.
         :type number_init: int, optional
+
         :return: A list of Bar objects representing the bars placed in the specified section of the beam.
         :rtype: list
         :raises ValueError: If the side is not within the range [0, 3].
@@ -906,6 +907,7 @@ class Beam:
         :type elements: list, optional
         :param x: X-coordinate of the beam section. If None, defaults to the middle of the beam.
         :type x: float, optional
+
         :return: List of elements located within the specified X-coordinate section.
         :rtype: list
         """
