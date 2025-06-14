@@ -317,8 +317,8 @@ class Slab:
             sp_bars_tr_inf = self.bars_as_inf_x
             db_max_lg_sup = self.max_db_sup_y
             db_max_lg_inf = self.max_db_inf_y
-            anchor_lg_sup = bool(self.as_sup_y_anchor)
-            anchor_lg_inf = bool(self.as_inf_y_anchor)
+            anchor_lg_sup = any(self.as_sup_y_anchor)
+            anchor_lg_inf = any(self.as_inf_y_anchor)
             rotate_angle = -90
 
             if axe_section == "y":
@@ -326,15 +326,15 @@ class Slab:
                 sp_bars_lg_inf, sp_bars_tr_inf = sp_bars_tr_inf, sp_bars_lg_inf
                 db_max_lg_sup = self.max_db_sup_x
                 db_max_lg_inf = self.max_db_inf_x
-                anchor_lg_sup = bool(self.as_sup_x_anchor)
-                anchor_lg_inf = bool(self.as_inf_x_anchor)
+                anchor_lg_sup = any(self.as_sup_x_anchor)
+                anchor_lg_inf = any(self.as_inf_x_anchor)
                 rotate_angle = 0
 
             # Transverse bar sections.
             for sp_bar in sp_bars_tr_sup:
                 x_coord, y_coord = x, y
                 if unifilar:
-                    y_coord += sp_bar.diameter / 2
+                    y_coord += db_max_lg_sup / 2
 
                 bar_displacements = {}
                 if not unifilar and anchor_lg_sup:
@@ -353,13 +353,14 @@ class Slab:
             for sp_bar in sp_bars_tr_inf:
                 x_coord, y_coord = x, y
                 if unifilar:
-                    y_coord -= sp_bar.diameter / 2
+                    y_coord -= db_max_lg_inf / 2
 
                 bar_displacements = {}
                 if not unifilar and anchor_lg_inf:
-                    bar_displacements[sp_bar.quantity - 1] = (0, -db_max_lg_sup)
+                    print(anchor_lg_inf)
+                    bar_displacements[sp_bar.quantity - 1] = (0, -db_max_lg_inf)
                     if sp_bar.exact_reinforcement:
-                        bar_displacements[0] = (0, db_max_lg_sup)
+                        bar_displacements[0] = (0, db_max_lg_inf)
 
                 spaced_bars_dict.append(sp_bar.draw_transverse(document=document,
                                                                x=x_coord,
@@ -371,10 +372,10 @@ class Slab:
 
             # Longitudinal bars.
             for sp_bar in sp_bars_lg_sup:
-                x_coord = x + self.cover - sp_bar.diameter / 2
-                y_coord = y + self.thickness - self.cover + sp_bar.diameter / 2 - sp_bar.bars[0].box_height
+                x_coord = x + self.cover
+                y_coord = y + self.thickness - self.cover - sp_bar.mandrel_radius - sp_bar.max_height_attribute - sp_bar.diameter / 2
                 if unifilar:
-                    y_coord += sp_bar.diameter
+                    y_coord += sp_bar.diameter / 2 + sp_bar.mandrel_radius
 
                 if sp_bar.diameter == db_max_lg_sup:
                     spaced_bars_dict.append(sp_bar.bars[0].draw_longitudinal(document=document,
@@ -385,7 +386,7 @@ class Slab:
                                                                              unifilar=unifilar,
                                                                              settings=settings["spaced_bars_settings"]))
             for sp_bar in sp_bars_lg_inf:
-                x_coord = x + self.cover - sp_bar.diameter / 2
+                x_coord = x + self.cover
                 y_coord = y + self.cover - sp_bar.diameter / 2
                 if unifilar:
                     y_coord += sp_bar.diameter / 2
@@ -414,6 +415,12 @@ class Slab:
         pass
 
     def data(self):
+        pass
+
+    # TODO: Escribir función elements_section y refactorizar funciones de transversal acordemente.
+    def __elements_section(self,
+                           elements: list,
+                           x: float) -> list:
         pass
 
     def extract_data(self):
@@ -507,31 +514,6 @@ class Slab:
         :rtype: list[SpacedBars]
         """
 
-        def get_util_witdh_length_by_direction(direction: Direction) -> tuple[float, float]:
-            """
-            Calculates the usable reinforcement width and length based on the bar direction.
-
-            The usable width and length are determined by subtracting the concrete cover
-            from both sides. If the direction is horizontal, the full length is used;
-            otherwise, the reinforcement runs across the width.
-
-            :param direction: Direction of the reinforcement (horizontal or vertical).
-            :type direction: Direction
-            :return: Tuple containing usable width and usable length.
-            :rtype: tuple[float, float]
-            """
-            util_length_x = self.length_x - 2 * self.cover
-            util_length_y = self.length_y - 2 * self.cover
-            if direction == Direction.HORIZONTAL:
-                return util_length_x, util_length_y
-            return util_length_y, util_length_x
-
-        def get_x_diff():
-            pass
-
-        def get_y_diff():
-            pass
-
         def get_x_y_by_position(n_position: int,
                                 n_bars: int) -> tuple[float, float, float, float]:
             """
@@ -551,25 +533,25 @@ class Slab:
             if as_position == Position.SUPERIOR:
                 if as_direction == Direction.HORIZONTAL:  # Superior X.
                     x_long = self.x + self.cover
-                    y_long = self.y + self.cover + (as_sp[n_position] / n_bars) * n_position
+                    y_long = self.y + self.cover + (as_sp[n_position] / n_bars) * n_position - as_db[i] / 2
                     x_transverse = self.cover
                     y_transverse = self.thickness - self.cover - self.max_db_sup_y / 2
                     return x_long, y_long, x_transverse, y_transverse
 
-                x_long = self.x + self.cover + (as_sp[n_position] / n_bars) * n_position  # Superior Y.
+                x_long = self.x + self.cover + (as_sp[n_position] / n_bars) * n_position - as_db[i] / 2  # Superior Y.
                 y_long = self.y + self.cover
                 x_transverse = self.cover
-                y_transverse = self.thickness - self.cover - self.max_db_sup_x / 2
+                y_transverse = self.thickness - self.cover - self.max_db_sup_x / 2 - as_db[i]
                 return x_long, y_long, x_transverse, y_transverse
 
             if as_direction == Direction.HORIZONTAL:  # Inferior X.
                 x_long = self.x + self.cover
-                y_long = self.y + self.cover + (as_sp[n_position] / n_bars) * n_position
+                y_long = self.y + self.cover + (as_sp[n_position] / n_bars) * n_position - as_db[i] / 2
                 x_transverse = self.cover
-                y_transverse = self.cover + self.max_db_inf_x / 2
+                y_transverse = self.cover + self.max_db_inf_y / 2 + as_db[i]
                 return x_long, y_long, x_transverse, y_transverse
 
-            x_long = self.x + self.cover + (as_sp[n_position] / n_bars) * n_position  # Inferior Y.
+            x_long = self.x + self.cover + (as_sp[n_position] / n_bars) * n_position - as_db[i] / 2  # Inferior Y.
             y_long = self.y + self.cover
             x_transverse = self.cover
             y_transverse = self.cover + self.max_db_inf_x / 2
@@ -585,33 +567,29 @@ class Slab:
         total_bars = len(as_db)
         spaced_bars = []
         for i in range(total_bars):
+            # Determination of x and y coordinates.
             x, y, x_tr, y_tr = get_x_y_by_position(n_position=i,
                                                    n_bars=total_bars)
 
+            # Determination of mandrel radius.
+            mandrel_radius = 0
             if as_direction == Direction.HORIZONTAL:
-                y -= as_db[i] / 2
-                y_tr += as_db[i] / 2
-
                 mandrel_radius = self.as_inf_y_db[0] / 2
                 if as_position == Position.SUPERIOR:
                     mandrel_radius = self.as_sup_y_db[0] / 2
 
             if as_direction == Direction.VERTICAL:
-                x -= as_db[i] / 2
-                x_tr -= as_db[i] / 2
-
                 mandrel_radius = self.as_inf_x_db[0] / 2
                 if as_position == Position.SUPERIOR:
-                    y_tr = y_tr - as_db[i]
                     mandrel_radius = self.as_sup_x_db[0] / 2
 
-            # Orientation determination.
+            # Determination of orientation.
             orientation = Orientation.BOTTOM
             if as_position == Position.INFERIOR and not any(as_bend_length):
                 orientation = Orientation.TOP
 
             spaced_bars.append(SpacedBars(reinforcement_length=reinforcement_length - (as_sp[i] / total_bars) * i,
-                                          length=length + as_db[i],
+                                          length=length,
                                           diameter=as_db[i],
                                           spacing=as_sp[i],
                                           x=x,
