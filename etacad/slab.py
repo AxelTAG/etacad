@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# Local imports.
-from etacad.cadtable import CADTable
-from etacad.concrete import Concrete
-from etacad.converters import to_list
-from etacad.drawing_utils import delimit_axe, dim_linear, rect, text
-from etacad.globals import (Position, Axes, SlabTypes, Direction, ElementTypes, Orientation, CONCRETE_WEIGHT,
-                            SLAB_SET_LONGITUDINAL, SLAB_SET_TRANSVERSE, SLAB_SET_LONG_REBBAR,
-                            SLAB_SET_TRANSVERSE_REBBAR)
-from etacad.spaced_bars import SpacedBars
+from itertools import chain
 
 # External imports.
 from attrs import define, field
 from ezdxf.document import Drawing
-from ezdxf.gfxattribs import GfxAttribs
-from itertools import chain
+
+# Local imports.
+from cadtable import CADTable
+from etacad.concrete import Concrete
+from etacad.converters import to_list
+from etacad.drawing_utils import text
+from etacad.globals import (Position, Axes, SlabTypes, Direction, ElementTypes, Orientation, CONCRETE_WEIGHT,
+                            SLAB_SET_LONGITUDINAL, SLAB_SET_TRANSVERSE, SLAB_SET_LONG_REBBAR)
+from etacad.spaced_bars import SpacedBars
 
 
 @define
@@ -96,22 +95,22 @@ class Slab:
     all_elements: list = field(init=False)
 
     # Box attributes.
-    box_width: float = field(init=False)
-    box_height: float = field(init=False)
+    _box_width: float = field(init=False)
+    _box_height: float = field(init=False)
 
     # Position bar attributes.
     nomenclature: str = field(default="#")
     positions: dict = field(init=False)
-
-    # Slab attributes.
-    denomination: str = field(default=None)
     number_init: int = field(default=None)
+    description: str = field(default=None)
+
+    # Other attributes.
     element_type: ElementTypes = field(default=ElementTypes.SLAB)
 
     def __attrs_post_init__(self):
         # Longitudinal steel attributes.
         if self.number_init is None:
-            self.number_init = 0
+            self.number_init = 1
 
         # Superior X bars.
         (self.as_sup_x_db, self.max_db_sup_x, self.as_sup_x_anchor, self.number_init_sup_x, self.as_sup_x_bend_longitud,
@@ -120,7 +119,7 @@ class Slab:
             as_anchor=self.as_sup_x_anchor,
             as_bend_length=self.as_sup_x_bend_longitud,
             as_bend_angle=self.as_sup_x_bend_angle,
-            as_bend_height=self.as_sup_x_bend_height)
+            as_bend_height=self.as_sup_x_bend_height, )
 
         # Superior Y bars.
         (self.as_sup_y_db, self.max_db_sup_y, self.as_sup_y_anchor, self.number_init_sup_y, self.as_sup_y_bend_longitud,
@@ -157,7 +156,8 @@ class Slab:
                                              as_direction=Direction.HORIZONTAL,
                                              as_bend_length=self.as_sup_x_bend_longitud,
                                              as_bend_angle=self.as_sup_x_bend_angle,
-                                             as_bend_height=self.as_sup_x_bend_height)
+                                             as_bend_height=self.as_sup_x_bend_height,
+                                             as_number_init=self.number_init_sup_x)
         self.bars_as_sup_y = self.__gen_bars(as_db=self.as_sup_y_db,
                                              as_sp=self.as_sup_y_sp,
                                              as_anchor=self.as_sup_y_anchor,
@@ -165,7 +165,8 @@ class Slab:
                                              as_direction=Direction.VERTICAL,
                                              as_bend_length=self.as_sup_y_bend_longitud,
                                              as_bend_angle=self.as_sup_y_bend_angle,
-                                             as_bend_height=self.as_sup_y_bend_height)
+                                             as_bend_height=self.as_sup_y_bend_height,
+                                             as_number_init=self.number_init_sup_y)
         self.bars_as_inf_x = self.__gen_bars(as_db=self.as_inf_x_db,
                                              as_sp=self.as_inf_x_sp,
                                              as_anchor=self.as_inf_x_anchor,
@@ -173,7 +174,8 @@ class Slab:
                                              as_direction=Direction.HORIZONTAL,
                                              as_bend_length=self.as_inf_x_bend_longitud,
                                              as_bend_angle=self.as_inf_x_bend_angle,
-                                             as_bend_height=self.as_inf_x_bend_height)
+                                             as_bend_height=self.as_inf_x_bend_height,
+                                             as_number_init=self.number_init_inf_x)
         self.bars_as_inf_y = self.__gen_bars(as_db=self.as_inf_y_db,
                                              as_sp=self.as_inf_y_sp,
                                              as_anchor=self.as_inf_y_anchor,
@@ -181,7 +183,8 @@ class Slab:
                                              as_direction=Direction.VERTICAL,
                                              as_bend_length=self.as_inf_y_bend_longitud,
                                              as_bend_angle=self.as_inf_y_bend_angle,
-                                             as_bend_height=self.as_inf_y_bend_height)
+                                             as_bend_height=self.as_inf_y_bend_height,
+                                             as_number_init=self.number_init_inf_y)
 
         # Concrete attributes.
         vertices = [(0, 0),
@@ -200,8 +203,16 @@ class Slab:
         self.all_elements = self.all_bars
 
         # Box attributes.
-        self.box_width = self.length_x
-        self.box_height = self.length_y
+        self._box_width = self.length_x
+        self._box_height = self.length_y
+
+    @property
+    def box_width(self) -> float:
+        return self._box_width
+
+    @property
+    def box_height(self) -> float:
+        return self._box_height
 
     def draw_longitudinal(self, document: Drawing,
                           x: float = None,
@@ -214,7 +225,7 @@ class Slab:
                           one_bar_position_sup: int = None,
                           one_bar_position_inf: int = None,
                           dimensions: bool = True,
-                          denomination: bool = False,
+                          description: bool = True,
                           unifilar_bars: bool = False) -> dict:
         if x is None:
             x = self.x
@@ -245,7 +256,7 @@ class Slab:
                         unifilar=unifilar_bars,
                         dimensions=dimensions,
                         reinforcement_dimensions=False,
-                        denomination=denomination,
+                        denomination=description,
                         one_bar=one_bar,
                         one_bar_position=one_bar_position_sup,
                         settings=SLAB_SET_LONGITUDINAL["spaced_bars_settings"]))
@@ -258,7 +269,7 @@ class Slab:
                         unifilar=unifilar_bars,
                         dimensions=dimensions,
                         reinforcement_dimensions=False,
-                        denomination=denomination,
+                        denomination=description,
                         one_bar=one_bar,
                         one_bar_position=one_bar_position_inf,
                         settings=SLAB_SET_LONGITUDINAL["spaced_bars_settings"]))
@@ -274,8 +285,6 @@ class Slab:
     def draw_transverse(self, document: Drawing,
                         x: float = None,
                         y: float = None,
-                        x_section: float = None,
-                        y_section: float = None,
                         axe_section: str = "x",
                         concrete_shape: bool = True,
                         bars: bool = True,
@@ -283,7 +292,6 @@ class Slab:
                         descriptions: bool = True,
                         description_start_sup: int = 6,
                         description_start_inf: int = 9,
-                        denomination: bool = False,
                         unifilar: bool = True,
                         settings: dict = SLAB_SET_TRANSVERSE) -> dict:
         if x is None:
@@ -292,25 +300,25 @@ class Slab:
             y = self.y
 
         elements = {}
-        concrete_dict = []
+        concrete_dict = {}
         spaced_bars_dict = []
 
         # Drawing concrete.
         if concrete_shape:
             if axe_section == Axes.X.value:
-                concrete_dict += self.concrete.draw_right_view(document=document,
-                                                               x=x,
-                                                               y=y,
-                                                               dimensions=dimensions,
-                                                               dimensions_inner=False,
-                                                               settings=settings["concrete_settings"])
+                concrete_dict = self.concrete.draw_right_view(document=document,
+                                                              x=x,
+                                                              y=y,
+                                                              dimensions=dimensions,
+                                                              dimensions_inner=False,
+                                                              settings=settings["concrete_settings"])
             if axe_section == Axes.Y.value:
-                concrete_dict += self.concrete.draw_front_view(document=document,
-                                                               x=x,
-                                                               y=y,
-                                                               dimensions=dimensions,
-                                                               dimensions_inner=False,
-                                                               settings=settings["concrete_settings"])
+                concrete_dict = self.concrete.draw_front_view(document=document,
+                                                              x=x,
+                                                              y=y,
+                                                              dimensions=dimensions,
+                                                              dimensions_inner=False,
+                                                              settings=settings["concrete_settings"])
 
         # Drawing bars.
         if bars:
@@ -334,6 +342,8 @@ class Slab:
                 rotate_angle = 0
 
             # Transverse bar sections.
+            # Superior.
+
             for i, sp_bar in enumerate(sp_bars_tr_sup):
                 x_coord, y_coord = x, y
                 if unifilar:
@@ -350,11 +360,13 @@ class Slab:
                                                                y=y_coord,
                                                                dimensions=False,
                                                                descriptions=descriptions,
-                                                               description_start=description_start_sup + i * 6,
+                                                               description_start=description_start_sup + i * settings[
+                                                                   "description_start_coefficient"],
                                                                bar_displacements=bar_displacements,
                                                                rotate_angle=rotate_angle,
                                                                settings=settings["spaced_bars_settings"]))
 
+            # Inferior.
             for i, sp_bar in enumerate(sp_bars_tr_inf):
                 x_coord, y_coord = x, y
                 if unifilar:
@@ -371,12 +383,14 @@ class Slab:
                                                                y=y_coord,
                                                                dimensions=False,
                                                                descriptions=descriptions,
-                                                               description_start=description_start_inf + i * 6,
+                                                               description_start=description_start_inf + i * settings[
+                                                                   "description_start_coefficient"],
                                                                bar_displacements=bar_displacements,
                                                                rotate_angle=rotate_angle,
                                                                settings=settings["spaced_bars_settings"]))
 
             # Longitudinal bars.
+            # Superior.
             for sp_bar in sp_bars_lg_sup:
                 x_coord = x + self.cover
                 y_coord = y + self.thickness - self.cover - sp_bar.mandrel_radius - sp_bar.max_height_attribute - sp_bar.diameter / 2
@@ -391,6 +405,8 @@ class Slab:
                                                                              denomination=False,
                                                                              unifilar=unifilar,
                                                                              settings=settings["spaced_bars_settings"]))
+
+            # Inferior.
             for sp_bar in sp_bars_lg_inf:
                 x_coord = x + self.cover
                 y_coord = y + self.cover - sp_bar.diameter / 2
@@ -405,32 +421,131 @@ class Slab:
                                                                              denomination=False,
                                                                              unifilar=unifilar,
                                                                              settings=settings["spaced_bars_settings"]))
-
         if dimensions:
+            # Dimensions are drawn at concrete shape.
             pass
+
+        # Setting groups of elements in dictionary.
+        elements["concrete"] = concrete_dict
+        elements["spaced_bars_elements"] = spaced_bars_dict
+        elements["all_elements"] = (elements["concrete"]["all_elements"] +
+                                    list(chain(
+                                        *[sp_dict["all_elements"] for sp_dict in elements["spaced_bars_elements"]])))
 
         return elements
 
-    def draw_rebbar_detailing_longitudinal(self):
+    def draw_rebbar_detailing_longitudinal(self,
+                                           document: Drawing,
+                                           x: float = None,
+                                           y: float = None,
+                                           unifilar: bool = True,
+                                           settings: dict = SLAB_SET_LONG_REBBAR) -> dict:
+        bars_elements = []
+        text_elements = []
+        elements = {}
+
+        # Bars.
+        rebbar_y = 0
+
+        # TODO: evaluar la posibilidad de hacer una función para crear cada apartado de barras.
+        # Superior bars.
+        # X.
+        if self.bars_as_sup_x:
+            text_elements += text(document=document,
+                                  text="As sup. x",
+                                  height=settings["text_height"],
+                                  point=(x, y - rebbar_y))
+            rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
+
+            for sp_bar in self.bars_as_sup_x:
+                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                  x=x,
+                                                                  y=y - rebbar_y,
+                                                                  unifilar=unifilar,
+                                                                  settings=settings["bar_settings"])
+                rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
+
+        if self.bars_as_sup_y:
+            text_elements += text(document=document,
+                                  text="As sup. y",
+                                  height=settings["text_height"],
+                                  point=(x, y - rebbar_y))
+            rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
+
+            for sp_bar in self.bars_as_sup_y:
+                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                  x=x,
+                                                                  y=y - rebbar_y,
+                                                                  unifilar=unifilar,
+                                                                  settings=settings["bar_settings"])
+                rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
+
+        if self.bars_as_inf_x:
+            text_elements += text(document=document,
+                                  text="As inf. x",
+                                  height=settings["text_height"],
+                                  point=(x, y - rebbar_y))
+            rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
+
+            for sp_bar in self.bars_as_inf_x:
+                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                  x=x,
+                                                                  y=y - rebbar_y,
+                                                                  unifilar=unifilar,
+                                                                  settings=settings["bar_settings"])
+                rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
+
+        if self.bars_as_inf_y:
+            text_elements += text(document=document,
+                                  text="As inf. y",
+                                  height=settings["text_height"],
+                                  point=(x, y - rebbar_y))
+            rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
+
+            for sp_bar in self.bars_as_inf_y:
+                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                  x=x,
+                                                                  y=y - rebbar_y,
+                                                                  unifilar=unifilar,
+                                                                  settings=settings["bar_settings"])
+
+                rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
+
+        return elements
+
+    def draw_rebbar_detailing_transverse(self) -> dict:
         pass
 
-    def draw_rebbar_detailing_transverse(self):
-        pass
+    def draw_rebbar_detailing_table(self,
+                                    document: Drawing,
+                                    x: float = None,
+                                    y: float = None) -> dict:
+        # Getting data.
+        data = self.extract_data()
 
-    def draw_rebbar_detailing_table(self):
-        pass
+        # Creating table.
+        table = CADTable(data=data, labels=["POSITION", "DIAMETER", "SPACING", "QUANTITY", "LENGTH", "TOTAL LENGTH",
+                                            "WEIGHT"])
 
-    def data(self):
-        pass
+        # Drawing table.
+        elements = table.draw_table(document=document, x=x, y=y)
 
-    # TODO: Escribir función elements_section y refactorizar funciones de transversal acordemente.
-    def __elements_section(self,
-                           elements: list,
-                           x: float) -> list:
-        pass
+        return elements
 
-    def extract_data(self):
-        pass
+    def extract_data(self) -> list:
+        data = []
+        for element in self.all_bars:
+            position = element.position
+            diameter = element.diameter
+            spacing = "{0}".format(element.spacing)
+            quantity = element.quantity
+            length = "{0:.2f}".format(float(element.length))
+            total_length = "{0:.2f}".format(element.quantity * element.length)
+            weight = "{0:.2f}".format(element.quantity * element.weight)
+
+            data.append([position, diameter, spacing, quantity, length, total_length, weight])
+
+        return data
 
     def __asign_bar_vars(self,
                          as_db: list,
@@ -490,6 +605,12 @@ class Slab:
 
         return as_db, max_db, as_anchor, number_init_as, as_bend_length, as_bend_angle, as_bend_height
 
+    # TODO: Escribir función elements_section y refactorizar funciones de transversal acordemente.
+    def __elements_section(self,
+                           elements: list,
+                           x: float) -> list:
+        pass
+
     def __gen_bars(self,
                    as_db: list,
                    as_sp: list,
@@ -498,7 +619,8 @@ class Slab:
                    as_bend_angle: list,
                    as_bend_height: list,
                    as_position: Position,
-                   as_direction: Direction) -> list[SpacedBars]:
+                   as_direction: Direction,
+                   as_number_init: int) -> list[SpacedBars]:
         """
         Generates a list of spaced reinforcement bars based on provided geometry and layout parameters.
 
@@ -594,6 +716,11 @@ class Slab:
             if as_position == Position.INFERIOR and not any(as_bend_length):
                 orientation = Orientation.TOP
 
+            # Setting description.
+            description = f"{self.nomenclature}{as_number_init} Ø{as_db[i]}/ {as_sp[i]}m"
+            position = f"{self.nomenclature}{as_number_init}"
+            as_number_init += 1
+
             spaced_bars.append(SpacedBars(reinforcement_length=reinforcement_length - (as_sp[i] / total_bars) * i,
                                           length=length,
                                           diameter=as_db[i],
@@ -608,7 +735,9 @@ class Slab:
                                           mandrel_radius=mandrel_radius,
                                           bend_longitud=as_bend_length[i],
                                           bend_angle=as_bend_angle[i],
-                                          bend_height=as_bend_height[i]))
+                                          bend_height=as_bend_height[i],
+                                          description=description,
+                                          position=position))
 
         return spaced_bars
 
@@ -646,9 +775,13 @@ if __name__ == "__main__":
     slab.draw_longitudinal(document=doc, x=10, y=10, unifilar_bars=True, one_bar=True)
     slab.draw_transverse(document=doc, x=10, y=9, unifilar=True, axe_section="y")
     slab.draw_transverse(document=doc, x=10, y=8, unifilar=True, axe_section="x")
+    slab.draw_rebbar_detailing_longitudinal(document=doc, x=10, y=5, unifilar=True)
 
-    slab.draw_longitudinal(document=doc, x=20, y=10, one_bar=False, unifilar_bars=False)
+    slab.draw_longitudinal(document=doc, x=20, y=10, one_bar=False, unifilar_bars=True)
     slab.draw_transverse(document=doc, x=20, y=9, unifilar=False, axe_section="y")
     slab.draw_transverse(document=doc, x=20, y=8, unifilar=False, axe_section="x")
+    slab.draw_rebbar_detailing_longitudinal(document=doc, x=20, y=5, unifilar=False)
+
+    slab.draw_rebbar_detailing_table(document=doc, x=0, y=0)
 
     doc.saveas(filename="c:/users/beta/desktop/test_slab.dxf")

@@ -204,6 +204,7 @@ SLAB_SET_TRANSVERSE = {"concrete_settings": {"text_dim_distance_horizontal": 0.0
                                                 "text_description_distance_horizontal": 0.4,
                                                 "text_description_distance_vertical": 0.2,
                                                 "dim_style": "EZ_M_25_H25_CM"},
+                       "description_start_coefficient": 6,
                        "text_dim_height": 0.05}
 
 SLAB_SET_LONG_REBBAR = {"bar_settings": {"text_dim_distance_horizontal": 0.05,
@@ -212,6 +213,7 @@ SLAB_SET_LONG_REBBAR = {"bar_settings": {"text_dim_distance_horizontal": 0.05,
                                          "text_denomination_distance": 0.05,
                                          "text_denomination_height": 0.05},
                         "text_height": 0.05,
+                        "text_distance_vertical": 0.15,
                         "spacing": 0.3}
 
 SLAB_SET_TRANSVERSE_REBBAR = {"bar_settings": {"text_dim_distance_horizontal": 0.05,
