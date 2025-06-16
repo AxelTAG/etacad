@@ -777,7 +777,7 @@ class Beam:
 
         # Checking if x given is in beam length.
         if not 0 <= x_section <= self.length:
-            return []
+            return elements
 
         stirrups = self.__elements_section(elements=self.stirrups,
                                            x=x_section)

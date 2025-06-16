@@ -53,7 +53,7 @@ class SpacedBars:
 
     # Others.
     element_type: ElementTypes = field(default=ElementTypes.SPACED_BARS)
-    denomination: str = field(default=None)
+    description: str = field(default=None)
     position: str = field(default=None)
 
     def __attrs_post_init__(self):
@@ -87,7 +87,8 @@ class SpacedBars:
                                  bend_angle=self.bend_angle,
                                  bend_height=self.bend_height,
                                  element_type=ElementTypes.BAR,
-                                 denomination=self.denomination))
+                                 denomination=self.description,
+                                 position=self.position))
 
         # Boxing attributes.
         self._box_width = self.bars[0].box_width
@@ -153,19 +154,6 @@ class SpacedBars:
                                                       dimensions=False,
                                                       denomination=denomination and i == denomination_position,
                                                       settings=settings))
-                if dimensions and bar_dimension and i == bar_dimension_position:
-                    y_differencial = 0
-                    if bar.orientation == Orientation.TOP:
-                        y_differencial = max(bar.right_anchor, bar.left_anchor, bar.bend_height)
-                    dimension_elements += text(document=document,
-                                               text="Ø{0} s/{1} ".format(
-                                                   bar.diameter, self.spacing),
-                                               height=settings["text_dim_height"],
-                                               point=(x + bar.box_width / 2,
-                                                      y + bar.y + bar.diameter + settings[
-                                                          "text_dim_distance_horizontal"] - y_differencial),
-                                               rotation=0,
-                                               attr={"halign": 4, "valign": 0})
 
         if dimensions and reinforcement_dimensions:
             dim_x = x + self.bars[0].x
@@ -369,7 +357,7 @@ class SpacedBars:
          quantity, spacing and weight.
         :rtype: dict
         """
-        data = {"denomination": self.denomination,
+        data = {"denomination": self.description,
                 "length": self.length,
                 "diameter": self.diameter,
                 "weight": self.weight,
