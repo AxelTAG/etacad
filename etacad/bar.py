@@ -124,7 +124,7 @@ class Bar:
             self.box_height = self.diameter
 
         # Physics attributes.
-        self.weight = (self.diameter ** 2 * pi / 4) * self.length * STEEL_WEIGHT
+        self.weight = ((self.diameter ** 2) * pi / 4) * self.length * STEEL_WEIGHT
 
     # Drawing longitudinal function.
     def draw_longitudinal(self,
