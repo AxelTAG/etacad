@@ -357,6 +357,7 @@ class Concrete:
 
         # Setting elements dict.
         elements["concrete_elements"] = concrete_elements
+        elements["dimensions"] = dim_elements
         elements["all_elements"] = concrete_elements + dim_elements
 
         return elements

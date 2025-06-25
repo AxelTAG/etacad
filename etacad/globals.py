@@ -69,6 +69,9 @@ class SlabTypes(Enum):
     RECTANGULAR = 0
 
 
+# Round error tolerance.
+ROUND_ERROR_TOLERANCE = 1e-9
+
 # Specific weights.
 STEEL_WEIGHT = 7850  # kg / m3
 
