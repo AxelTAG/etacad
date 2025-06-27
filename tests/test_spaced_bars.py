@@ -185,6 +185,7 @@ def test_draw_transverse_rotate_spaced_bars_horizontal(spaced_bar_horizontal):
     doc = ezdxf.new(setup=True)
     ex_01 = spaced_bar_horizontal.draw_transverse(document=doc, x=10, y=10, dimensions=True, rotate_angle=0)
     ex_02 = spaced_bar_horizontal.draw_transverse(document=doc, x=10, y=10, dimensions=True, rotate_angle=45)
+    ex_03 = spaced_bar_horizontal.draw_transverse(document=doc, x=10, y=10, dimensions=True, rotate_angle=-90)
     doc.saveas(filename="./tests/spaced_bars_horizontal_draw_transverse_rotate.dxf")
 
     # Example 01.
@@ -208,6 +209,17 @@ def test_draw_transverse_rotate_spaced_bars_horizontal(spaced_bar_horizontal):
     # Steel elements.
     assert ex_02["bar_elements"][0]["steel_elements"][0].dxf.center == Vec3(10, 10.207071067811865, 0)  # First.
     assert ex_02["bar_elements"][-1]["steel_elements"][0].dxf.center == Vec3(7.19985714650127, 13.007213921310594, 0)  # Last.
+
+    # Example 03.
+    # General.
+    assert len(ex_03["all_elements"]) == 39
+    assert len(ex_03["dimension_elements"]) == 1
+    assert len(ex_03["description_elements"]) == 4
+    assert len(ex_03["bar_elements"]) == 34
+
+    # Steel elements.
+    assert ex_03["bar_elements"][0]["steel_elements"][0].dxf.center == Vec3(10.005, 10.194999999999999, 0)  # First.
+    assert ex_03["bar_elements"][-1]["steel_elements"][0].dxf.center == Vec3(13.965000000000002, 10.194999999999999, 0)  # Last.
 
 
 @pytest.fixture()
