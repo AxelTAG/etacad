@@ -63,26 +63,14 @@ class Slab:
     :type as_sup_x_bend_longitud: list | float
     :param as_sup_y_bend_longitud: Bend lengths of superior Y bars.
     :type as_sup_y_bend_longitud: list | float
-    :param as_inf_x_bend_longitud: Bend lengths of inferior X bars.
-    :type as_inf_x_bend_longitud: list | float
-    :param as_inf_y_bend_longitud: Bend lengths of inferior Y bars.
-    :type as_inf_y_bend_longitud: list | float
     :param as_sup_x_bend_angle: Bend angles of superior X bars.
     :type as_sup_x_bend_angle: list | float
     :param as_sup_y_bend_angle: Bend angles of superior Y bars.
     :type as_sup_y_bend_angle: list | float
-    :param as_inf_x_bend_angle: Bend angles of inferior X bars.
-    :type as_inf_x_bend_angle: list | float
-    :param as_inf_y_bend_angle: Bend angles of inferior Y bars.
-    :type as_inf_y_bend_angle: list | float
     :param as_sup_x_bend_height: Bend heights of superior X bars.
     :type as_sup_x_bend_height: list | float
     :param as_sup_y_bend_height: Bend heights of superior Y bars.
     :type as_sup_y_bend_height: list | float
-    :param as_inf_x_bend_height: Bend heights of inferior X bars.
-    :type as_inf_x_bend_height: list | float
-    :param as_inf_y_bend_height: Bend heights of inferior Y bars.
-    :type as_inf_y_bend_height: list | float
     :param cover: Concrete cover for reinforcement.
     :type cover: float
     :param nomenclature: Prefix used in bar position identifiers.
@@ -137,26 +125,14 @@ class Slab:
     :vartype as_sup_x_bend_longitud: list | float
     :ivar as_sup_y_bend_longitud: Bend lengths of superior Y bars.
     :vartype as_sup_y_bend_longitud: list | float
-    :ivar as_inf_x_bend_longitud: Bend lengths of inferior X bars.
-    :vartype as_inf_x_bend_longitud: list | float
-    :ivar as_inf_y_bend_longitud: Bend lengths of inferior Y bars.
-    :vartype as_inf_y_bend_longitud: list | float
     :ivar as_sup_x_bend_angle: Bend angles of superior X bars.
     :vartype as_sup_x_bend_angle: list | float
     :ivar as_sup_y_bend_angle: Bend angles of superior Y bars.
     :vartype as_sup_y_bend_angle: list | float
-    :ivar as_inf_x_bend_angle: Bend angles of inferior X bars.
-    :vartype as_inf_x_bend_angle: list | float
-    :ivar as_inf_y_bend_angle: Bend angles of inferior Y bars.
-    :vartype as_inf_y_bend_angle: list | float
     :ivar as_sup_x_bend_height: Bend heights of superior X bars.
     :vartype as_sup_x_bend_height: list | float
     :ivar as_sup_y_bend_height: Bend heights of superior Y bars.
     :vartype as_sup_y_bend_height: list | float
-    :ivar as_inf_x_bend_height: Bend heights of inferior X bars.
-    :vartype as_inf_x_bend_height: list | float
-    :ivar as_inf_y_bend_height: Bend heights of inferior Y bars.
-    :vartype as_inf_y_bend_height: list | float
     :ivar cover: Concrete cover for reinforcement.
     :ivar bars_as_sup_x: List of generated superior X-direction bars.
     :vartype bars_as_sup_x: list[SpacedBars]
@@ -240,18 +216,12 @@ class Slab:
 
     as_sup_x_bend_longitud: list | float = field(default=None, converter=to_list)
     as_sup_y_bend_longitud: list | float = field(default=None, converter=to_list)
-    as_inf_x_bend_longitud: list | float = field(default=None, converter=to_list)
-    as_inf_y_bend_longitud: list | float = field(default=None, converter=to_list)
 
     as_sup_x_bend_angle: list | float = field(default=None, converter=to_list)
     as_sup_y_bend_angle: list | float = field(default=None, converter=to_list)
-    as_inf_x_bend_angle: list | float = field(default=None, converter=to_list)
-    as_inf_y_bend_angle: list | float = field(default=None, converter=to_list)
 
     as_sup_x_bend_height: list | float = field(default=None, converter=to_list)
     as_sup_y_bend_height: list | float = field(default=None, converter=to_list)
-    as_inf_x_bend_height: list | float = field(default=None, converter=to_list)
-    as_inf_y_bend_height: list | float = field(default=None, converter=to_list)
 
     bars_as_sup_x: list | float = field(init=False)
     bars_as_sup_y: list | float = field(init=False)
@@ -310,22 +280,16 @@ class Slab:
             as_bend_height=self.as_sup_y_bend_height)
 
         # Inferior X bars.
-        (self.as_inf_x_db, self.max_db_inf_x, self.as_inf_x_anchor, self.number_init_inf_x, self.as_inf_x_bend_longitud,
-         self.as_inf_x_bend_angle, self.as_inf_x_bend_height) = self.__asign_bar_vars(
+        (self.as_inf_x_db, self.max_db_inf_x, self.as_inf_x_anchor, self.number_init_inf_x,
+         _, _, _) = self.__asign_bar_vars(
             as_db=self.as_inf_x_db,
-            as_anchor=self.as_inf_x_anchor,
-            as_bend_length=self.as_inf_x_bend_longitud,
-            as_bend_angle=self.as_inf_x_bend_angle,
-            as_bend_height=self.as_inf_x_bend_height)
+            as_anchor=self.as_inf_x_anchor)
 
         # Inferior Y bars.
-        (self.as_inf_y_db, self.max_db_inf_y, self.as_inf_y_anchor, self.number_init_inf_y, self.as_inf_y_bend_longitud,
-         self.as_inf_y_bend_angle, self.as_inf_y_bend_height) = self.__asign_bar_vars(
+        (self.as_inf_y_db, self.max_db_inf_y, self.as_inf_y_anchor, self.number_init_inf_y,
+         _, _, _) = self.__asign_bar_vars(
             as_db=self.as_inf_y_db,
-            as_anchor=self.as_inf_y_anchor,
-            as_bend_length=self.as_inf_y_bend_longitud,
-            as_bend_angle=self.as_inf_y_bend_angle,
-            as_bend_height=self.as_inf_y_bend_height)
+            as_anchor=self.as_inf_y_anchor)
 
         # Generate bars.
         self.bars_as_sup_x = self.__gen_bars(as_db=self.as_sup_x_db,
@@ -351,18 +315,12 @@ class Slab:
                                              as_anchor=self.as_inf_x_anchor,
                                              as_position=Position.INFERIOR,
                                              as_direction=Direction.HORIZONTAL,
-                                             as_bend_length=self.as_inf_x_bend_longitud,
-                                             as_bend_angle=self.as_inf_x_bend_angle,
-                                             as_bend_height=self.as_inf_x_bend_height,
                                              as_number_init=self.number_init_inf_x)
         self.bars_as_inf_y = self.__gen_bars(as_db=self.as_inf_y_db,
                                              as_sp=self.as_inf_y_sp,
                                              as_anchor=self.as_inf_y_anchor,
                                              as_position=Position.INFERIOR,
                                              as_direction=Direction.VERTICAL,
-                                             as_bend_length=self.as_inf_y_bend_longitud,
-                                             as_bend_angle=self.as_inf_y_bend_angle,
-                                             as_bend_height=self.as_inf_y_bend_height,
                                              as_number_init=self.number_init_inf_y)
 
         # Concrete attributes.
@@ -890,9 +848,9 @@ class Slab:
     def __asign_bar_vars(self,
                          as_db: list,
                          as_anchor: list,
-                         as_bend_length: list,
-                         as_bend_angle: list,
-                         as_bend_height: list) -> tuple[list, float, list, int, list, list, list]:
+                         as_bend_length: list = None,
+                         as_bend_angle: list = None,
+                         as_bend_height: list = None) -> tuple[list, float, list, int, list, list, list]:
         """
         Assigns and adjusts variables related to reinforcement bars, anchorage, and bar bends.
 
@@ -955,12 +913,12 @@ class Slab:
                    as_db: list,
                    as_sp: list,
                    as_anchor: list,
-                   as_bend_length: list,
-                   as_bend_angle: list,
-                   as_bend_height: list,
                    as_position: Position,
                    as_direction: Direction,
-                   as_number_init: int) -> list[SpacedBars]:
+                   as_number_init: int,
+                   as_bend_length: list = None,
+                   as_bend_angle: list = None,
+                   as_bend_height: list = None) -> list[SpacedBars]:
         """
         Generates a list of spaced reinforcement bars based on provided geometry and layout parameters.
 
@@ -1024,6 +982,15 @@ class Slab:
             x_transverse = self.cover
             y_transverse = self.cover + self.max_db_inf_x / 2
             return x_long, y_long, x_transverse, y_transverse
+
+        if as_bend_height is None:
+            as_bend_height = [0] * len(as_db)
+
+        if as_bend_length is None:
+            as_bend_length = [0] * len(as_db)
+
+        if as_bend_angle is None:
+            as_bend_angle = [0] * len(as_db)
 
         # Determination of util length and width.
         length = self.length_x - 2 * self.cover

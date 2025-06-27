@@ -8,6 +8,7 @@ from etacad.slab import Slab
 import ezdxf
 import pytest
 
+from ezdxf import zoom
 from ezdxf.math import Vec3
 from itertools import chain
 
@@ -68,18 +69,12 @@ def test_attributes_slab_10x5_without_anchor(slab_10x5_whithout_anchor):
 
     assert slab_10x5_whithout_anchor.as_sup_x_bend_longitud == [0]
     assert slab_10x5_whithout_anchor.as_sup_y_bend_longitud == [0]
-    assert slab_10x5_whithout_anchor.as_inf_x_bend_longitud == [0]
-    assert slab_10x5_whithout_anchor.as_inf_y_bend_longitud == [0]
 
     assert slab_10x5_whithout_anchor.as_sup_x_bend_angle == [0]
     assert slab_10x5_whithout_anchor.as_sup_y_bend_angle == [0]
-    assert slab_10x5_whithout_anchor.as_inf_x_bend_angle == [0]
-    assert slab_10x5_whithout_anchor.as_inf_y_bend_angle == [0]
 
     assert slab_10x5_whithout_anchor.as_sup_x_bend_height == [0]
     assert slab_10x5_whithout_anchor.as_sup_y_bend_height == [0]
-    assert slab_10x5_whithout_anchor.as_inf_x_bend_height == [0]
-    assert slab_10x5_whithout_anchor.as_inf_y_bend_height == [0]
 
     assert len(slab_10x5_whithout_anchor.bars_as_sup_x) == 1
     assert len(slab_10x5_whithout_anchor.bars_as_sup_y) == 1
@@ -114,6 +109,7 @@ def test_draw_longitudinal_slab_10x5_without_anchor(slab_10x5_whithout_anchor):
     ex_02 = slab_10x5_whithout_anchor.draw_longitudinal(document=doc, x=12, y=0, one_bar=True)
     ex_03 = slab_10x5_whithout_anchor.draw_longitudinal(document=doc, x=0, y=-10, unifilar_bars=True)
     ex_04 = slab_10x5_whithout_anchor.draw_longitudinal(document=doc, x=12, y=-10, one_bar=True, unifilar_bars=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x5_without_anchor_draw_longitudinal.dxf")
 
     # Example 01.
@@ -143,6 +139,7 @@ def test_draw_transverse_slab_10x5_without_anchor(slab_10x5_whithout_anchor):
     ex_02 = slab_10x5_whithout_anchor.draw_transverse(document=doc, x=0, y=-2, unifilar=True, axe_section="y")
     ex_03 = slab_10x5_whithout_anchor.draw_transverse(document=doc, x=0, y=-4, axe_section="x")
     ex_04 = slab_10x5_whithout_anchor.draw_transverse(document=doc, x=0, y=-6, unifilar=True, axe_section="x")
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x5_without_anchor_draw_transverse.dxf")
 
     # Example 01.
@@ -170,6 +167,7 @@ def test_draw_longitudinal_rebar_detailing_slab_10x5_without_anchor(slab_10x5_wh
     doc = ezdxf.new(setup=True)
     ex_01 = slab_10x5_whithout_anchor.draw_longitudinal_rebar_detailing(document=doc, x=0, y=0)
     ex_02 = slab_10x5_whithout_anchor.draw_longitudinal_rebar_detailing(document=doc, x=15, y=0, unifilar=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x5_without_anchor_draw_longitudinal_rebar_detailing.dxf")
 
     # Example 01.
@@ -186,6 +184,7 @@ def test_draw_longitudinal_rebar_detailing_slab_10x5_without_anchor(slab_10x5_wh
 def test_draw_table_rebar_detailing_slab_10x5_without_anchor(slab_10x5_whithout_anchor):
     doc = ezdxf.new(setup=True)
     ex_01 = slab_10x5_whithout_anchor.draw_table_rebar_detailing(document=doc, x=10, y=-15)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x5_without_anchor_draw_table_rebar_detailing.dxf")
 
     # Example 01.
@@ -276,18 +275,12 @@ def test_attributes_slab_5x10_without_anchor(slab_5x10_whitout_anchor):
 
     assert slab_5x10_whitout_anchor.as_sup_x_bend_longitud == [0]
     assert slab_5x10_whitout_anchor.as_sup_y_bend_longitud == [0]
-    assert slab_5x10_whitout_anchor.as_inf_x_bend_longitud == [0]
-    assert slab_5x10_whitout_anchor.as_inf_y_bend_longitud == [0]
 
     assert slab_5x10_whitout_anchor.as_sup_x_bend_angle == [0]
     assert slab_5x10_whitout_anchor.as_sup_y_bend_angle == [0]
-    assert slab_5x10_whitout_anchor.as_inf_x_bend_angle == [0]
-    assert slab_5x10_whitout_anchor.as_inf_y_bend_angle == [0]
 
     assert slab_5x10_whitout_anchor.as_sup_x_bend_height == [0]
     assert slab_5x10_whitout_anchor.as_sup_y_bend_height == [0]
-    assert slab_5x10_whitout_anchor.as_inf_x_bend_height == [0]
-    assert slab_5x10_whitout_anchor.as_inf_y_bend_height == [0]
 
     assert len(slab_5x10_whitout_anchor.bars_as_sup_x) == 1
     assert len(slab_5x10_whitout_anchor.bars_as_sup_y) == 1
@@ -322,6 +315,7 @@ def test_draw_longitudinal_slab_5x10_without_anchor(slab_5x10_whitout_anchor):
     ex_02 = slab_5x10_whitout_anchor.draw_longitudinal(document=doc, x=8, y=0, one_bar=True)
     ex_03 = slab_5x10_whitout_anchor.draw_longitudinal(document=doc, x=0, y=-15, unifilar_bars=True)
     ex_04 = slab_5x10_whitout_anchor.draw_longitudinal(document=doc, x=8, y=-15, one_bar=True, unifilar_bars=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_5x10_without_anchor_draw_longitudinal.dxf")
 
     # Example 01.
@@ -351,6 +345,7 @@ def test_draw_transverse_slab_5x10_without_anchor(slab_5x10_whitout_anchor):
     ex_02 = slab_5x10_whitout_anchor.draw_transverse(document=doc, x=0, y=-2, unifilar=True, axe_section="y")
     ex_03 = slab_5x10_whitout_anchor.draw_transverse(document=doc, x=0, y=-4, axe_section="x")
     ex_04 = slab_5x10_whitout_anchor.draw_transverse(document=doc, x=0, y=-6, unifilar=True, axe_section="x")
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_5x10_without_anchor_draw_transverse.dxf")
 
     # Example 01.
@@ -378,6 +373,7 @@ def test_draw_longitudinal_rebar_detailing_slab_5x10_without_anchor(slab_5x10_wh
     doc = ezdxf.new(setup=True)
     ex_01 = slab_5x10_whitout_anchor.draw_longitudinal_rebar_detailing(document=doc, x=0, y=0)
     ex_02 = slab_5x10_whitout_anchor.draw_longitudinal_rebar_detailing(document=doc, x=15, y=0, unifilar=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_5x10_without_anchor_draw_longitudinal_rebar_detailing.dxf")
 
     # Example 01.
@@ -394,6 +390,7 @@ def test_draw_longitudinal_rebar_detailing_slab_5x10_without_anchor(slab_5x10_wh
 def test_draw_table_rebar_detailing_slab_5x10_without_anchor(slab_5x10_whitout_anchor):
     doc = ezdxf.new(setup=True)
     ex_01 = slab_5x10_whitout_anchor.draw_table_rebar_detailing(document=doc, x=10, y=-15)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_5x10_without_anchor_draw_table_rebar_detailing.dxf")
 
     # Example 01.
@@ -488,18 +485,12 @@ def test_attributes_slab_10x10_with_anchor(slab_10x10_with_anchor):
 
     assert slab_10x10_with_anchor.as_sup_x_bend_longitud == [0]
     assert slab_10x10_with_anchor.as_sup_y_bend_longitud == [0]
-    assert slab_10x10_with_anchor.as_inf_x_bend_longitud == [0]
-    assert slab_10x10_with_anchor.as_inf_y_bend_longitud == [0]
 
     assert slab_10x10_with_anchor.as_sup_x_bend_angle == [0]
     assert slab_10x10_with_anchor.as_sup_y_bend_angle == [0]
-    assert slab_10x10_with_anchor.as_inf_x_bend_angle == [0]
-    assert slab_10x10_with_anchor.as_inf_y_bend_angle == [0]
 
     assert slab_10x10_with_anchor.as_sup_x_bend_height == [0]
     assert slab_10x10_with_anchor.as_sup_y_bend_height == [0]
-    assert slab_10x10_with_anchor.as_inf_x_bend_height == [0]
-    assert slab_10x10_with_anchor.as_inf_y_bend_height == [0]
 
     assert len(slab_10x10_with_anchor.bars_as_sup_x) == 1
     assert len(slab_10x10_with_anchor.bars_as_sup_y) == 1
@@ -534,6 +525,7 @@ def test_draw_longitudinal_slab_10x10_without_anchor(slab_10x10_with_anchor):
     ex_02 = slab_10x10_with_anchor.draw_longitudinal(document=doc, x=12, y=0, one_bar=True)
     ex_03 = slab_10x10_with_anchor.draw_longitudinal(document=doc, x=0, y=-15, unifilar_bars=True)
     ex_04 = slab_10x10_with_anchor.draw_longitudinal(document=doc, x=12, y=-15, one_bar=True, unifilar_bars=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x10_without_anchor_draw_longitudinal.dxf")
 
     # Example 01.
@@ -563,6 +555,7 @@ def test_draw_transverse_slab_10x10_without_anchor(slab_10x10_with_anchor):
     ex_02 = slab_10x10_with_anchor.draw_transverse(document=doc, x=0, y=-2, unifilar=True, axe_section="y")
     ex_03 = slab_10x10_with_anchor.draw_transverse(document=doc, x=0, y=-4, axe_section="x")
     ex_04 = slab_10x10_with_anchor.draw_transverse(document=doc, x=0, y=-6, unifilar=True, axe_section="x")
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x10_without_anchor_draw_transverse.dxf")
 
     # Example 01.
@@ -590,6 +583,7 @@ def test_draw_longitudinal_rebar_detailing_slab_10x10_without_anchor(slab_10x10_
     doc = ezdxf.new(setup=True)
     ex_01 = slab_10x10_with_anchor.draw_longitudinal_rebar_detailing(document=doc, x=0, y=0)
     ex_02 = slab_10x10_with_anchor.draw_longitudinal_rebar_detailing(document=doc, x=15, y=0, unifilar=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x10_without_anchor_draw_longitudinal_rebar_detailing.dxf")
 
     # Example 01.
@@ -606,6 +600,7 @@ def test_draw_longitudinal_rebar_detailing_slab_10x10_without_anchor(slab_10x10_
 def test_draw_table_rebar_detailing_slab_10x10_without_anchor(slab_10x10_with_anchor):
     doc = ezdxf.new(setup=True)
     ex_01 = slab_10x10_with_anchor.draw_table_rebar_detailing(document=doc, x=10, y=-15)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_10x10_without_anchor_draw_table_rebar_detailing.dxf")
 
     # Example 01.
@@ -644,7 +639,7 @@ def test_draw_table_rebar_detailing_slab_10x10_without_anchor(slab_10x10_with_an
 def slab_8x3_with_anchor_bend() -> Slab:
     return Slab(length_x=8,
                 length_y=3,
-                thickness=0.12,
+                thickness=0.18,
                 x=100,
                 y=100,
                 direction=Direction.HORIZONTAL,
@@ -663,17 +658,11 @@ def slab_8x3_with_anchor_bend() -> Slab:
                 as_inf_y_anchor=0.05,
                 as_sup_x_bend_height=0.03,
                 as_sup_y_bend_height=0.03,
-                as_inf_x_bend_height=0.03,
-                as_inf_y_bend_height=0.03,
                 as_sup_x_bend_longitud=4,
                 as_sup_y_bend_longitud=1.5,
-                as_inf_x_bend_longitud=7,
-                as_inf_y_bend_longitud=2,
                 as_sup_x_bend_angle=45,
                 as_sup_y_bend_angle=30,
-                as_inf_x_bend_angle=60,
-                as_inf_y_bend_angle=45,
-                cover=0.3,
+                cover=0.03,
                 number_init=1,
                 description="SLAB 01 8x3")
 
@@ -682,7 +671,7 @@ def test_attributes_slab_8x3_with_anchor_bend(slab_8x3_with_anchor_bend):
     # Geometric attributes.
     assert slab_8x3_with_anchor_bend.length_x == 8
     assert slab_8x3_with_anchor_bend.length_y == 3
-    assert slab_8x3_with_anchor_bend.thickness == 0.12
+    assert slab_8x3_with_anchor_bend.thickness == 0.18
     assert slab_8x3_with_anchor_bend.x == 100
     assert slab_8x3_with_anchor_bend.y == 100
     assert slab_8x3_with_anchor_bend.direction == Direction.HORIZONTAL
@@ -711,18 +700,12 @@ def test_attributes_slab_8x3_with_anchor_bend(slab_8x3_with_anchor_bend):
 
     assert slab_8x3_with_anchor_bend.as_sup_x_bend_longitud == [4]
     assert slab_8x3_with_anchor_bend.as_sup_y_bend_longitud == [1.5]
-    assert slab_8x3_with_anchor_bend.as_inf_x_bend_longitud == [7]
-    assert slab_8x3_with_anchor_bend.as_inf_y_bend_longitud == [2]
 
     assert slab_8x3_with_anchor_bend.as_sup_x_bend_angle == [45]
     assert slab_8x3_with_anchor_bend.as_sup_y_bend_angle == [30]
-    assert slab_8x3_with_anchor_bend.as_inf_x_bend_angle == [60]
-    assert slab_8x3_with_anchor_bend.as_inf_y_bend_angle == [45]
 
     assert slab_8x3_with_anchor_bend.as_sup_x_bend_height == [0.03]
     assert slab_8x3_with_anchor_bend.as_sup_y_bend_height == [0.03]
-    assert slab_8x3_with_anchor_bend.as_inf_x_bend_height == [0.03]
-    assert slab_8x3_with_anchor_bend.as_inf_y_bend_height == [0.03]
 
     assert len(slab_8x3_with_anchor_bend.bars_as_sup_x) == 1
     assert len(slab_8x3_with_anchor_bend.bars_as_sup_y) == 1
@@ -734,10 +717,10 @@ def test_attributes_slab_8x3_with_anchor_bend(slab_8x3_with_anchor_bend):
     assert slab_8x3_with_anchor_bend.number_init_inf_x == 3
     assert slab_8x3_with_anchor_bend.number_init_inf_y == 4
 
-    assert slab_8x3_with_anchor_bend.cover == 0.3
+    assert slab_8x3_with_anchor_bend.cover == 0.03
 
     # Concrete attributes.
-    assert slab_8x3_with_anchor_bend.concrete.volume == 2.88
+    assert slab_8x3_with_anchor_bend.concrete.volume == 4.32
     assert slab_8x3_with_anchor_bend.concrete.specific_weight == 2400
     assert slab_8x3_with_anchor_bend.concrete.vertices == [(0, 0), (0, 3), (8, 3), (8, 0)]
 
@@ -757,25 +740,26 @@ def test_draw_longitudinal_8x3_with_anchor_bend(slab_8x3_with_anchor_bend):
     ex_02 = slab_8x3_with_anchor_bend.draw_longitudinal(document=doc, x=12, y=0, one_bar=True)
     ex_03 = slab_8x3_with_anchor_bend.draw_longitudinal(document=doc, x=0, y=-15, unifilar_bars=True)
     ex_04 = slab_8x3_with_anchor_bend.draw_longitudinal(document=doc, x=12, y=-15, one_bar=True, unifilar_bars=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_8x3_with_anchor_bend_draw_longitudinal.dxf")
 
     # Example 01.
-    assert len(ex_01["all_elements"]) == 4179
+    assert len(ex_01["all_elements"]) == 3747
     assert len(ex_01["concrete_elements"]) == 3
     assert len(ex_01["spaced_bars_elements"]) == 4
 
     # Example 02.
-    assert len(ex_02["all_elements"]) == 119
+    assert len(ex_02["all_elements"]) == 87
     assert len(ex_02["concrete_elements"]) == 3
     assert len(ex_02["spaced_bars_elements"]) == 4
 
     # Example 03.
-    assert len(ex_03["all_elements"]) == 1050
+    assert len(ex_03["all_elements"]) == 942
     assert len(ex_03["concrete_elements"]) == 3
     assert len(ex_03["spaced_bars_elements"]) == 4
 
     # Example 04.
-    assert len(ex_04["all_elements"]) == 35
+    assert len(ex_04["all_elements"]) == 27
     assert len(ex_04["concrete_elements"]) == 3
     assert len(ex_04["spaced_bars_elements"]) == 4
 
@@ -786,25 +770,26 @@ def test_draw_transverse_8x3_with_anchor_bend(slab_8x3_with_anchor_bend):
     ex_02 = slab_8x3_with_anchor_bend.draw_transverse(document=doc, x=0, y=-2, unifilar=True, axe_section="y")
     ex_03 = slab_8x3_with_anchor_bend.draw_transverse(document=doc, x=0, y=-4, axe_section="x")
     ex_04 = slab_8x3_with_anchor_bend.draw_transverse(document=doc, x=0, y=-6, unifilar=True, axe_section="x")
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_8x3_with_anchor_bend_draw_transverse.dxf")
 
     # Example 01.
-    assert len(ex_01["all_elements"]) == 183
+    assert len(ex_01["all_elements"]) == 174
     assert len(ex_01["concrete_elements"]) == 3
     assert len(ex_01["spaced_bars_elements"]) == 4
 
     # Example 02.
-    assert len(ex_02["all_elements"]) == 141
+    assert len(ex_02["all_elements"]) == 144
     assert len(ex_02["concrete_elements"]) == 3
     assert len(ex_02["spaced_bars_elements"]) == 4
 
     # Example 03.
-    assert len(ex_03["all_elements"]) == 106
+    assert len(ex_03["all_elements"]) == 99
     assert len(ex_03["concrete_elements"]) == 3
     assert len(ex_03["spaced_bars_elements"]) == 4
 
     # Example 04.
-    assert len(ex_04["all_elements"]) == 64
+    assert len(ex_04["all_elements"]) == 69
     assert len(ex_04["concrete_elements"]) == 3
     assert len(ex_04["spaced_bars_elements"]) == 4
 
@@ -813,15 +798,16 @@ def test_draw_longitudinal_rebar_detailing_8x3_with_anchor_bend(slab_8x3_with_an
     doc = ezdxf.new(setup=True)
     ex_01 = slab_8x3_with_anchor_bend.draw_longitudinal_rebar_detailing(document=doc, x=0, y=0)
     ex_02 = slab_8x3_with_anchor_bend.draw_longitudinal_rebar_detailing(document=doc, x=15, y=0, unifilar=True)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_8x3_with_anchor_bend_draw_longitudinal_rebar_detailing.dxf")
 
     # Example 01.
-    assert len(ex_01["all_elements"]) == 132
+    assert len(ex_01["all_elements"]) == 100
     assert len(ex_01["bars_elements"]) == 4
     assert len(ex_01["text_elements"]) == 4
 
     # Example 02.
-    assert len(ex_02["all_elements"]) == 48
+    assert len(ex_02["all_elements"]) == 40
     assert len(ex_02["bars_elements"]) == 4
     assert len(ex_02["text_elements"]) == 4
 
@@ -829,6 +815,7 @@ def test_draw_longitudinal_rebar_detailing_8x3_with_anchor_bend(slab_8x3_with_an
 def test_draw_table_rebar_detailing_8x3_with_anchor_bend(slab_8x3_with_anchor_bend):
     doc = ezdxf.new(setup=True)
     ex_01 = slab_8x3_with_anchor_bend.draw_table_rebar_detailing(document=doc, x=10, y=-15)
+    zoom.extents(layout=doc.modelspace())
     doc.saveas(filename="./tests/slab_8x3_with_anchor_bend_draw_table_rebar_detailing.dxf")
 
     # Example 01.
