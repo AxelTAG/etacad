@@ -4,7 +4,7 @@ readme = open("./README.md", "r")
 
 setup(name="etacad",
       packages=find_packages(),
-      version="0.0.13",
+      version="0.0.14",
       description="A package aimed to simpilfy drawings of structurals elements based on ezdxf library.",
       long_description=readme.read(),
       long_description_content_type="text/markdown",
