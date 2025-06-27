@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from itertools import chain
-
-# External imports.
-from attrs import define, field
-from ezdxf.document import Drawing
-
 # Local imports.
-from cadtable import CADTable
+from etacad.cadtable import CADTable
 from etacad.concrete import Concrete
 from etacad.converters import to_list
 from etacad.drawing_utils import text
@@ -15,18 +9,208 @@ from etacad.globals import (Position, Axes, SlabTypes, Direction, ElementTypes, 
                             SLAB_SET_LONGITUDINAL, SLAB_SET_TRANSVERSE, SLAB_SET_LONG_REBBAR)
 from etacad.spaced_bars import SpacedBars
 
+# External imports.
+from attrs import define, field
+from ezdxf.document import Drawing
+from itertools import chain
+
 
 @define
 class Slab:
     """
     Slab element, computes geometrics and physics props and manages dxf drawing methods (longitudinal, transversal,
     reinforcement detailing, etc.)
+
+    :param length_x: Slab length along the X axis.
+    :type length_x: float
+    :param length_y: Slab length along the Y axis.
+    :type length_y: float
+    :param thickness: Slab thickness.
+    :type thickness: float
+    :param x: X-coordinate of the bottom left corner of the slab concrete shape.
+    :type x: float
+    :param y: Y-coordinate of the bottom left corner of the slab concrete shape.
+    :type y: float
+    :param direction: Direction of the slab (HORIZONTAL or VERTICAL).
+    :type direction: Direction
+    :param orientation: Slab orientation (TOP, RIGHT, DOWN, LEFT).
+    :type orientation: Orientation
+    :param as_sup_x_db: Superior X-direction rebar diameter.
+    :type as_sup_x_db: list | float
+    :param as_sup_y_db: Superior Y-direction rebar diameter.
+    :type as_sup_y_db: list | float
+    :param as_inf_x_db: Inferior X-direction rebar diameter.
+    :type as_inf_x_db: list | float
+    :param as_inf_y_db: Inferior Y-direction rebar diameter.
+    :type as_inf_y_db: list | float
+    :param as_sup_x_sp: Superior X-direction rebar spacing.
+    :type as_sup_x_sp: list | float
+    :param as_sup_y_sp: Superior Y-direction rebar spacing.
+    :type as_sup_y_sp: list | float
+    :param as_inf_x_sp: Inferior X-direction rebar spacing.
+    :type as_inf_x_sp: list | float
+    :param as_inf_y_sp: Inferior Y-direction rebar spacing.
+    :type as_inf_y_sp: list | float
+    :param as_sup_x_anchor: Superior X-direction rebar anchor lengths.
+    :type as_sup_x_anchor: list | float
+    :param as_sup_y_anchor: Superior Y-direction rebar anchor lengths.
+    :type as_sup_y_anchor: list | float
+    :param as_inf_x_anchor: Inferior X-direction reabar anchor lengths.
+    :type as_inf_x_anchor: list | float
+    :param as_inf_y_anchor: Inferior Y-direction rebar anchor lengths.
+    :type as_inf_y_anchor: list | float
+    :param as_sup_x_bend_longitud: Bend lengths of superior X bars.
+    :type as_sup_x_bend_longitud: list | float
+    :param as_sup_y_bend_longitud: Bend lengths of superior Y bars.
+    :type as_sup_y_bend_longitud: list | float
+    :param as_inf_x_bend_longitud: Bend lengths of inferior X bars.
+    :type as_inf_x_bend_longitud: list | float
+    :param as_inf_y_bend_longitud: Bend lengths of inferior Y bars.
+    :type as_inf_y_bend_longitud: list | float
+    :param as_sup_x_bend_angle: Bend angles of superior X bars.
+    :type as_sup_x_bend_angle: list | float
+    :param as_sup_y_bend_angle: Bend angles of superior Y bars.
+    :type as_sup_y_bend_angle: list | float
+    :param as_inf_x_bend_angle: Bend angles of inferior X bars.
+    :type as_inf_x_bend_angle: list | float
+    :param as_inf_y_bend_angle: Bend angles of inferior Y bars.
+    :type as_inf_y_bend_angle: list | float
+    :param as_sup_x_bend_height: Bend heights of superior X bars.
+    :type as_sup_x_bend_height: list | float
+    :param as_sup_y_bend_height: Bend heights of superior Y bars.
+    :type as_sup_y_bend_height: list | float
+    :param as_inf_x_bend_height: Bend heights of inferior X bars.
+    :type as_inf_x_bend_height: list | float
+    :param as_inf_y_bend_height: Bend heights of inferior Y bars.
+    :type as_inf_y_bend_height: list | float
+    :param cover: Concrete cover for reinforcement.
+    :type cover: float
+    :param nomenclature: Prefix used in bar position identifiers.
+    :type nomenclature: str
+    :param number_init: Initial number used for bar position numbering.
+    :type number_init: int | None
+    :param description: Optional description of the slab element.
+    :type description: str | None
+    :param element_type: Type of the structural element (SLAB).
+    :type element_type: ElementTypes
+
+    :ivar length_x: Slab length along the X axis.
+    :vartype length_x: float
+    :ivar length_y: Slab length along the Y axis.
+    :vartype length_y: float
+    :ivar thickness: Slab thickness.
+    :vartype thickness: float
+    :ivar x: X-coordinate of the bottom left corner of the slab concrete shape.
+    :vartype x: float
+    :ivar y: Y-coordinate of the bottom left corner of the slab concrete shape.
+    :vartype y: float
+    :ivar direction: Direction of the slab (HORIZONTAL or VERTICAL).
+    :vartype direction: Direction
+    :ivar orientation: Slab orientation (TOP, RIGHT, DOWN, LEFT).
+    :vartype orientation: Orientation
+
+    :ivar as_sup_x_db: Superior X-direction rebar diameter.
+    :vartype as_sup_x_db: list | float
+    :ivar as_sup_y_db: Superior Y-direction rebar diameter.
+    :vartype as_sup_y_db: list | float
+    :ivar as_inf_x_db: Inferior X-direction rebar diameter.
+    :vartype as_inf_x_db: list | float
+    :ivar as_inf_y_db: Inferior Y-direction rebar diameter.
+    :vartype as_inf_y_db: list | float
+    :ivar as_sup_x_sp: Superior X-direction rebar spacing.
+    :vartype as_sup_x_sp: list | float
+    :ivar as_sup_y_sp: Superior Y-direction rebar spacing.
+    :vartype as_sup_y_sp: list | float
+    :ivar as_inf_x_sp: Inferior X-direction rebar spacing.
+    :vartype as_inf_x_sp: list | float
+    :ivar as_inf_y_sp: Inferior Y-direction rebar spacing.
+    :vartype as_inf_y_sp: list | float
+    :ivar as_sup_x_anchor: Superior X-direction rebar anchor lengths.
+    :vartype as_sup_x_anchor: list | float
+    :ivar as_sup_y_anchor: Superior Y-direction rebar anchor lengths.
+    :vartype as_sup_y_anchor: list | float
+    :ivar as_inf_x_anchor: Inferior X-direction reabar anchor lengths.
+    :vartype as_inf_x_anchor: list | float
+    :ivar as_inf_y_anchor: Inferior Y-direction rebar anchor lengths.
+    :vartype as_inf_y_anchor: list | float
+    :ivar as_sup_x_bend_longitud: Bend lengths of superior X bars.
+    :vartype as_sup_x_bend_longitud: list | float
+    :ivar as_sup_y_bend_longitud: Bend lengths of superior Y bars.
+    :vartype as_sup_y_bend_longitud: list | float
+    :ivar as_inf_x_bend_longitud: Bend lengths of inferior X bars.
+    :vartype as_inf_x_bend_longitud: list | float
+    :ivar as_inf_y_bend_longitud: Bend lengths of inferior Y bars.
+    :vartype as_inf_y_bend_longitud: list | float
+    :ivar as_sup_x_bend_angle: Bend angles of superior X bars.
+    :vartype as_sup_x_bend_angle: list | float
+    :ivar as_sup_y_bend_angle: Bend angles of superior Y bars.
+    :vartype as_sup_y_bend_angle: list | float
+    :ivar as_inf_x_bend_angle: Bend angles of inferior X bars.
+    :vartype as_inf_x_bend_angle: list | float
+    :ivar as_inf_y_bend_angle: Bend angles of inferior Y bars.
+    :vartype as_inf_y_bend_angle: list | float
+    :ivar as_sup_x_bend_height: Bend heights of superior X bars.
+    :vartype as_sup_x_bend_height: list | float
+    :ivar as_sup_y_bend_height: Bend heights of superior Y bars.
+    :vartype as_sup_y_bend_height: list | float
+    :ivar as_inf_x_bend_height: Bend heights of inferior X bars.
+    :vartype as_inf_x_bend_height: list | float
+    :ivar as_inf_y_bend_height: Bend heights of inferior Y bars.
+    :vartype as_inf_y_bend_height: list | float
+    :ivar cover: Concrete cover for reinforcement.
+    :ivar bars_as_sup_x: List of generated superior X-direction bars.
+    :vartype bars_as_sup_x: list[SpacedBars]
+    :ivar bars_as_sup_y: List of generated superior Y-direction bars.
+    :vartype bars_as_sup_y: list[SpacedBars]
+    :ivar bars_as_inf_x: List of generated inferior X-direction bars.
+    :vartype bars_as_inf_x: list[SpacedBars]
+    :ivar bars_as_inf_y: List of generated inferior Y-direction bars.
+    :vartype bars_as_inf_y: list[SpacedBars]
+    :vartype cover: float
+
+    :ivar nomenclature: Prefix used in spaced bar position identifiers.
+    :vartype nomenclature: str
+    :ivar number_init: Initial number used for spaced bar position numbering.
+    :vartype number_init: int | None
+    :ivar description: Optional description of the slab element.
+    :vartype description: str | None
+
+    :ivar element_type: Type of the structural element (SLAB).
+    :vartype element_type: ElementTypes
+    :ivar concrete: Concrete element representing the slab volume.
+    :vartype concrete: Concrete
+
+    :ivar all_bars: All reinforcement bars of the slab.
+    :vartype all_bars: list[SpacedBars]
+    :ivar all_elements: All drawable elements (bars, annotations).
+    :vartype all_elements: list
+
+    :ivar positions: Dictionary of bar positions used in labeling.
+    :vartype positions: dict
+    :ivar max_db_sup_x: Maximum diameter in superior X bars.
+    :vartype max_db_sup_x: float
+    :ivar max_db_sup_y: Maximum diameter in superior Y bars.
+    :vartype max_db_sup_y: float
+    :ivar max_db_inf_x: Maximum diameter in inferior X bars.
+    :vartype max_db_inf_x: float
+    :ivar max_db_inf_y: Maximum diameter in inferior Y bars.
+    :vartype max_db_inf_y: float
+    :ivar max_db_hz: Maximum horizontal bar diameter.
+    :vartype max_db_hz: float
+
+    :ivar number_init_sup_x: Initial bar ID number for superior X bars.
+    :vartype number_init_sup_x: int
+    :ivar number_init_sup_y: Initial bar ID number for superior Y bars.
+    :vartype number_init_sup_y: int
+    :ivar number_init_inf_x: Initial bar ID number for inferior X bars.
+    :vartype number_init_inf_x: int
+    :ivar number_init_inf_y: Initial bar ID number for inferior Y bars.
+    :vartype number_init_inf_y: int
     """
     # Geometric attributes.
     length_x: float = field(converter=float)
     length_y: float = field(converter=float)
     thickness: float = field(converter=float)
-    slab_type: int = field(default=SlabTypes.RECTANGULAR)
     x: float = field(default=0, converter=float)
     y: float = field(default=0, converter=float)
     direction: Direction = field(default=Direction.HORIZONTAL)
@@ -84,11 +268,6 @@ class Slab:
     # Concrete attributes.
     concrete: Concrete = field(init=False)
     concrete_specific_weight: float = CONCRETE_WEIGHT
-
-    # Crossing beams attributes.
-    beams: list = field(default=None)  # Maybe not in use.
-    beams_pos: list = field(default=None)  # Maybe not in use.
-    beams_symbol: list = field(default=None)  # Maybe not in use.
 
     # Entities groups.
     all_bars: list[SpacedBars] = field(init=False)
@@ -208,10 +387,12 @@ class Slab:
 
     @property
     def box_width(self) -> float:
+        """Bounding box width (equal to length_x)."""
         return self._box_width
 
     @property
     def box_height(self) -> float:
+        """Bounding box height (equal to length_y)."""
         return self._box_height
 
     def draw_longitudinal(self, document: Drawing,
@@ -227,6 +408,46 @@ class Slab:
                           dimensions: bool = True,
                           description: bool = True,
                           unifilar_bars: bool = False) -> dict:
+        """
+        Draws the longitudinal view of the slab, including the concrete section and reinforcement bars.
+
+        The method adds the concrete outline and/or longitudinal bars (superior and/or inferior)
+        to the specified `ezdxf` drawing, with customizable display options. It returns a dictionary
+        with categorized drawing elements.
+
+        :param document: The `ezdxf` Drawing object where the elements will be rendered.
+        :type document: Drawing
+        :param x: X-coordinate of the left bottom corner of slab concrete shape. Defaults to slab's own X.
+        :type x: float, optional
+        :param y: Y-coordinate of the left bottom corner of slab concrete shape. Defaults to slab's own Y.
+        :type y: float, optional
+        :param concrete_shape: Whether to draw the concrete outline of the slab.
+        :type concrete_shape: bool
+        :param bars: Whether to draw reinforcement bars.
+        :type bars: bool
+        :param bars_sup: Whether to draw superior reinforcement bars.
+        :type bars_sup: bool
+        :param bars_inf: Whether to draw inferior reinforcement bars.
+        :type bars_inf: bool
+        :param one_bar: Whether to draw a single selected bar instead of the full set.
+        :type one_bar: bool
+        :param one_bar_position_sup: Position index for the superior bar to draw when `one_bar` is True.
+        :type one_bar_position_sup: int, optional
+        :param one_bar_position_inf: Position index for the inferior bar to draw when `one_bar` is True.
+        :type one_bar_position_inf: int, optional
+        :param dimensions: Whether to draw dimensions.
+        :type dimensions: bool
+        :param description: Whether to include denomination/description for each bar.
+        :type description: bool
+        :param unifilar_bars: If True, draws bars in unifilar (symbolic) representation.
+        :type unifilar_bars: bool
+
+        :return: Dictionary containing grouped drawing elements:
+            - "concrete_elements": list of DXF elements related to the concrete section
+            - "spaced_bars_elements": list of DXF elements related to spaced bars
+            - "all_elements": flat list combining all drawable elements
+        :rtype: dict
+        """
         if x is None:
             x = self.x
         if y is None:
@@ -254,9 +475,9 @@ class Slab:
                         x=x + (sp_bar.x - self.x),
                         y=y + (sp_bar.y - self.y),
                         unifilar=unifilar_bars,
-                        dimensions=dimensions,
+                        dimensions=False,
                         reinforcement_dimensions=False,
-                        denomination=description,
+                        description=description,
                         one_bar=one_bar,
                         one_bar_position=one_bar_position_sup,
                         settings=SLAB_SET_LONGITUDINAL["spaced_bars_settings"]))
@@ -267,9 +488,9 @@ class Slab:
                         x=x + (sp_bar.x - self.x),
                         y=y + (sp_bar.y - self.y),
                         unifilar=unifilar_bars,
-                        dimensions=dimensions,
+                        dimensions=False,
                         reinforcement_dimensions=False,
-                        denomination=description,
+                        description=description,
                         one_bar=one_bar,
                         one_bar_position=one_bar_position_inf,
                         settings=SLAB_SET_LONGITUDINAL["spaced_bars_settings"]))
@@ -292,8 +513,46 @@ class Slab:
                         descriptions: bool = True,
                         description_start_sup: int = 6,
                         description_start_inf: int = 9,
-                        unifilar: bool = True,
+                        unifilar: bool = False,
                         settings: dict = SLAB_SET_TRANSVERSE) -> dict:
+        """
+        Draws the transverse section of the slab, including the concrete shape and reinforcement bars.
+
+        This method generates the DXF elements representing a cross-sectional view of the slab along
+        the selected axis ('x' or 'y'). It includes both transverse and longitudinal reinforcement bars,
+        as well as optional dimensions and descriptions. It handles symbolic (unifilar) or detailed representation.
+
+        :param document: The `ezdxf` Drawing object where the transverse view will be drawn.
+        :type document: Drawing
+        :param x: X-coordinate of the left bottom corner of slab concrete shape. Defaults to slab's own X.
+        :type x: float, optional
+        :param y: Y-coordinate of the left bottom corner of slab concrete shape. Defaults to slab's own Y.
+        :type y: float, optional
+        :param axe_section: Section axis ("x" for right view or "y" for front view).
+        :type axe_section: str
+        :param concrete_shape: Whether to draw the concrete shape of the slab section.
+        :type concrete_shape: bool
+        :param bars: Whether to draw reinforcement bars.
+        :type bars: bool
+        :param dimensions: Whether to draw dimension lines.
+        :type dimensions: bool
+        :param descriptions: Whether to show bar descriptions.
+        :type descriptions: bool
+        :param description_start_sup: Initial number to use for upper transverse bar labels.
+        :type description_start_sup: int
+        :param description_start_inf: Initial number to use for lower transverse bar labels.
+        :type description_start_inf: int
+        :param unifilar: If True, draws symbolic (unifilar) bars; if False, uses detailed geometry.
+        :type unifilar: bool
+        :param settings: Dictionary of drawing settings for concrete and reinforcement bars.
+        :type settings: dict
+
+        :return: Dictionary containing grouped DXF elements:
+            - "concrete": DXF elements related to the concrete shape.
+            - "spaced_bars_elements": List of DXF elements for all reinforcement bars.
+            - "all_elements": Flat list combining all the elements above for easier access.
+        :rtype: dict
+        """
         if x is None:
             x = self.x
         if y is None:
@@ -322,6 +581,7 @@ class Slab:
 
         # Drawing bars.
         if bars:
+            # X axe section.
             sp_bars_lg_sup = self.bars_as_sup_y
             sp_bars_lg_inf = self.bars_as_inf_y
             sp_bars_tr_sup = self.bars_as_sup_x
@@ -331,7 +591,10 @@ class Slab:
             anchor_lg_sup = any(self.as_sup_y_anchor)
             anchor_lg_inf = any(self.as_inf_y_anchor)
             rotate_angle = -90
+            other_extreme = False
+            inverter_coeficient = 1
 
+            # Y axe section.
             if axe_section == "y":
                 sp_bars_lg_sup, sp_bars_tr_sup = sp_bars_tr_sup, sp_bars_lg_sup
                 sp_bars_lg_inf, sp_bars_tr_inf = sp_bars_tr_inf, sp_bars_lg_inf
@@ -340,20 +603,26 @@ class Slab:
                 anchor_lg_sup = any(self.as_sup_x_anchor)
                 anchor_lg_inf = any(self.as_inf_x_anchor)
                 rotate_angle = 0
+                other_extreme = False
+                inverter_coeficient = -1
 
             # Transverse bar sections.
             # Superior.
-
             for i, sp_bar in enumerate(sp_bars_tr_sup):
+                first_bar_index = 0
+                last_bar_index = sp_bar.quantity - 1
+                if axe_section == "y":
+                    first_bar_index, last_bar_index = last_bar_index, first_bar_index
+
                 x_coord, y_coord = x, y
                 if unifilar:
                     y_coord += db_max_lg_sup / 2
 
                 bar_displacements = {}
                 if not unifilar and anchor_lg_sup:
-                    bar_displacements[sp_bar.quantity - 1] = (0, -db_max_lg_sup)
+                    bar_displacements[first_bar_index] = (0, db_max_lg_sup * inverter_coeficient)
                     if sp_bar.is_exact_reinforcement:
-                        bar_displacements[0] = (0, db_max_lg_sup)
+                        bar_displacements[last_bar_index] = (0, -db_max_lg_sup * inverter_coeficient)
 
                 spaced_bars_dict.append(sp_bar.draw_transverse(document=document,
                                                                x=x_coord,
@@ -364,19 +633,25 @@ class Slab:
                                                                    "description_start_coefficient"],
                                                                bar_displacements=bar_displacements,
                                                                rotate_angle=rotate_angle,
+                                                               other_extreme=other_extreme,
                                                                settings=settings["spaced_bars_settings"]))
 
             # Inferior.
             for i, sp_bar in enumerate(sp_bars_tr_inf):
+                first_bar_index = 0
+                last_bar_index = sp_bar.quantity - 1
+                if axe_section == "y":
+                    first_bar_index, last_bar_index = last_bar_index, first_bar_index
+
                 x_coord, y_coord = x, y
                 if unifilar:
                     y_coord -= db_max_lg_inf / 2
 
                 bar_displacements = {}
                 if not unifilar and anchor_lg_inf:
-                    bar_displacements[sp_bar.quantity - 1] = (0, -db_max_lg_inf)
+                    bar_displacements[first_bar_index] = (0, db_max_lg_inf * inverter_coeficient)
                     if sp_bar.is_exact_reinforcement:
-                        bar_displacements[0] = (0, db_max_lg_inf)
+                        bar_displacements[last_bar_index] = (0, -db_max_lg_inf * inverter_coeficient)
 
                 spaced_bars_dict.append(sp_bar.draw_transverse(document=document,
                                                                x=x_coord,
@@ -387,6 +662,7 @@ class Slab:
                                                                    "description_start_coefficient"],
                                                                bar_displacements=bar_displacements,
                                                                rotate_angle=rotate_angle,
+                                                               other_extreme=other_extreme,
                                                                settings=settings["spaced_bars_settings"]))
 
             # Longitudinal bars.
@@ -426,20 +702,46 @@ class Slab:
             pass
 
         # Setting groups of elements in dictionary.
-        elements["concrete"] = concrete_dict
+        elements["concrete_elements"] = concrete_dict
         elements["spaced_bars_elements"] = spaced_bars_dict
-        elements["all_elements"] = (elements["concrete"]["all_elements"] +
+        elements["all_elements"] = (elements["concrete_elements"]["all_elements"] +
                                     list(chain(
                                         *[sp_dict["all_elements"] for sp_dict in elements["spaced_bars_elements"]])))
 
         return elements
 
-    def draw_rebbar_detailing_longitudinal(self,
-                                           document: Drawing,
-                                           x: float = None,
-                                           y: float = None,
-                                           unifilar: bool = True,
-                                           settings: dict = SLAB_SET_LONG_REBBAR) -> dict:
+    def draw_longitudinal_rebar_detailing(self,
+                                          document: Drawing,
+                                          x: float = None,
+                                          y: float = None,
+                                          unifilar: bool = False,
+                                          settings: dict = SLAB_SET_LONG_REBBAR) -> dict:
+        """
+        Draws a detailed longitudinal reinforcement schedule for the slab.
+
+        This method creates a vertical list of labeled reinforcement bars for both
+        top (superior) and bottom (inferior) layers in the X and Y directions. Each
+        group of bars is preceded by a label, and bars are spaced according to the
+        settings provided. Bars are drawn symbolically or in full detail based on
+        the `unifilar` flag.
+
+        :param document: The `ezdxf` Drawing object where the detailing will be placed.
+        :type document: Drawing
+        :param x: X-coordinate of the top-left corner of the detailing layout. Defaults to the slab's own x.
+        :type x: float, optional
+        :param y: Y-coordinate of the top-left corner of the detailing layout. Defaults to the slab's own y.
+        :type y: float, optional
+        :param unifilar: If True, draws symbolic (unifilar) representations of the bars; otherwise, detailed.
+        :type unifilar: bool
+        :param settings: Dictionary containing configuration for text height, spacing, and bar styling.
+        :type settings: dict
+
+        :return: Dictionary containing grouped DXF elements:
+            - "text_elements": DXF elements related to text labels.
+            - "bars_elements": List of DXF elements for all reinforcement bars.
+            - "all_elements": Flat list combining all the elements above for easier access.
+        :rtype: dict
+        """
         bars_elements = []
         text_elements = []
         elements = {}
@@ -458,11 +760,11 @@ class Slab:
             rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
 
             for sp_bar in self.bars_as_sup_x:
-                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
-                                                                  x=x,
-                                                                  y=y - rebbar_y,
-                                                                  unifilar=unifilar,
-                                                                  settings=settings["bar_settings"])
+                bars_elements.append(sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                      x=x,
+                                                                      y=y - rebbar_y,
+                                                                      unifilar=unifilar,
+                                                                      settings=settings["bar_settings"]))
                 rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
 
         if self.bars_as_sup_y:
@@ -473,11 +775,11 @@ class Slab:
             rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
 
             for sp_bar in self.bars_as_sup_y:
-                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
-                                                                  x=x,
-                                                                  y=y - rebbar_y,
-                                                                  unifilar=unifilar,
-                                                                  settings=settings["bar_settings"])
+                bars_elements.append(sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                      x=x,
+                                                                      y=y - rebbar_y,
+                                                                      unifilar=unifilar,
+                                                                      settings=settings["bar_settings"]))
                 rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
 
         if self.bars_as_inf_x:
@@ -488,11 +790,11 @@ class Slab:
             rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
 
             for sp_bar in self.bars_as_inf_x:
-                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
-                                                                  x=x,
-                                                                  y=y - rebbar_y,
-                                                                  unifilar=unifilar,
-                                                                  settings=settings["bar_settings"])
+                bars_elements.append(sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                      x=x,
+                                                                      y=y - rebbar_y,
+                                                                      unifilar=unifilar,
+                                                                      settings=settings["bar_settings"]))
                 rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
 
         if self.bars_as_inf_y:
@@ -503,23 +805,48 @@ class Slab:
             rebbar_y += settings["text_height"] + settings["text_distance_vertical"]
 
             for sp_bar in self.bars_as_inf_y:
-                bars_elements += sp_bar.bars[0].draw_longitudinal(document=document,
-                                                                  x=x,
-                                                                  y=y - rebbar_y,
-                                                                  unifilar=unifilar,
-                                                                  settings=settings["bar_settings"])
+                bars_elements.append(sp_bar.bars[0].draw_longitudinal(document=document,
+                                                                      x=x,
+                                                                      y=y - rebbar_y,
+                                                                      unifilar=unifilar,
+                                                                      settings=settings["bar_settings"]))
 
                 rebbar_y += sp_bar.bars[0].box_height + settings["spacing"]
 
+        # Setting groups of elements in dictionary.
+        elements["bars_elements"] = bars_elements
+        elements["text_elements"] = text_elements
+        elements["all_elements"] = (elements["text_elements"] +
+                                    list(chain(
+                                        *[bar["all_elements"] for bar in elements["bars_elements"]])))
+
         return elements
 
-    def draw_rebbar_detailing_transverse(self) -> dict:
+    def draw_rebar_detailing_transverse(self) -> dict:
         pass
 
-    def draw_rebbar_detailing_table(self,
-                                    document: Drawing,
-                                    x: float = None,
-                                    y: float = None) -> dict:
+    def draw_table_rebar_detailing(self,
+                                   document: Drawing,
+                                   x: float = None,
+                                   y: float = None) -> dict:
+        """
+        Draws a reinforcement detailing table for the slab.
+
+        This method generates a tabular summary of the reinforcement bars used in the slab,
+        including information such as position, diameter, spacing, quantity, individual length,
+        total length, and weight. The table is created from internal slab data and inserted into
+        the provided DXF document at the specified coordinates.
+
+        :param document: The `ezdxf` Drawing object where the table will be drawn.
+        :type document: Drawing
+        :param x: X-coordinate of the bottom-left corner of the table. If not specified, defaults to the slab's own x.
+        :type x: float, optional
+        :param y: Y-coordinate of the bottom-left corner of the table. If not specified, defaults to the slab's own y.
+        :type y: float, optional
+
+        :return: Dictionary containing the generated DXF elements of the table.
+        :rtype: dict
+        """
         # Getting data.
         data = self.extract_data()
 
@@ -533,6 +860,19 @@ class Slab:
         return elements
 
     def extract_data(self) -> list:
+        """
+        Extracts and formats reinforcement bar data for tabular representation.
+
+        This method iterates over all reinforcement bars associated with the slab
+        and gathers relevant properties such as position, diameter, spacing, quantity,
+        length, total length, and weight. Numeric values like length, total length, and
+        weight are formatted to two decimal places, while spacing is represented as a string.
+
+        :return: A list of lists, where each inner list represents one row of bar data
+                 with the following fields:
+                 [POSITION, DIAMETER, SPACING, QUANTITY, LENGTH, TOTAL LENGTH, WEIGHT]
+        :rtype: list
+        """
         data = []
         for element in self.all_bars:
             position = element.position
@@ -541,7 +881,7 @@ class Slab:
             quantity = element.quantity
             length = "{0:.2f}".format(float(element.length))
             total_length = "{0:.2f}".format(element.quantity * element.length)
-            weight = "{0:.2f}".format(element.quantity * element.weight)
+            weight = "{0:.2f}".format(element.weight)
 
             data.append([position, diameter, spacing, quantity, length, total_length, weight])
 
