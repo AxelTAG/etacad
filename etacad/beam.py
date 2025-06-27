@@ -34,9 +34,9 @@ class Beam:
     :param y: Y-coordinate of the bottom left corner of the beam concrete shape.
     :type y: float
     :param direction: Direction of the beam (HORIZONTAL or VERTICAL).
-    :type direction: str
+    :type direction: Direction
     :param orientation: Orientation of the beam (TOP, RIGHT, DOWN, LEFT).
-    :type orientation: str
+    :type orientation: Orientation
     :param as_sup: Dictionary containing reinforcement information for the top side.
     :type as_sup: dict
     :param anchor_sup: Anchor length for the top reinforcement or list of lengths.
@@ -76,7 +76,7 @@ class Beam:
     :type nomenclature: str
     :param number_init: Initial number for labeling elements.
     :type number_init: int
-    :param element_type: Type of the structural element (e.g., BEAM).
+    :param element_type: Type of the structural element (BEAM).
     :type element_type: ElementTypes
 
     :ivar width: Width of the beam.
