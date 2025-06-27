@@ -47,6 +47,8 @@ class SpacedBars:
     # Boxing attributes.
     _box_width: float = field(init=False)
     _box_height: float = field(init=False)
+    _box_width_transverse: float = field(init=False)
+    _box_height_transverse: float = field(init=False)
     _remanent_distance: float = field(init=False)
     max_height_attribute: float = field(init=False)
 
@@ -95,6 +97,8 @@ class SpacedBars:
         # Boxing attributes.
         self._box_width = self.bars[0].box_width
         self._box_height = (self.quantity - 1) * self.spacing + self.bars[0].box_height
+        self._box_width_transverse = self.diameter
+        self._box_height_transverse = (self.quantity - 1) * self.spacing + self.diameter
         self._remanent_distance = self.reinforcement_length - (self.quantity - 1) * self.spacing
         self.max_height_attribute = max(self.right_anchor, self.left_anchor, self.bend_height)
 
@@ -304,7 +308,8 @@ class SpacedBars:
                             x=x,
                             y=y,
                             rotate_angle=rads(rotate_angle),
-                            other_extreme=other_extreme)
+                            other_extreme=other_extreme,
+                            transverse=True)
 
         return elements
 
@@ -356,7 +361,8 @@ class SpacedBars:
                        y: float = None,
                        rotate_angle: float = 0,
                        unifilar: bool = False,
-                       other_extreme: bool = False):
+                       other_extreme: bool = False,
+                       transverse: bool = False):
         """
         Adjusts the orientation of the drawing based on the direction and orientation of the bar.
 
@@ -375,6 +381,10 @@ class SpacedBars:
         if y is None:
             y = self.y
 
+        box_height = self._box_height
+        if transverse:
+            box_height = self._box_height_transverse
+
         # Filtering entities.
         group_filter = filter_entities(entities=group)
 
@@ -383,10 +393,10 @@ class SpacedBars:
         if self.direction == Direction.VERTICAL:
             angle = pi / 2
             x_v, y_v = x, y
-            pivot_point = (x_v, y_v + self._box_height)
+            pivot_point = (x_v, y_v + box_height)
             if other_extreme:
                 x_v, y_v = x_v, y_v - self._remanent_distance
-                pivot_point = (x_v, y_v + self._box_height + self._remanent_distance * 2)
+                pivot_point = (x_v, y_v + box_height + self._remanent_distance * 2)
 
             vector_translate = (x_v - (pivot_point[0] * cos(angle) - pivot_point[1] * sin(angle)),
                                 y_v - (pivot_point[0] * sin(angle) + pivot_point[1] * cos(angle)))
