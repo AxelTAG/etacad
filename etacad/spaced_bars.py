@@ -148,6 +148,11 @@ class SpacedBars:
 
         if one_bar_position is None:
             one_bar_position = self.quantity // 3
+        if one_bar_position >= self.quantity:
+            one_bar_position = self.quantity - 1
+        if one_bar_position < 0:
+            one_bar_position = 0
+
         if bar_dimension_position is None:
             bar_dimension_position = one_bar_position
         if description_position is None:

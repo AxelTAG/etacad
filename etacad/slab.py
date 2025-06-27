@@ -5,7 +5,7 @@ from etacad.cadtable import CADTable
 from etacad.concrete import Concrete
 from etacad.converters import to_list
 from etacad.drawing_utils import text
-from etacad.globals import (Position, Axes, SlabTypes, Direction, ElementTypes, Orientation, CONCRETE_WEIGHT,
+from etacad.globals import (Position, Axes, Direction, ElementTypes, Orientation, CONCRETE_WEIGHT,
                             SLAB_SET_LONGITUDINAL, SLAB_SET_TRANSVERSE, SLAB_SET_LONG_REBBAR)
 from etacad.spaced_bars import SpacedBars
 
@@ -220,8 +220,8 @@ class Slab:
     as_sup_x_bend_angle: list | float = field(default=None, converter=to_list)
     as_sup_y_bend_angle: list | float = field(default=None, converter=to_list)
 
-    as_sup_x_bend_height: list | float = field(default=None, converter=to_list)
-    as_sup_y_bend_height: list | float = field(default=None, converter=to_list)
+    as_sup_x_bend_height: list | float = field(init=False)
+    as_sup_y_bend_height: list | float = field(init=False)
 
     bars_as_sup_x: list | float = field(init=False)
     bars_as_sup_y: list | float = field(init=False)
@@ -263,33 +263,42 @@ class Slab:
 
         # Superior X bars.
         (self.as_sup_x_db, self.max_db_sup_x, self.as_sup_x_anchor, self.number_init_sup_x, self.as_sup_x_bend_longitud,
-         self.as_sup_x_bend_angle, self.as_sup_x_bend_height) = self.__asign_bar_vars(
+         self.as_sup_x_bend_angle) = self.__asign_bar_vars(
             as_db=self.as_sup_x_db,
             as_anchor=self.as_sup_x_anchor,
             as_bend_length=self.as_sup_x_bend_longitud,
-            as_bend_angle=self.as_sup_x_bend_angle,
-            as_bend_height=self.as_sup_x_bend_height, )
+            as_bend_angle=self.as_sup_x_bend_angle)
 
         # Superior Y bars.
         (self.as_sup_y_db, self.max_db_sup_y, self.as_sup_y_anchor, self.number_init_sup_y, self.as_sup_y_bend_longitud,
-         self.as_sup_y_bend_angle, self.as_sup_y_bend_height) = self.__asign_bar_vars(
+         self.as_sup_y_bend_angle) = self.__asign_bar_vars(
             as_db=self.as_sup_y_db,
             as_anchor=self.as_sup_y_anchor,
             as_bend_length=self.as_sup_y_bend_longitud,
-            as_bend_angle=self.as_sup_y_bend_angle,
-            as_bend_height=self.as_sup_y_bend_height)
+            as_bend_angle=self.as_sup_y_bend_angle)
 
         # Inferior X bars.
         (self.as_inf_x_db, self.max_db_inf_x, self.as_inf_x_anchor, self.number_init_inf_x,
-         _, _, _) = self.__asign_bar_vars(
+         _, _) = self.__asign_bar_vars(
             as_db=self.as_inf_x_db,
             as_anchor=self.as_inf_x_anchor)
 
         # Inferior Y bars.
         (self.as_inf_y_db, self.max_db_inf_y, self.as_inf_y_anchor, self.number_init_inf_y,
-         _, _, _) = self.__asign_bar_vars(
+         _, _) = self.__asign_bar_vars(
             as_db=self.as_inf_y_db,
             as_anchor=self.as_inf_y_anchor)
+
+        # Bend heights.
+        if self.as_sup_x_db:
+            self.as_sup_x_bend_height = [0] * len(self.as_sup_x_db)
+            if any(self.as_sup_x_bend_longitud):
+                self.as_sup_x_bend_height = [self.thickness - self.cover * 2 - (self.max_db_sup_x + self.max_db_inf_x) / 2] * len(self.as_sup_x_db)
+
+        if self.as_sup_y_db:
+            self.as_sup_y_bend_height = [0] * len(self.as_sup_y_db)
+            if any(self.as_sup_y_bend_longitud):
+                self.as_sup_y_bend_height = [self.thickness - self.cover * 2 - (self.max_db_sup_y + self.max_db_inf_y) / 2] * len(self.as_sup_y_db)
 
         # Generate bars.
         self.bars_as_sup_x = self.__gen_bars(as_db=self.as_sup_x_db,
@@ -361,8 +370,8 @@ class Slab:
                           bars_sup: bool = True,
                           bars_inf: bool = True,
                           one_bar: bool = False,
-                          one_bar_position_sup: int = None,
-                          one_bar_position_inf: int = None,
+                          one_bar_position_sup: int = 4,
+                          one_bar_position_inf: int = 6,
                           dimensions: bool = True,
                           description: bool = True,
                           unifilar_bars: bool = False) -> dict:
@@ -470,7 +479,7 @@ class Slab:
                         dimensions: bool = True,
                         descriptions: bool = True,
                         description_start_sup: int = 6,
-                        description_start_inf: int = 9,
+                        description_start_inf: int = 8,
                         unifilar: bool = False,
                         settings: dict = SLAB_SET_TRANSVERSE) -> dict:
         """
@@ -849,8 +858,7 @@ class Slab:
                          as_db: list,
                          as_anchor: list,
                          as_bend_length: list = None,
-                         as_bend_angle: list = None,
-                         as_bend_height: list = None) -> tuple[list, float, list, int, list, list, list]:
+                         as_bend_angle: list = None) -> tuple[list, float, list, int, list, list]:
         """
         Assigns and adjusts variables related to reinforcement bars, anchorage, and bar bends.
 
@@ -868,8 +876,6 @@ class Slab:
         :type as_bend_length: list
         :param as_bend_angle: List of bend angles for each bar. Can be None. If shorter, it is repeated.
         :type as_bend_angle: list
-        :param as_bend_height: List of bend heights for each bar. Can be None. If shorter, it is repeated.
-        :type as_bend_height: list
 
         :return: A tuple containing:
                  - List of bar diameters (`as_db`)
@@ -899,9 +905,8 @@ class Slab:
         as_anchor = normalize_list(as_anchor)
         as_bend_length = normalize_list(as_bend_length)
         as_bend_angle = normalize_list(as_bend_angle)
-        as_bend_height = normalize_list(as_bend_height)
 
-        return as_db, max_db, as_anchor, number_init_as, as_bend_length, as_bend_angle, as_bend_height
+        return as_db, max_db, as_anchor, number_init_as, as_bend_length, as_bend_angle
 
     # TODO: Escribir función elements_section y refactorizar funciones de transversal acordemente.
     def __elements_section(self,

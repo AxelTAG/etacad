@@ -10,7 +10,6 @@ import pytest
 
 from ezdxf import zoom
 from ezdxf.math import Vec3
-from itertools import chain
 
 
 @pytest.fixture
@@ -656,8 +655,6 @@ def slab_8x3_with_anchor_bend() -> Slab:
                 as_sup_y_anchor=0.1,
                 as_inf_x_anchor=0.05,
                 as_inf_y_anchor=0.05,
-                as_sup_x_bend_height=0.03,
-                as_sup_y_bend_height=0.03,
                 as_sup_x_bend_longitud=4,
                 as_sup_y_bend_longitud=1.5,
                 as_sup_x_bend_angle=45,
@@ -704,8 +701,8 @@ def test_attributes_slab_8x3_with_anchor_bend(slab_8x3_with_anchor_bend):
     assert slab_8x3_with_anchor_bend.as_sup_x_bend_angle == [45]
     assert slab_8x3_with_anchor_bend.as_sup_y_bend_angle == [30]
 
-    assert slab_8x3_with_anchor_bend.as_sup_x_bend_height == [0.03]
-    assert slab_8x3_with_anchor_bend.as_sup_y_bend_height == [0.03]
+    assert slab_8x3_with_anchor_bend.as_sup_x_bend_height == [0.109]
+    assert slab_8x3_with_anchor_bend.as_sup_y_bend_height == [0.104]
 
     assert len(slab_8x3_with_anchor_bend.bars_as_sup_x) == 1
     assert len(slab_8x3_with_anchor_bend.bars_as_sup_y) == 1
