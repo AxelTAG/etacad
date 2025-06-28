@@ -6,11 +6,11 @@ A package aimed to simpilfy drawings of structurals elements based on ezdxf libr
 ## Features
 
 - Uses of ezdxf for create ".dxf" files with Python.
-- Python Bar, Stirrup, SpacedBars, Concrete, Beam, Column classes for manipulate and draw elements.
+- Python Bar, Stirrup, SpacedBars, Concrete, Beam, Column Slab, classes for manipulate and draw elements.
 
 ## Coming features
 
-- Slab class, Isoleted footing.
+- Isoleted footing, Pile, Caisson.
 
 ## Usage
 

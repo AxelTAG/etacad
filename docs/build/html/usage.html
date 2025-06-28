@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Usage &mdash; etacad 0.0.12 documentation</title>
+  <title>Usage &mdash; etacad 0.0.14 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=3bbcec59"></script>
+        <script src="_static/documentation_options.js?v=544df88d"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -71,6 +71,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#id3">Table rebar detailing</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-slab-instance">Creating a Slab instance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#slab-reinforcement">Slab reinforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Longitudinal drawing of the column</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Transversal drawing of the column</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Longitudinal rebar detailing drawing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Table rebar detailing</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">API References</a></li>
@@ -121,16 +129,16 @@ uses them.</p>
 <span class="kn">from</span> <span class="nn">etacad</span> <span class="kn">import</span> <span class="n">Beam</span>
 
 <span class="c1"># Creating a basic Beam instance.</span>
-<span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
-            <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
+<span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
             <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
             <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-            <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
-            <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
-            <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">0.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span>
+            <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>x</cite> and <cite>y</cite> parameters correspond to the default point where the drawings will be plotted unless specified when
@@ -140,16 +148,16 @@ executing the drawing methods.</p>
 <p>You can add more steel bars by specifying their diameter as the key and the quantity as the dictionary values. These
 will be symmetrically arranged along the width or effective height of the section. You can add bars vertically using
 the parameters <cite>as_right</cite> and <cite>as_left</cite>. The cover is considered at the bar’s centerline.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
-                <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
-                <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.01</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-                <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
-                <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
-                <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>  <span class="c1"># The cover is considered at the bar&#39;s centerline.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">0.01</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">0.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">0.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+            <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span>
+            <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>  <span class="c1"># The cover is considered at the bar&#39;s centerline.</span>
 </pre></div>
 </div>
 <p>You can also add an anchorage length for the bars using <cite>anchor_sup</cite>, <cite>anchor_right</cite>, <cite>anchor_inf</cite>, and <cite>anchor_left</cite>,
@@ -161,16 +169,16 @@ passing a single value for all the bars on the side or a list specifying a value
 example), which will distribute the stirrups along the beam, or you can provide a list of diameters, requiring
 additional parameters such as the X coordinate where each stirrup begins and the reinforcement length. Additionally,
 you can provide a list of the anchorage lengths for each stirrup or a float for all stirrups.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
-            <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
             <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.01</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-            <span class="n">stirrups_db</span><span class="o">=</span><span class="p">[</span><span class="mf">.008</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.008</span><span class="p">],</span>
-            <span class="n">stirrups_sep</span><span class="o">=</span><span class="p">[</span><span class="mf">.15</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.15</span><span class="p">],</span>
-            <span class="n">stirrups_length</span><span class="o">=</span><span class="p">[</span><span class="mf">.6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.6</span><span class="p">],</span>
-            <span class="n">stirrups_anchor</span><span class="o">=</span><span class="mf">.125</span><span class="p">,</span>
-            <span class="n">stirrups_x</span><span class="o">=</span><span class="p">[</span><span class="mf">.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">],</span>
+            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">0.01</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">stirrups_db</span><span class="o">=</span><span class="p">[</span><span class="mf">0.008</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">],</span>
+            <span class="n">stirrups_sep</span><span class="o">=</span><span class="p">[</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">],</span>
+            <span class="n">stirrups_length</span><span class="o">=</span><span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+            <span class="n">stirrups_anchor</span><span class="o">=</span><span class="mf">0.125</span><span class="p">,</span>
+            <span class="n">stirrups_x</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">],</span>
             <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -179,17 +187,17 @@ you can provide a list of the anchorage lengths for each stirrup or a float for 
 <h3>Beam columns intersections<a class="headerlink" href="#beam-columns-intersections" title="Link to this heading"></a></h3>
 <p>Intersections of the columns can be taken into account; we need to introduce three additional parameters:
 <cite>columns</cite>, <cite>columns_pos</cite>, and <cite>columns_symbol</cite>, the latter being optional.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
-            <span class="n">height</span><span class="o">=</span><span class="mf">.35</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
             <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-            <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
-            <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
-            <span class="n">columns</span><span class="o">=</span><span class="p">[(</span><span class="mf">.2</span><span class="p">,</span> <span class="mf">.35</span><span class="p">),</span> <span class="p">(</span><span class="mf">.25</span><span class="p">,</span> <span class="mf">.35</span><span class="p">)],</span>
+            <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">0.008</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+            <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span>
+            <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">)],</span>
             <span class="n">columns_pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">3.65</span><span class="p">],</span>
             <span class="n">columns_symbol</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">],</span>
-            <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -254,18 +262,18 @@ class). The keys that do not have dictionaries contain a list of DXF entities.</
 <span class="kn">from</span> <span class="nn">etacad</span> <span class="kn">import</span> <span class="n">Column</span>
 
 <span class="c1"># Creating a basic Column instance.</span>
-<span class="n">column</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
-                <span class="n">depth</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
+<span class="n">column</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+                <span class="n">depth</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
                 <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
                 <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                 <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
-                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-                <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
-                <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
-                <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span>
+                <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+                <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>x</cite> and <cite>y</cite> parameters correspond to the default point where the drawings will be plotted unless specified when
@@ -284,21 +292,21 @@ the bars at the edges apply to two faces of the section, as considered in this e
 <h3>Column beams intersections<a class="headerlink" href="#column-beams-intersections" title="Link to this heading"></a></h3>
 <p>Intersections of the beams can be taken into account; we need to introduce three additional parameters:
 <cite>beams</cite>, <cite>beams_pos</cite>, and <cite>beams_symbol</cite>, the latter being optional.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
-                <span class="n">depth</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">column</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+                <span class="n">depth</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
                 <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
                 <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                 <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
-                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-                <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">.008</span><span class="p">,</span>
-                <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">.15</span><span class="p">,</span>
-                <span class="n">beams</span><span class="o">=</span><span class="p">[(</span><span class="mf">.25</span><span class="p">,</span> <span class="mf">.25</span><span class="p">),</span> <span class="p">(</span><span class="mf">.25</span><span class="p">,</span> <span class="mf">.25</span><span class="p">)],</span>
+                <span class="n">as_sup</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+                <span class="n">as_right</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">as_inf</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                <span class="n">as_left</span><span class="o">=</span><span class="p">{</span><span class="mf">0.012</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">stirrups_db</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span>
+                <span class="n">stirrups_sep</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+                <span class="n">beams</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)],</span>
                 <span class="n">beams_pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.75</span><span class="p">],</span>
                 <span class="n">beams_symbol</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B1&quot;</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">],</span>
-                <span class="n">cover</span><span class="o">=</span><span class="mf">.025</span><span class="p">)</span>
+                <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -354,6 +362,126 @@ class). The keys that do not have dictionaries contain a list of DXF entities.</
 </pre></div>
 </div>
 <p>See more about the parameters of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Column.draw_table_rebar_detailing()</span></code> function for further details.</p>
+</section>
+</section>
+<section id="creating-a-slab-instance">
+<h2>Creating a Slab instance<a class="headerlink" href="#creating-a-slab-instance" title="Link to this heading"></a></h2>
+<p>Create a simple concrete slab with <code class="xref py py-class docutils literal notranslate"><span class="pre">Slab</span></code> class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing Slab class.</span>
+<span class="kn">from</span> <span class="nn">etacad</span> <span class="kn">import</span> <span class="n">Slab</span>
+
+<span class="c1"># Creating a basic Slab instance.</span>
+<span class="n">slab</span> <span class="o">=</span> <span class="n">Slab</span><span class="p">(</span><span class="n">length_x</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+           <span class="n">length_y</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+           <span class="n">thickness</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+           <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+           <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>x</cite> and <cite>y</cite> parameters correspond to the default point where the drawings will be plotted unless specified when
+executing the drawing methods.</p>
+<section id="slab-reinforcement">
+<h3>Slab reinforcement<a class="headerlink" href="#slab-reinforcement" title="Link to this heading"></a></h3>
+<p>Adds steel bars to the slab by assigning values to the parameters as_sup_x_*, as_sup_y_*, as_inf_x_*, and as_inf_y_*.
+You can define the position of the reinforcement (top or bottom), the bar diameter, the spacing between bars, and their
+anchorage length.</p>
+<p>You can also add a concrete cover using the cover parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating a basic Slab instance.</span>
+<span class="n">slab</span> <span class="o">=</span> <span class="n">Slab</span><span class="p">(</span><span class="n">length_x</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="n">length_y</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">thickness</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="mi">1</span>
+            <span class="n">as_inf_x_db</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span>
+            <span class="n">as_inf_y_db</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span>
+            <span class="n">as_inf_x_sp</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+            <span class="n">as_inf_y_sp</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+            <span class="n">as_inf_x_anchor</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+            <span class="n">as_inf_y_anchor</span><span class="o">=</span><span class="mf">0.075</span><span class="p">,</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you need more than two bar diameters in the same position (top/bottom, x/y), you must provide the corresponding
+parameters as a list.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating a basic Slab instance with reinforcement.</span>
+<span class="n">slab</span> <span class="o">=</span> <span class="n">Slab</span><span class="p">(</span><span class="n">length_x</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="n">length_y</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">thickness</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">as_inf_x_db</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span>
+            <span class="n">as_inf_y_db</span><span class="o">=</span><span class="p">[</span><span class="mf">0.008</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span>
+            <span class="n">as_inf_x_sp</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+            <span class="n">as_inf_y_sp</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
+            <span class="n">as_inf_x_anchor</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+            <span class="n">as_inf_y_anchor</span><span class="o">=</span><span class="p">[</span><span class="mf">0.075</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">],</span>
+            <span class="n">cover</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>Longitudinal drawing of the column<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>The Slab class offers methods for drawing longitudinal and cross sections, which are customizable through the method
+parameters and the <cite>settings</cite> parameter.
+Each method returns a dictionary that may or may not contain other nested dictionaries (depending on the method and
+class). The keys that do not have dictionaries contain a list of DXF entities.</p>
+<p>The draw_longitudinal() method will draw a top view of the slab (in future updates, it will be renamed to draw_top_view).
+The method includes several parameters that enable or disable parts of the drawing according to user preferences.
+The most notable parameter is one_bar, which indicates that only one bar from each position should be drawn.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drawing top view of slab.</span>
+<span class="n">slab</span><span class="o">.</span><span class="n">draw_longitudinal</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                       <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">one_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With the one_bar_position_* parameters, you can specify the position of the bar to be drawn.
+The unifilar_bars parameter indicates whether you want to draw the bars as single-line representations (unifilar).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">slab</span><span class="o">.</span><span class="n">draw_longitudinal</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                       <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">one_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">one_bar_position_sup</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                       <span class="n">one_bar_position_inf</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                       <span class="n">unifilar_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Slab.draw_longitudinal()</span></code> function for further details.</p>
+</section>
+<section id="id5">
+<h3>Transversal drawing of the column<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>Cross-sections of the slab can be drawn along both the X and Y axes. This is specified using the axe_section parameter.
+You can also enable the drawing of single-line (unifilar) bars.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">slab</span><span class="o">.</span><span class="n">draw_transverse</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                     <span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                     <span class="n">axe_section</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+                     <span class="n">concrete_shape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">unifilar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Slab.draw_transverse()</span></code> function for further details.</p>
+</section>
+<section id="id6">
+<h3>Longitudinal rebar detailing drawing<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>A simple bar detailing can also be drawn.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">slab</span><span class="o">.</span><span class="n">draw_longitudinal_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                       <span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                       <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                       <span class="n">unifilar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Slab.draw_longitudinal_rebar_detailing()</span></code> function for further details.</p>
+</section>
+<section id="id7">
+<h3>Table rebar detailing<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>A reinforcement quantity table can also be drawn, just like in the Beam and Column classes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">slab</span><span class="o">.</span><span class="n">draw_table_rebar_detailing</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+                                <span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more about the parameters of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Slab.draw_table_rebar_detailing()</span></code> function for further details.</p>
 </section>
 </section>
 </section>

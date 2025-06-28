@@ -13,6 +13,11 @@ API References.
 
 ---------------
 
+.. automodule:: etacad.spaced_bars
+   :members:
+
+---------------
+
 .. automodule:: etacad.concrete
    :members:
 
@@ -28,5 +33,5 @@ API References.
 
 ---------------
 
-.. automodule:: etacad.spaced_bars
+.. automodule:: etacad.slab
    :members:
